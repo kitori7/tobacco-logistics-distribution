@@ -4,8 +4,13 @@ import { createRouter, createWebHashHistory, RouteRecordRaw } from "vue-router";
 // 静态路由
 export const constantRoutes: RouteRecordRaw[] = [
   { path: "/", redirect: "/login" },
-  { path: "/login", name: "login", component: () => import("@/pages/Login/index.vue") },
-  { path: "/home", name: "home", component: () => import("@/pages/Home/index.vue") },
+  { path: "/login", name: "login", component: () => import("@/pages/Login/login.vue") },
+  {
+    path: "/home",
+    name: "home",
+    component: () => import("@/pages/Home/home.vue"),
+    children: [{ path: "/board", component: () => import("@/pages/Home/Board/Board.vue") }],
+  },
 ];
 
 /**
