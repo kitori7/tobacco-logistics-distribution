@@ -27,7 +27,7 @@
     line: string;
     deliverer: string;
     client: string;
-    encode: Number;
+    encode: number;
     customer: string;
     address: string;
     info: string;

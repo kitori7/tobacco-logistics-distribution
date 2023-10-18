@@ -1,21 +1,21 @@
 <template>
   <div class="btn">
     <el-button type="primary" color="#73e5ff" :icon="icon" >
-      {{addbtnText}}
+      {{content}}
     </el-button>
   </div>
 </template>
 <script lang="ts" setup>
-// @ts-ignore
   const props = defineProps({
     icon: {
       type: String,
       default: "Edit",
     },
-    addbtnText: {
+    content: {
       type: String,
       default: "异常信息",
     },
   });
+  props
 </script>
 <style lang="scss" scoped></style>
