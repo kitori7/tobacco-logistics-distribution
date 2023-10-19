@@ -45,4 +45,6 @@
     .el-table__inner-wrapper::before{
       display: none;
     }
- 
+    .el-checkbox__input.is-checked .el-checkbox__inner {
+      background-color: #0023a3;
+    }
