@@ -8,15 +8,17 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     ElButton: typeof import('element-plus/es')['ElButton']
+    ElDatePicker: typeof import('element-plus/es')['ElDatePicker']
     ElForm: typeof import('element-plus/es')['ElForm']
     ElFormItem: typeof import('element-plus/es')['ElFormItem']
     ElInput: typeof import('element-plus/es')['ElInput']
+    ElOption: typeof import('element-plus/es')['ElOption']
+    ElSelect: typeof import('element-plus/es')['ElSelect']
     ElTable: typeof import('element-plus/es')['ElTable']
     ElTableColumn: typeof import('element-plus/es')['ElTableColumn']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     TbButton: typeof import('./../components/TbButton/TbButton.vue')['default']
-    TbSide: typeof import('./../components/TbSideDecoration/TbSide.vue')['default']
     TbSideDecoration: typeof import('./../components/TbSideDecoration/TbSideDecoration.vue')['default']
     TbTable: typeof import('./../components/TbTable/TbTable.vue')['default']
   }

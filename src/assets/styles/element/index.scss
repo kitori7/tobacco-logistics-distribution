@@ -12,39 +12,74 @@
         ),
         'info': ('base': #909399,
         ),
-    ));
+                                                                                                                                ));
 @import "../common.scss";
-    
-    .el-table__header th {
-      background-color: rgb(200, 194, 254) !important;
-      border-left: 1px solid rgb(255, 255, 255);
-      color: #000000;
-    }
-    .el-table__header th:nth-child(1) {
-      border-left: none;
-    }
-    // 改变客户表格表头颜色
-    .el-table {
-      background: transparent;
-      color: $processed;
-    }
-    .el-table .odd {
-      --el-table-tr-bg-color: rgba(0, 13, 46, 0.7);
-    }
-    .el-table .even {
-      --el-table-tr-bg-color: rgba(1, 47, 83, 0.7);
-    }
-    // 设置表格奇数偶数行颜色
-    .el-table td.el-table__cell {
-      border-bottom: none;
-    }
-    // 去除表格边框
-    .el-table--enable-row-hover .el-table__body tr:hover > td {
-      background-color: rgba(0, 0, 0, 0) !important;
-    }
-    .el-table__inner-wrapper::before{
-      display: none;
-    }
-    .el-checkbox__input.is-checked .el-checkbox__inner {
-      background-color: #0023a3;
-    }
+.el-table__header th {
+  background-color: rgb(200, 194, 254) !important;
+  border-left: 1px solid rgb(255, 255, 255);
+  color: #000000;
+}
+
+.el-table__header th:nth-child(1) {
+  border-left: none;
+}
+
+// 改变客户表格表头颜色
+.el-table {
+  background: transparent;
+  color: $processed;
+}
+
+.el-table .odd {
+  --el-table-tr-bg-color: rgba(0, 13, 46, 0.7);
+}
+
+.el-table .even {
+  --el-table-tr-bg-color: rgba(1, 47, 83, 0.7);
+}
+
+// 设置表格奇数偶数行颜色
+.el-table td.el-table__cell {
+  border-bottom: none;
+}
+
+// 去除表格边框
+.el-table--enable-row-hover .el-table__body tr:hover>td {
+  background-color: rgba(0, 0, 0, 0) !important;
+}
+.el-table__inner-wrapper::before {
+  display: none;
+}
+
+.el-checkbox__input.is-checked .el-checkbox__inner {
+  background-color: #0023a3;
+}
+
+// el-input
+.el-input {
+  width: 200px !important;
+  --el-input-border-color: rgb(204, 255, 255);
+  --el-input-bg-color: rgba(0, 0, 0, 0);
+  --el-input-text-color: rgb(204, 255, 255);
+}
+
+
+.el-select__popper {
+  background: #001731 !important;
+  border: 3px solid rgb(204, 255, 255);
+}
+
+.el-select-dropdown__item {
+  display: flex;
+  align-items: center;
+  color: rgb(204, 255, 255);
+
+  &:hover {
+    background-color: rgb(200, 200, 200);
+  }
+}
+
+.el-form-item__label {
+  font-size: 20px;
+  color: rgb(204, 255, 255);
+}
