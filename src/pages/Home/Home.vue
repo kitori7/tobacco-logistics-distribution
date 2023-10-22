@@ -30,10 +30,12 @@
 </script>
 <style lang="scss" scoped>
   .home {
+    box-sizing: border-box;
     height: 100vh;
     width: 100vw;
     background: url("@/assets/images/background.png") center no-repeat;
     background-size: cover;
+    padding: 5px 30px;
     .main {
       display: flex;
       justify-content: space-between;
@@ -67,5 +69,6 @@
         }
       }
     }
+    
   }
 </style>

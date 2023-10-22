@@ -30,7 +30,7 @@
           <el-input></el-input>
         </el-form-item>
         <el-form-item>
-          <ElButton>搜索</ElButton>
+          <el-button :icon="Search">搜索</el-button>
         </el-form-item>
         <el-form-item label="配送域">
           <el-select></el-select>
@@ -42,13 +42,18 @@
           <el-select></el-select>
         </el-form-item>
         <el-form-item>
-          <ElButton>重置</ElButton>
+          <el-button :icon="Refresh">重置</el-button>
         </el-form-item>
       </el-form>
+    </div>
+    <div class="btn-content">
+      <el-button :icon="Plus">添加异常信息</el-button>
+      <el-button :icon="Delete">批量删除</el-button>
     </div>
   </div>
 </template>
 <script lang="ts" setup>
+  import { Search, Refresh, Plus, Delete } from "@element-plus/icons-vue";
   const test = ref("全部");
 </script>
 <style lang="scss" scoped>
@@ -61,28 +66,13 @@
         margin: 0 15px;
       }
     }
-    .search-content{
+    .search-content {
       margin-top: 20px;
       padding: 10px 40px 0px 40px;
       border: 2px solid $processed;
     }
-  }
-  .round {
-    display: inline-block;
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    &.notProcessed {
-      background-color: $notProcessed;
+    .btn-content {
+      margin: 5px 0;
     }
-    &.processed {
-      background-color: $processed;
-    }
-  }
-
-  .sRound {
-    width: 10px;
-    height: 10px;
-    margin: 0px 5px;
   }
 </style>
