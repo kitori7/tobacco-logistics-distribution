@@ -51,6 +51,7 @@
         width: 55%;
         margin: 0 auto;
         .el-input {
+          width: 100% !important;
           margin: 15px 0;
           height: 40px;
           :deep(.el-input__wrapper) {

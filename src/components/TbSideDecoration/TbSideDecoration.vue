@@ -12,7 +12,6 @@
 .TbSideDecoration{
     position:relative;
     width: 30px;
-    margin-left:100px;
     
 
     .vertical-bar{
