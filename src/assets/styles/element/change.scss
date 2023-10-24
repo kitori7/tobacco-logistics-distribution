@@ -102,3 +102,13 @@
     background-color: var(--el-button-hover-bg-color);
     outline: none;
 }
+// dialog
+.el-dialog {
+    --el-dialog-bg-color: #011631;
+    color: #73e1ff;
+    border: 1px solid #72e1ff;
+
+    .el-dialog__body {
+        color: #73e1ff;
+    }
+}

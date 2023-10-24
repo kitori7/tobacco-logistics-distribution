@@ -17,12 +17,24 @@
       <el-table-column prop="customer" label="客户名称" width="75" />
       <el-table-column prop="address" label="客户地址" />
       <el-table-column prop="info" label="异常信息反馈" />
+      <el-table-column label="操作" width="60">
+        <template #default="scope">
+          <el-button
+            link
+            size="small"
+            @click="handleEdit(scope.$index, scope.row)"
+            ><el-icon color="rgb(204,255,255)" size="15"><Edit /></el-icon
+          ></el-button>
+        </template>
+      </el-table-column>
     </el-table>
     <el-pagination layout="prev, pager, next" :total="80" />
   </div>
 </template>
 <script lang="ts" setup>
-  import type { User } from "./types";
+  import type { User } from "../../types";
+  import { Edit } from "@element-plus/icons-vue";
+  const emit = defineEmits(["itemClick"]);
   const tableRowClassName = ({ rowIndex }: { row: User; rowIndex: number }) => {
     if (rowIndex % 2 == 1) {
       return "odd";
@@ -31,6 +43,11 @@
     }
     return "";
   };
+
+  // 点击编辑
+  function handleEdit(rowIndex: number, item: User) {
+    emit("itemClick", rowIndex, item);
+  }
 
   const tableData: User[] = [
     {
