@@ -1,9 +1,12 @@
 <template>
   <div class="BoardAnalyze">
-    <h2>BoardAnalyze</h2>
+    <AnalyzeSearch></AnalyzeSearch>
+    <AnalyzeTable></AnalyzeTable>
   </div>
 </template>
 <script lang="ts" setup>
+import AnalyzeSearch from './cpn/AnalyzeSearch/AnalyzeSearch.vue'
+import AnalyzeTable from './cpn/AnalyzeTable/AnalyzeTable.vue'
 </script>
 <style lang="scss" scoped>
 .BoardAnalyze {
