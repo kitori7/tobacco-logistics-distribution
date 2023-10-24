@@ -22,7 +22,7 @@
     </div>
   </template>
   <script lang="ts" setup>
-    import type { User } from "./types";
+    import type { User } from "../../types";
     const tableRowClassName = ({ rowIndex }: { row: User; rowIndex: number }) => {
       if (rowIndex % 2 == 1) {
         return "odd";
