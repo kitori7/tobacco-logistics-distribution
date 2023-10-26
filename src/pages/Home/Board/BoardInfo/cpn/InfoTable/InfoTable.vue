@@ -59,6 +59,7 @@
       customer: "客户甲",
       address: "某地址",
       info: "没开门",
+      date:"2023.08.24",
     },
     {
       domain: "某配送域",
@@ -69,6 +70,7 @@
       customer: "客户甲",
       address: "某地址",
       info: "没开门",
+      date:"2023.08.24",
     },
     {
       domain: "某配送域",
@@ -79,6 +81,7 @@
       customer: "客户甲",
       address: "某地址",
       info: "没开门",
+      date:"2023.08.24",
     },
     {
       domain: "某配送域",
@@ -89,6 +92,7 @@
       customer: "客户甲",
       address: "某地址",
       info: "没开门",
+      date:"2023.08.24",
     },
     {
       domain: "某配送域",
@@ -99,6 +103,7 @@
       customer: "客户甲",
       address: "某地址",
       info: "没开门",
+      date:"2023.08.24",
     },
     {
       domain: "某配送域",
@@ -109,6 +114,7 @@
       customer: "客户甲",
       address: "某地址",
       info: "没开门",
+      date:"2023.08.24",
     },
     {
       domain: "某配送域",
@@ -119,6 +125,7 @@
       customer: "客户甲",
       address: "某地址",
       info: "没开门",
+      date:"2023.08.24",
     },
     {
       domain: "某配送域",
@@ -129,6 +136,7 @@
       customer: "客户甲",
       address: "某地址",
       info: "没开门",
+      date:"2023.08.24",
     },
     {
       domain: "某配送域",
@@ -139,6 +147,7 @@
       customer: "客户甲",
       address: "某地址",
       info: "没开门",
+      date:"2023.08.24",
     },
     {
       domain: "某配送域",
@@ -149,6 +158,7 @@
       customer: "客户甲",
       address: "某地址",
       info: "没开门",
+      date:"2023.08.24",
     },
   ];
 </script>
