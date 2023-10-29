@@ -7,4 +7,5 @@ export interface User {
   customer: string;
   address: string;
   info: string;
+  date:string;
 }
