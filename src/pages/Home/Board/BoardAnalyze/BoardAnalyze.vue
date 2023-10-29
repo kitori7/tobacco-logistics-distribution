@@ -1,7 +1,7 @@
 <template>
   <div class="BoardAnalyze">
     <AnalyzeSearch></AnalyzeSearch>
-    <AnalyzeTable></AnalyzeTable>
+    <AnalyzeTable class="analyze-table"></AnalyzeTable>
   </div>
 </template>
 <script lang="ts" setup>
@@ -10,6 +10,9 @@ import AnalyzeTable from './cpn/AnalyzeTable/AnalyzeTable.vue'
 </script>
 <style lang="scss" scoped>
 .BoardAnalyze {
-  color:red
+  .analyze-table{
+    height: 64vh;
+    overflow: auto;
+  }
 }
 </style>
