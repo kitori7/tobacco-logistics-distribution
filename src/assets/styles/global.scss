@@ -12,10 +12,18 @@
         background-color: $processed;
     }
 
-    .sRound {
+    &.dispose {
+        background-color: $dispose;
+    }
+
+    &.notDispose {
+        background-color: $notDispose;
+    }
+
+    &.sRound {
         width: 10px;
         height: 10px;
-        margin: 0px 5px;
+        margin: 0px 10px;
     }
 }
 

@@ -1,7 +1,7 @@
 <template>
   <div class="BoardInfo">
     <info-search></info-search>
-    <info-table @item-click="propItemClick"></info-table>
+    <info-table class="info-table" @item-click="propItemClick"></info-table>
     <info-item ref="InfoItemRef"></info-item>
   </div>
 </template>
@@ -20,6 +20,10 @@
   }
 </script>
 <style lang="scss" scoped>
-  .BoardInfo {
+.BoardInfo{
+  .info-table{
+    height: 58vh;
+    overflow: auto;
   }
+}
 </style>

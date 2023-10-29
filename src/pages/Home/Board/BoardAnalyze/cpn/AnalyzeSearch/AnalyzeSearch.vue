@@ -33,6 +33,9 @@
   display: flex;
   margin: 20px; 
   align-items: center;
+  .el-form-item{
+    width: 30%;
+  }
   .btn-content{
     transform: translate(0,-25%);
     width:400px;

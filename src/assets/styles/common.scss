@@ -1,8 +1,10 @@
-$notProcessed: rgb(255, 51, 204);
 // 未处理颜色
-$processed:rgb(204,255,255);
+$notProcessed: rgb(255, 51, 204);
 // 已处理颜色
-$dispose:rgb(255,255,102);
+$processed:rgb(204,255,255);
 // 处理中颜色
+$dispose:rgb(255,255,102);
+// 无需处理
+$notDispose: rgb(86, 116, 124);
+// 背景颜色/全部信息
 $bgColor: rgb(0, 0, 51);
-// 背景颜色

@@ -61,15 +61,14 @@
 
     &:hover {
         background-color: #73e1ff;
+        color: #001731;
     }
 
     &.selected {
+        color: #001731;
         background-color: #73e1ff;
     }
 
-    &.hover {
-        background-color: #73e1ff;
-    }
 }
 
 .el-form-item__label {
