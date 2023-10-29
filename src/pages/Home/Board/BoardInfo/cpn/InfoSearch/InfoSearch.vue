@@ -3,7 +3,7 @@
     <div class="title">
       <div class="round notProcessed"></div>
       <p>营销反馈</p>
-      <el-select v-model="test" placeholder="全部信息" size="small">
+      <el-select  placeholder="全部信息" size="small">
         <el-option value="全部">
           <div class="sRound round notDispose"></div>
           <span>全部</span>
@@ -11,6 +11,10 @@
         <el-option label="未处理" value="未处理">
           <div class="sRound round notProcessed"></div>
           <span>未处理</span>
+        </el-option>
+        <el-option label="处理中" value="处理中">
+          <div class="sRound round dispose"></div>
+          <span>处理中</span>
         </el-option>
         <el-option label="已处理" value="已处理">
           <div class="sRound round processed"></div>
@@ -45,14 +49,18 @@
       </div>
     </div>
     <div class="btn-content">
-      <el-button :icon="Plus">添加异常信息</el-button>
+      <el-button :icon="Plus" @click="handleAdd">添加异常信息</el-button>
       <el-button :icon="Delete">批量删除</el-button>
     </div>
   </div>
 </template>
 <script lang="ts" setup>
   import { Search, Refresh, Plus, Delete } from "@element-plus/icons-vue";
-  const test = ref("全部");
+  const emit = defineEmits(["itemAdd"]);
+  // 点击提交
+  function handleAdd() {
+    emit("itemAdd");
+  }
 </script>
 <style lang="scss" scoped>
   .InfoSearch {
@@ -72,15 +80,15 @@
       .el-form-item {
         width: 30%;
       }
-      .search-btn{
+      .search-btn {
         width: 20%;
         display: flex;
         flex-direction: column;
         align-items: start;
       }
-      .el-button + .el-button{
+      .el-button + .el-button {
         margin-top: 10%;
-        margin-left:0;
+        margin-left: 0;
       }
     }
     .btn-content {
