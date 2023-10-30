@@ -48,6 +48,12 @@
     --el-input-text-color: rgb(204, 255, 255);
 }
 
+// textarea
+.el-textarea__inner {
+    --el-input-border-color: rgb(204, 255, 255);
+    --el-input-bg-color: rgba(0, 0, 0, 0);
+    --el-input-text-color: rgb(204, 255, 255);
+}
 
 .el-select__popper {
     background: #001731 !important;
@@ -101,6 +107,7 @@
     background-color: var(--el-button-hover-bg-color);
     outline: none;
 }
+
 // dialog
 .el-dialog {
     --el-dialog-bg-color: #011631;
@@ -110,4 +117,10 @@
     .el-dialog__body {
         color: #73e1ff;
     }
+}
+
+// upload
+.el-upload--picture-card {
+    --el-fill-color-lighter: #001731;
+    --el-border-color-darker: rgb(204, 255, 255);
 }
