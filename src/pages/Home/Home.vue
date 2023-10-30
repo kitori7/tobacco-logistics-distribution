@@ -36,6 +36,8 @@
     background: url("@/assets/images/background.png") center no-repeat;
     background-size: cover;
     padding: 5px 30px;
+    display: flex;
+    flex-direction: column;
     .main {
       display: flex;
       justify-content: space-between;
@@ -69,6 +71,8 @@
         }
       }
     }
-    
+    .content{
+      flex: 1;
+    }
   }
 </style>

@@ -4,6 +4,7 @@
         :data="tableData"
         :row-class-name="tableRowClassName"
         size="small"
+        max-height="400"
         :cell-style="{ textAlign: 'center' }"
         :header-cell-style="{ 'text-align': 'center' }"
       >
