@@ -21,9 +21,7 @@
 </script>
 <style lang="scss" scoped>
 .BoardInfo{
-  .info-table{
-    height: 58vh;
-    overflow: auto;
-  }
+  display: flex;
+  flex-direction: column;
 }
 </style>
