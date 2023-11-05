@@ -20,6 +20,10 @@
         background-color: $notDispose;
     }
 
+    &.all{
+        background-color: #041c3f;
+        border: 1px solid $processed;
+    }
     &.sRound {
         width: 10px;
         height: 10px;

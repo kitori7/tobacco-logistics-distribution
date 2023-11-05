@@ -11,12 +11,12 @@
       <el-button
         :class="{ vertical: true, active: currentIndex === 0 }"
         @click="routerChange('/board/info')"
-        >异常信息</el-button
+        >营销反馈</el-button
       >
       <el-button
         :class="{ vertical: true, active: currentIndex === 1 }"
         @click="routerChange('/board/analyze')"
-        >异常分析</el-button
+        >物流反馈</el-button
       >
     </div>
   </div>
