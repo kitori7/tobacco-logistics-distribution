@@ -4,8 +4,8 @@
       <div class="round notProcessed"></div>
       <p>营销反馈</p>
       <el-select  placeholder="全部信息" size="small">
-        <el-option value="全部">
-          <div class="sRound round notDispose"></div>
+        <el-option label="全部" value="全部">
+          <div class="sRound round all"></div>
           <span>全部</span>
         </el-option>
         <el-option label="未处理" value="未处理">
@@ -19,6 +19,10 @@
         <el-option label="已处理" value="已处理">
           <div class="sRound round processed"></div>
           <span>已处理</span>
+        </el-option>
+        <el-option value="全部">
+          <div class="sRound round notDispose"></div>
+          <span>无需处理</span>
         </el-option>
       </el-select>
     </div>
