@@ -3,7 +3,7 @@
     <div class="title">
       <div class="round notProcessed"></div>
       <p>营销反馈</p>
-      <el-select  placeholder="全部信息" size="small">
+      <el-select placeholder="全部信息" size="small">
         <el-option label="全部" value="全部">
           <div class="sRound round all"></div>
           <span>全部</span>
@@ -27,17 +27,17 @@
       </el-select>
     </div>
     <div class="search-content">
-      <el-form :inline="true" label-width="100px">
+      <el-form :inline="true" label-width="100px" :model="searchForm">
         <el-form-item label="订单日期">
           <el-date-picker></el-date-picker>
         </el-form-item>
         <el-form-item label="客户编码">
-          <el-input></el-input>
+          <el-input v-model="searchForm.areaName"></el-input>
         </el-form-item>
         <el-form-item label="客户名称">
           <el-input></el-input>
         </el-form-item>
-        <el-form-item label="配送域">
+        <el-form-item label="大区名称">
           <el-select></el-select>
         </el-form-item>
         <el-form-item label="送货路径">
@@ -60,8 +60,19 @@
 </template>
 <script lang="ts" setup>
   import { Search, Refresh, Plus, Delete } from "@element-plus/icons-vue";
+  import type { ISearch } from "@/types/board";
   const emit = defineEmits(["itemAdd"]);
   // 点击提交
+  const searchForm = ref<ISearch>({
+    contactName: "",
+    areaName: "",
+    customerCodeL: "",
+    feedbackStatus: "1",
+    feedbackType: "0",
+    orderEndDate: "",
+    orderStartDate: "",
+    routeId: 0,
+  });
   function handleAdd() {
     emit("itemAdd");
   }

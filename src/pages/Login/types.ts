@@ -1,4 +1,5 @@
 export interface ILoginForm {
-  account: string;
+  loginName: string;
   password: string;
+  captcha: string;
 }

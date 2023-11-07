@@ -29,7 +29,6 @@
         </template>
       </el-table-column>
     </el-table>
-    <el-pagination layout="prev, pager, next" :total="80" />
   </div>
 </template>
 <script lang="ts" setup>

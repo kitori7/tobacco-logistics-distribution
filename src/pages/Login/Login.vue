@@ -5,10 +5,29 @@
       <div class="login-form">
         <el-form :model="loginForm">
           <el-form-item>
-            <el-input v-model.trim="loginForm.account"></el-input>
+            <el-input
+              v-model.trim="loginForm.loginName"
+              placeholder="请输入姓名"
+            ></el-input>
           </el-form-item>
           <el-form-item>
-            <el-input v-model.trim="loginForm.password" show-password></el-input>
+            <el-input
+              v-model.trim="loginForm.password"
+              placeholder="请输入密码"
+              show-password
+            ></el-input>
+          </el-form-item>
+          <el-form-item>
+            <el-input
+              style="width: 60% !important"
+              v-model.trim="loginForm.captcha"
+              placeholder="请输入验证码"
+            ></el-input>
+            <img
+              @click="loginStore.getCaptchaAction()"
+              :src="loginStore.captcha"
+              alt=""
+            />
           </el-form-item>
         </el-form>
         <div class="button" @click="handleLogin">GO</div>
@@ -18,12 +37,21 @@
 </template>
 <script lang="ts" setup>
   import { ILoginForm } from "./types.ts";
-  import { useRouter } from 'vue-router';
-  const router = useRouter()
-  const loginForm = ref<ILoginForm>({ account: "", password: "" });
-  function handleLogin(){
-    console.log({...loginForm.value});
-    router.push("home")
+  import { useRouter } from "vue-router";
+  import { useLoginStore } from "@/store/login";
+  const router = useRouter();
+  const loginStore = useLoginStore();
+  const loginForm = ref<ILoginForm>({
+    loginName: "",
+    password: "",
+    captcha: "",
+  });
+  // 获取二维码
+  loginStore.getCaptchaAction();
+  function handleLogin() {
+    loginStore.loginAction({ ...loginForm.value });
+    // console.log({ ...loginForm.value });
+    // router.push("home");
   }
   // 目录
   // const isLogin = ref<boolean>(false)
@@ -40,19 +68,22 @@
       position: relative;
       top: 35%;
       margin: 0 auto;
-      background: url("@/assets/images/Login/login-background.png") center no-repeat;
+      background: url("@/assets/images/Login/login-background.png") center
+        no-repeat;
       background-size: contain;
       .title {
         text-align: center;
-        line-height: 130px;
+        line-height: 120px;
         font-weight: 400;
       }
       .login-form {
         width: 55%;
         margin: 0 auto;
+        :deep(.el-form-item__content) {
+          justify-content: space-between;
+        }
         .el-input {
           width: 100% !important;
-          margin: 15px 0;
           height: 40px;
           :deep(.el-input__wrapper) {
             background-color: #00000000;
@@ -62,6 +93,11 @@
           color: #e1f7ff;
           height: 45px;
           line-height: 45px;
+        }
+        img {
+          width: 30%;
+          height: 45px;
+          object-fit: contain;
         }
         .button {
           position: relative;
@@ -88,8 +124,8 @@
           &:hover {
             box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
           }
-          &::before{
-            content: '';
+          &::before {
+            content: "";
             position: absolute;
             display: block;
             left: 100%;

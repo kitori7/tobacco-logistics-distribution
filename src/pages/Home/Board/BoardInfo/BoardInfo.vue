@@ -3,6 +3,7 @@
     <info-search @item-add="propItemAdd"></info-search>
     <info-table class="info-table" @item-click="propItemClick"></info-table>
     <info-item ref="InfoItemRef"></info-item>
+    <el-pagination layout="prev, pager, next" :total="80" />
     <InfoAdd ref="InfoAddRef"></InfoAdd>
   </div>
 </template>
@@ -41,5 +42,7 @@
   .BoardInfo {
     display: flex;
     flex-direction: column;
+    justify-content: center;
+    align-items: center;
   }
 </style>
