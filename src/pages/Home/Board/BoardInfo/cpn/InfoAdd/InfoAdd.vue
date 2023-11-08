@@ -84,4 +84,5 @@
       font-size: 15px !important;
     }
   }
+  
 </style>

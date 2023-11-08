@@ -51,7 +51,7 @@
   function handleLogin() {
     loginStore.loginAction({ ...loginForm.value });
     // console.log({ ...loginForm.value });
-    // router.push("home");
+    router.push("home");
   }
   // 目录
   // const isLogin = ref<boolean>(false)
@@ -99,7 +99,7 @@
           height: 45px;
           object-fit: contain;
         }
-        .button {
+        .button { 
           position: relative;
           margin: 0 auto;
           color: #0c2e48;

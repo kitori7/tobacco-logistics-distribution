@@ -18,6 +18,7 @@
       @current-change="propPageChange"
     />
     <InfoAdd ref="InfoAddRef"></InfoAdd>
+    <info-reply ref="InfoReplyRef" @click="propReplyClick"></info-reply>
   </div>
 </template>
 <script lang="ts" setup>
@@ -26,6 +27,7 @@
   import InfoTable from "./cpn/InfoTable/InfoTable.vue";
   import InfoItem from "./cpn/InfoItem/InfoItem.vue";
   import InfoAdd from "./cpn/InfoAdd/InfoAdd.vue";
+  import infoReply from "./cpn/InfoReply/infoReply.vue";
 
   const boardStore = useBoardStore();
   const pageData = ref<IBoardSearchData>({
@@ -57,6 +59,11 @@
   // 搜索点击
   function propItemSearch(searchData: ISearch) {
     console.log(searchData);
+  }
+  // 回复点击
+  const InfoReplyRef = ref<InstanceType<typeof infoReply>>()
+  function propReplyClick(id:number){
+    InfoReplyRef.value?.handleReply(id)
   }
 </script>
 <style lang="scss" scoped>
