@@ -46,10 +46,23 @@
           <el-input v-model="searchForm.contactName"></el-input>
         </el-form-item>
         <el-form-item label="大区名称">
-          <el-select v-model="searchForm.areaName"></el-select>
+          <el-select v-model="searchForm.areaName">
+            <el-option
+              v-for="item in boardStore.cond?.areaList"
+              :key="item.areaId"
+              :value="item.areaName"
+            ></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="送货路径">
-          <el-select v-model="searchForm.routeId"></el-select>
+          <el-select v-model="searchForm.routeId">
+            <el-option
+              v-for="item in boardStore.cond?.routeList"
+              :key="item.routeId"
+              :label="item.routeName"
+              :value="item.routeId"
+            ></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="送货部">
           <el-select></el-select>
@@ -57,7 +70,7 @@
       </el-form>
       <div class="search-btn">
         <el-button :icon="Search" @click="handleSearch">搜索</el-button>
-        <el-button :icon="Refresh">重置</el-button>
+        <el-button :icon="Refresh" @click="handelReset">重置</el-button>
       </div>
     </div>
     <div class="btn-content">
@@ -69,25 +82,42 @@
 <script lang="ts" setup>
   import { Search, Refresh, Plus, Delete } from "@element-plus/icons-vue";
   import type { ISearch } from "@/types/board";
-  const emit = defineEmits(["itemAdd", "itemSearch"]);
-  // 点击提交
-  // 时间处理
+  import { useBoardStore } from "@/store/board";
+  const boardStore = useBoardStore();
+  const emit = defineEmits(["itemAdd", "itemSearch", "itemReset"]);
+
+  onMounted(() => {
+    boardStore.getCondAction();
+  });
+  // 时间数据处理
   const time = ref();
   watch(time, (newValue) => {
-    searchForm.value.orderStartDate = newValue[0]
-    searchForm.value.orderEndDate = newValue[1]
+    searchForm.value.orderStartDate = newValue[0];
+    searchForm.value.orderEndDate = newValue[1];
   });
   const searchForm = ref<ISearch>({
     contactName: "",
     areaName: "",
     customerCodeL: "",
-    feedbackStatus: "1",
+    feedbackStatus: "",
     orderEndDate: "",
     orderStartDate: "",
   });
-
+  // 点击提交
   function handleSearch() {
     emit("itemSearch", { ...searchForm.value });
+  }
+  // 重置
+  function handelReset() {
+    searchForm.value = {
+      contactName: "",
+      areaName: "",
+      customerCodeL: "",
+      feedbackStatus: "",
+      orderEndDate: "",
+      orderStartDate: "",
+    };
+    emit("itemReset");
   }
   function handleAdd() {
     emit("itemAdd");

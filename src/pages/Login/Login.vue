@@ -50,8 +50,7 @@
   loginStore.getCaptchaAction();
   function handleLogin() {
     loginStore.loginAction({ ...loginForm.value });
-    // console.log({ ...loginForm.value });
-    router.push("home");
+    router.push("/home");
   }
   // 目录
   // const isLogin = ref<boolean>(false)

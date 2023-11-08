@@ -4,5 +4,5 @@ export const MenuList = [
   { name: "数据计算", router: "/board" },
   { name: "数据分析", router: "/board" },
   { name: "用户管理", router: "/board" },
-  { name: "班组管理", router: "/board" },
+  { name: "班组管理", router: "/home/board/info" },
 ];

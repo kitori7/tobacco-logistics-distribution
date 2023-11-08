@@ -9,13 +9,13 @@
     </div>
     <div class="btn-content">
       <el-button
-        :class="{ vertical: true, active: currentIndex === 0 }"
-        @click="routerChange('/board/info')"
+        :class="{ vertical: true, active: currentIndex === 1 }"
+        @click="routerChange('1')"
         >营销反馈</el-button
       >
       <el-button
-        :class="{ vertical: true, active: currentIndex === 1 }"
-        @click="routerChange('/board/analyze')"
+        :class="{ vertical: true, active: currentIndex === 2 }"
+        @click="routerChange('2')"
         >物流反馈</el-button
       >
     </div>
@@ -24,18 +24,15 @@
 <script lang="ts" setup>
   import TbSideDecoration from "@/components/TbSideDecoration/TbSideDecoration.vue";
   import { BorderBox9 } from "@dataview/datav-vue3";
-  import { useRouter } from "vue-router";
+  import { useRouter ,useRoute} from "vue-router";
 
   const router = useRouter();
+  const route = useRoute();
   // 切换
-  const currentIndex = ref<number>(0);
-  function routerChange(route: string) {
-    if (route === "/board/info") {
-      currentIndex.value = 0;
-    } else {
-      currentIndex.value = 1;
-    }
-    router.push(route);
+  const currentIndex = ref<number>(Number(route.query.feedbackType));
+  function routerChange(query: string) {
+    router.push({ path: "/home/board/info", query: { feedbackType: query } });
+    currentIndex.value = Number(query);
   }
 </script>
 <style lang="scss" scoped>

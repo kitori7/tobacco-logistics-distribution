@@ -1,6 +1,7 @@
 <template>
   <div class="InfoTable">
     <el-table
+      v-loading="loading"
       :data="props.tableData"
       :row-class-name="tableRowClassName"
       size="small"
@@ -19,10 +20,7 @@
       <el-table-column prop="feedbackInformation" label="异常信息反馈" />
       <el-table-column label="操作" width="60">
         <template #default="scope">
-          <el-button
-            link
-            size="small"
-            @click="handleEdit(scope.row)"
+          <el-button link size="small" @click="handleEdit(scope.row)"
             ><el-icon color="rgb(204,255,255)" size="15"><Edit /></el-icon
           ></el-button>
         </template>
@@ -32,8 +30,12 @@
 </template>
 <script lang="ts" setup>
   import type { IBoardItem } from "@/types/board";
+  import { storeToRefs } from "pinia";
   import { Edit } from "@element-plus/icons-vue";
   const emit = defineEmits(["itemClick"]);
+  import { useBoardStore } from "@/store/board";
+  const boardStore = useBoardStore();
+  const { loading } = storeToRefs(boardStore);
   interface IProps {
     tableData?: IBoardItem[];
   }
@@ -58,7 +60,7 @@
 
   // 点击编辑
   function handleEdit(item: IBoardItem) {
-    emit("itemClick",item);
+    emit("itemClick", item);
   }
 </script>
 <style lang="scss" scoped>

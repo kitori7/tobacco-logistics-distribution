@@ -20,17 +20,17 @@ const constantRoutes: RouteRecordRaw[] = [
     component: Home,
     children: [
       {
-        path: "/board",
+        path: "/home/board",
         component: Board,
-        redirect: "/board/info",
+        redirect: "/home/board/info",
         children: [
           {
-            path: "/board/info",
+            path: "/home/board/info",
             name: "boardInfo",
             component: BoardInfo,
           },
           {
-            path: "/board/analyze",
+            path: "/home/board/analyze",
             name: "analyze",
             component: BoardAnalyze,
           },
@@ -47,7 +47,6 @@ const router = createRouter({
   history: createWebHashHistory(),
   routes: constantRoutes,
   // 刷新时，滚动条位置还原
-  scrollBehavior: () => ({ left: 0, top: 0 }),
 });
 
 /**
@@ -57,5 +56,13 @@ export function resetRouter() {
   router.push({ path: "/login" });
   location.reload();
 }
-
+router.beforeEach((to) => {
+  //登录成功有token进入main
+  const token = localStorage.getItem("token")
+  console.log(token);
+  
+  if (to.path.startsWith('/home') && !token) {
+    return '/login'
+  }
+})
 export default router;
