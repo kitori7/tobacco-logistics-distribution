@@ -3,6 +3,7 @@
     <info-search
       @item-add="propItemAdd"
       @item-search="propItemSearch"
+      @item-reset="propItemReset"
     ></info-search>
     <info-table
       class="info-table"
@@ -15,13 +16,14 @@
       :current-page="pageData.pageNum"
       :page-size="pageData.pageSize"
       :total="boardStore.boardData.totalCount"
-      @current-change="propPageChange"
+      @current-change="getDate()"
     />
     <InfoAdd ref="InfoAddRef"></InfoAdd>
     <info-reply ref="InfoReplyRef" @click="propReplyClick"></info-reply>
   </div>
 </template>
 <script lang="ts" setup>
+  import { useRoute } from "vue-router";
   import { useBoardStore } from "@/store/board";
   import InfoSearch from "./cpn/InfoSearch/InfoSearch.vue";
   import InfoTable from "./cpn/InfoTable/InfoTable.vue";
@@ -30,17 +32,28 @@
   import infoReply from "./cpn/InfoReply/infoReply.vue";
 
   const boardStore = useBoardStore();
+  const route = useRoute();
   const pageData = ref<IBoardSearchData>({
-    feedbackType: "1",
     pageNum: 1,
     pageSize: 10,
   });
-  onMounted(() => {
-    boardStore.getBoardData({ ...pageData.value });
-  });
-  function propPageChange() {
-    boardStore.getBoardData({ ...pageData.value });
+  const feedbackType = ref<"1" | "2">();
+  function getDate(searchData: ISearch = {}) {
+    boardStore.getBoardData({
+      feedbackType: feedbackType.value,
+      ...pageData.value,
+      ...searchData,
+    });
   }
+
+  watch(
+    () => route.query.feedbackType,
+    (newValue) => {
+      feedbackType.value = newValue as "1" | "2";
+      getDate();
+    },
+    { immediate: true }
+  );
   const InfoItemRef = ref<InstanceType<typeof InfoItem>>();
   import type { IBoardItem, IBoardSearchData } from "@/types/board";
   import { ISearch } from "@/types/board";
@@ -58,12 +71,16 @@
 
   // 搜索点击
   function propItemSearch(searchData: ISearch) {
-    console.log(searchData);
+    getDate(searchData);
+  }
+  // 重置点击
+  function propItemReset() {
+    getDate();
   }
   // 回复点击
-  const InfoReplyRef = ref<InstanceType<typeof infoReply>>()
-  function propReplyClick(id:number){
-    InfoReplyRef.value?.handleReply(id)
+  const InfoReplyRef = ref<InstanceType<typeof infoReply>>();
+  function propReplyClick(id: number) {
+    InfoReplyRef.value?.handleReply(id);
   }
 </script>
 <style lang="scss" scoped>
