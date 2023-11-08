@@ -84,10 +84,6 @@ export interface ISearch {
    */
   feedbackStatus?: string;
   /**
-   * 异常信息类型 0：全部1：物流反馈；2：营销反馈
-   */
-  feedbackType: "0" | "1" | "2";
-  /**
    * 订单终止日期
    */
   orderEndDate?: string;

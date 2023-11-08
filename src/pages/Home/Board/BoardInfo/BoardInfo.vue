@@ -1,7 +1,10 @@
 <template>
   <div class="BoardInfo">
-    <info-search @item-add="propItemAdd"></info-search>
-    <info-table class="info-table" @item-click="propItemClick"></info-table>
+    <info-search
+      @item-add="propItemAdd"
+      @item-search="propItemSearch"
+    ></info-search>
+    <info-table class="info-table" :table-data="boardStore.boardData?.dataCurrentPage" @item-click="propItemClick"></info-table>
     <info-item ref="InfoItemRef"></info-item>
     <el-pagination layout="prev, pager, next" :total="80" />
     <InfoAdd ref="InfoAddRef"></InfoAdd>
@@ -24,18 +27,23 @@
   });
 
   const InfoItemRef = ref<InstanceType<typeof InfoItem>>();
-  import type { User } from "./types";
+  import type { IBoardItem } from "@/types/board";
+  import { ISearch } from "@/types/board";
   // 表格点击
-  function propItemClick(rowIndex: number, item: User) {
-    console.log(rowIndex, item);
-    console.log({ ...InfoItemRef.value });
-    InfoItemRef.value?.handleOpen(rowIndex, item);
+  function propItemClick(item: IBoardItem) {
+    console.log(item);
+    InfoItemRef.value?.handleOpen(item);
   }
 
   // 添加点击
   const InfoAddRef = ref<InstanceType<typeof InfoAdd>>();
   function propItemAdd() {
     InfoAddRef.value?.handleOpen();
+  }
+
+  // 搜索点击
+  function propItemSearch(searchData: ISearch) {
+    console.log(searchData);
   }
 </script>
 <style lang="scss" scoped>
@@ -44,5 +52,9 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    height: 100%;
+    .info-table{
+      flex: 1;
+    }
   }
 </style>
