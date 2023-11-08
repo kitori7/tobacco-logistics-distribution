@@ -4,9 +4,19 @@
       @item-add="propItemAdd"
       @item-search="propItemSearch"
     ></info-search>
-    <info-table class="info-table" :table-data="boardStore.boardData?.dataCurrentPage" @item-click="propItemClick"></info-table>
+    <info-table
+      class="info-table"
+      :table-data="boardStore.boardData?.dataCurrentPage"
+      @item-click="propItemClick"
+    ></info-table>
     <info-item ref="InfoItemRef"></info-item>
-    <el-pagination layout="prev, pager, next" :total="80" />
+    <el-pagination
+      layout="prev, pager, next"
+      :current-page="pageData.pageNum"
+      :page-size="pageData.pageSize"
+      :total="boardStore.boardData.totalCount"
+      @current-change="propPageChange"
+    />
     <InfoAdd ref="InfoAddRef"></InfoAdd>
   </div>
 </template>
@@ -18,16 +28,19 @@
   import InfoAdd from "./cpn/InfoAdd/InfoAdd.vue";
 
   const boardStore = useBoardStore();
-  onMounted(() => {
-    boardStore.getBoardData({
-      feedbackType: "1",
-      pageNum: 1,
-      pageSize: 10,
-    });
+  const pageData = ref<IBoardSearchData>({
+    feedbackType: "1",
+    pageNum: 1,
+    pageSize: 10,
   });
-
+  onMounted(() => {
+    boardStore.getBoardData({ ...pageData.value });
+  });
+  function propPageChange() {
+    boardStore.getBoardData({ ...pageData.value });
+  }
   const InfoItemRef = ref<InstanceType<typeof InfoItem>>();
-  import type { IBoardItem } from "@/types/board";
+  import type { IBoardItem, IBoardSearchData } from "@/types/board";
   import { ISearch } from "@/types/board";
   // 表格点击
   function propItemClick(item: IBoardItem) {
@@ -53,7 +66,7 @@
     justify-content: center;
     align-items: center;
     height: 100%;
-    .info-table{
+    .info-table {
       flex: 1;
     }
   }
