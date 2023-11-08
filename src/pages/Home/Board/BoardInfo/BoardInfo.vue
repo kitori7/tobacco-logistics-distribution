@@ -2,7 +2,8 @@
   <div class="BoardInfo">
     <info-search @item-add="propItemAdd"></info-search>
     <info-table class="info-table" @item-click="propItemClick"></info-table>
-    <info-item ref="InfoItemRef"></info-item>
+    <info-item ref="InfoItemRef" @reply-click="propReplyClick"></info-item>
+    <info-reply ref="InfoReplyRef"></info-reply>
     <InfoAdd ref="InfoAddRef"></InfoAdd>
   </div>
 </template>
@@ -12,6 +13,7 @@
   import InfoTable from "./cpn/InfoTable/InfoTable.vue";
   import InfoItem from "./cpn/InfoItem/InfoItem.vue";
   import InfoAdd from "./cpn/InfoAdd/InfoAdd.vue";
+  import infoReply from "./cpn/InfoReply/infoReply.vue";
 
   const boardStore = useBoardStore();
   onMounted(() => {
@@ -35,6 +37,12 @@
   const InfoAddRef = ref<InstanceType<typeof InfoAdd>>();
   function propItemAdd() {
     InfoAddRef.value?.handleOpen();
+  }
+
+  // 回复点击
+  const InfoReplyRef = ref<InstanceType<typeof infoReply>>()
+  function propReplyClick(id:number){
+    InfoReplyRef.value?.handleReply(id)
   }
 </script>
 <style lang="scss" scoped>

@@ -63,7 +63,7 @@
           height: 45px;
           line-height: 45px;
         }
-        .button {
+        .button { 
           position: relative;
           margin: 0 auto;
           color: #0c2e48;
