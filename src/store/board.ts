@@ -19,7 +19,7 @@ export const useBoardStore = defineStore("board", () => {
   const token = ref(
     "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJMb2dpbk5hbWUiOiJ4aWFvbWluZyIsInBhc3N3b3JkIjoiMSIsInVzZXJOYW1lIjoieGlhb21pbmciLCJ1c2VySWQiOiIxIn0.Wc0srbcOSnVrid1NC29vJGf5GSS6ws7x5m7FIz6RgCM"
   );
-  // localStorage.setItem("token",token.value)
+  localStorage.setItem("token",token.value)
 
   // 客户专员token
   // const token = ref("eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJMb2dpbk5hbWUiOiJ4aWFvd2FuZyIsInBhc3N3b3JkIjoiMiIsInVzZXJOYW1lIjoieGlhb3dhbmciLCJ1c2VySWQiOiIyIn0.zwhirBu0rT5ZCl3EmsfyaOj3A4J-W53QktcuVzOwSEE")
@@ -33,13 +33,11 @@ export const useBoardStore = defineStore("board", () => {
     totalPageNum: 0,
   });
   async function getBoardData(data: IBoardSearchData) {
-    localStorage.setItem("token", token.value);
     const res = await getList(data);
     boardData.value = res.data;
-    console.log(boardData.value);
   }
   return {
-    token,
+    // token,
     boardData,
     getBoardData,
   };
