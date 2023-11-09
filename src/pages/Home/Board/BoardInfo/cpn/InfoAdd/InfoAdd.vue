@@ -60,7 +60,7 @@
   }
 
   defineExpose({
-    handleOpen: handleOpen,
+    handleOpen,
   });
 </script>
 <style lang="scss" scoped>

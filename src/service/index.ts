@@ -10,8 +10,13 @@ const requests = new request({
       if (config.headers && token) {
         config.headers.Authorization = token;
       }
-
       return config;
+    },
+    responseSuccessFn: (response: any) => {
+      if (response.code === 500) {
+        ElMessage.error(response.msg);
+      }
+      return response;
     },
   },
 });

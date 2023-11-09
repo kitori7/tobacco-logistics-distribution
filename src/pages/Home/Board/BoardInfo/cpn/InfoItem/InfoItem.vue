@@ -34,14 +34,14 @@
   </div>
 </template>
 <script lang="ts" setup>
-  import type { User } from "../../types";
+  import type { IBoardItem } from "@/types/board";
 
   const isOpen = ref<boolean>(false);
   const id = ref<number>(0);
-  function handleOpen(rowIndex: number, item: User) {
+  function handleOpen(item: IBoardItem) {
     isOpen.value = true;
-    console.log(item);
-    id.value = rowIndex;
+    id.value = item.feedbackId;
+    console.log(id.value);
   }
 
   defineExpose({

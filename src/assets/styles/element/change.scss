@@ -101,11 +101,12 @@
 
 //el-button
 .el-button {
-  --el-button-bg-color: #73e1ff;
-  --el-button-border-color: #46899c;
-  --el-button-text-color: rgb(0, 0, 51);
-  --el-button-hover-bg-color: #041c3f;
-  --el-button-hover-border-color: #1f3d45;
+    --el-color-primary: #73e1ff;
+    --el-button-bg-color: #73e1ff;
+    --el-button-border-color: #46899c;
+    --el-button-text-color: rgb(0, 0, 51);
+    --el-button-hover-bg-color: #041c3f;
+    --el-button-hover-border-color: #1f3d45;
 }
 
 .el-button.active {
@@ -128,9 +129,34 @@
 
 // upload
 .el-upload--picture-card {
-  --el-fill-color-lighter: #001731;
-  --el-border-color-darker: rgb(204,255,255);
+    --el-fill-color-lighter: #001731;
+    --el-border-color-darker: rgb(204, 255, 255);
 }
+
+// dataPicker
+.el-date-editor {
+    // width: 200px !important;
+    --el-input-border-color: rgb(204, 255, 255);
+    --el-input-bg-color: rgba(0, 0, 0, 0);
+    --el-input-text-color: rgb(204, 255, 255);
+    --el-text-color-regular: rgb(204, 255, 255);
+    --el-font-size-base: 10px;
+}
+
+.el-picker__popper.el-popper {
+    --el-bg-color-overlay: rgb(0, 0, 51);
+}
+
+.el-date-range-picker {
+    --el-text-color-regular: rgb(204, 255, 255);
+    --el-datepicker-inrange-bg-color: #041c3f;
+    width: 875px;
+}
+
+.el-date-range-picker__editor+.el-input {
+    width: auto !important;
+}
+
 .el-upload-dragger {
   background: none;
   border: 1px solid rgb(204,255,255);

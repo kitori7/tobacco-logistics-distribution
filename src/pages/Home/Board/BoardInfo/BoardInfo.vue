@@ -1,13 +1,29 @@
 <template>
   <div class="BoardInfo">
-    <info-search @item-add="propItemAdd"></info-search>
-    <info-table class="info-table" @item-click="propItemClick"></info-table>
-    <info-item ref="InfoItemRef" @reply-click="propReplyClick"></info-item>
-    <info-reply ref="InfoReplyRef"></info-reply>
+    <info-search
+      @item-add="propItemAdd"
+      @item-search="propItemSearch"
+      @item-reset="propItemReset"
+    ></info-search>
+    <info-table
+      class="info-table"
+      :table-data="boardStore.boardData?.dataCurrentPage"
+      @item-click="propItemClick"
+    ></info-table>
+    <info-item ref="InfoItemRef"></info-item>
+    <el-pagination
+      layout="prev, pager, next"
+      :current-page="pageData.pageNum"
+      :page-size="pageData.pageSize"
+      :total="boardStore.boardData.totalCount"
+      @current-change="getDate()"
+    />
     <InfoAdd ref="InfoAddRef"></InfoAdd>
+    <info-reply ref="InfoReplyRef" @click="propReplyClick"></info-reply>
   </div>
 </template>
 <script lang="ts" setup>
+  import { useRoute } from "vue-router";
   import { useBoardStore } from "@/store/board";
   import InfoSearch from "./cpn/InfoSearch/InfoSearch.vue";
   import InfoTable from "./cpn/InfoTable/InfoTable.vue";
@@ -16,21 +32,35 @@
   import infoReply from "./cpn/InfoReply/infoReply.vue";
 
   const boardStore = useBoardStore();
-  onMounted(() => {
-    boardStore.getBoardData({
-      feedbackType: "1",
-      pageNum: 1,
-      pageSize: 10,
-    });
+  const route = useRoute();
+  const pageData = ref<IBoardSearchData>({
+    pageNum: 1,
+    pageSize: 10,
   });
+  const feedbackType = ref<"1" | "2">();
+  function getDate(searchData: ISearch = {}) {
+    boardStore.getBoardData({
+      feedbackType: feedbackType.value,
+      ...pageData.value,
+      ...searchData,
+    });
+  }
 
+  watch(
+    () => route.query.feedbackType,
+    (newValue) => {
+      feedbackType.value = newValue as "1" | "2";
+      getDate();
+    },
+    { immediate: true }
+  );
   const InfoItemRef = ref<InstanceType<typeof InfoItem>>();
-  import type { User } from "./types";
+  import type { IBoardItem, IBoardSearchData } from "@/types/board";
+  import { ISearch } from "@/types/board";
   // 表格点击
-  function propItemClick(rowIndex: number, item: User) {
-    console.log(rowIndex, item);
-    console.log({ ...InfoItemRef.value });
-    InfoItemRef.value?.handleOpen(rowIndex, item);
+  function propItemClick(item: IBoardItem) {
+    console.log(item);
+    InfoItemRef.value?.handleOpen(item);
   }
 
   // 添加点击
@@ -39,15 +69,29 @@
     InfoAddRef.value?.handleOpen();
   }
 
+  // 搜索点击
+  function propItemSearch(searchData: ISearch) {
+    getDate(searchData);
+  }
+  // 重置点击
+  function propItemReset() {
+    getDate();
+  }
   // 回复点击
-  const InfoReplyRef = ref<InstanceType<typeof infoReply>>()
-  function propReplyClick(id:number){
-    InfoReplyRef.value?.handleReply(id)
+  const InfoReplyRef = ref<InstanceType<typeof infoReply>>();
+  function propReplyClick(id: number) {
+    InfoReplyRef.value?.handleReply(id);
   }
 </script>
 <style lang="scss" scoped>
   .BoardInfo {
     display: flex;
     flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    .info-table {
+      flex: 1;
+    }
   }
 </style>

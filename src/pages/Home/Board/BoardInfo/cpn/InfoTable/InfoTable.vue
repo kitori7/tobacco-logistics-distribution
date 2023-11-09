@@ -1,42 +1,55 @@
 <template>
   <div class="InfoTable">
     <el-table
-      :data="tableData"
+      v-loading="loading"
+      :data="props.tableData"
       :row-class-name="tableRowClassName"
       size="small"
-      max-height="340"
       :cell-style="{ textAlign: 'center' }"
       :header-cell-style="{ 'text-align': 'center' }"
     >
       <el-table-column type="selection" />
       <el-table-column type="index" label="序号" />
-      <el-table-column prop="domain" label="配送域" width="180" />
-      <el-table-column prop="line" label="线路名称" width="180" />
-      <el-table-column prop="deliverer" label="送货员" width="60" />
-      <el-table-column prop="client" label="客户专员" width="65" />
-      <el-table-column prop="encode" label="客户编码" width="65" />
-      <el-table-column prop="customer" label="客户名称" width="75" />
-      <el-table-column prop="address" label="客户地址" />
-      <el-table-column prop="info" label="异常信息反馈" />
+      <el-table-column prop="areaName" label="配送域" width="180" />
+      <el-table-column prop="storeName" label="线路名称" width="180" />
+      <el-table-column prop="deliveryName" label="送货员" width="60" />
+      <el-table-column prop="customerManagerName" label="客户专员" width="65" />
+      <el-table-column prop="customerCode" label="客户编码" width="65" />
+      <el-table-column prop="contactName" label="客户名称" width="75" />
+      <el-table-column prop="storeAddress" label="客户地址" />
+      <el-table-column prop="feedbackInformation" label="异常信息反馈" />
       <el-table-column label="操作" width="60">
         <template #default="scope">
-          <el-button
-            link
-            size="small"
-            @click="handleEdit(scope.$index, scope.row)"
+          <el-button link size="small" @click="handleEdit(scope.row)"
             ><el-icon color="rgb(204,255,255)" size="15"><Edit /></el-icon
           ></el-button>
         </template>
       </el-table-column>
     </el-table>
-    <el-pagination layout="prev, pager, next" :total="80" />
   </div>
 </template>
 <script lang="ts" setup>
-  import type { User } from "../../types";
+  import type { IBoardItem } from "@/types/board";
+  import { storeToRefs } from "pinia";
   import { Edit } from "@element-plus/icons-vue";
   const emit = defineEmits(["itemClick"]);
-  const tableRowClassName = ({ rowIndex }: { row: User; rowIndex: number }) => {
+  import { useBoardStore } from "@/store/board";
+  const boardStore = useBoardStore();
+  const { loading } = storeToRefs(boardStore);
+  interface IProps {
+    tableData?: IBoardItem[];
+  }
+  const props = withDefaults(defineProps<IProps>(), {
+    tableData: () => {
+      return [];
+    },
+  });
+  const tableRowClassName = ({
+    rowIndex,
+  }: {
+    row: IBoardItem;
+    rowIndex: number;
+  }) => {
     if (rowIndex % 2 == 1) {
       return "odd";
     } else if (rowIndex % 2 == 0) {
@@ -46,232 +59,9 @@
   };
 
   // 点击编辑
-  function handleEdit(rowIndex: number, item: User) {
-    emit("itemClick", rowIndex, item);
+  function handleEdit(item: IBoardItem) {
+    emit("itemClick", item);
   }
-
-  const tableData: User[] = [
-    {
-      domain: "某配送域",
-      line: "某路线",
-      deliverer: "送货甲",
-      client: "专员甲",
-      encode: 12345,
-      customer: "客户甲",
-      address: "某地址",
-      info: "没开门",
-      date:"2023.08.24",
-    },
-    {
-      domain: "某配送域",
-      line: "某路线",
-      deliverer: "送货甲",
-      client: "专员甲",
-      encode: 12345,
-      customer: "客户甲",
-      address: "某地址",
-      info: "没开门",
-      date:"2023.08.24",
-    },
-    {
-      domain: "某配送域",
-      line: "某路线",
-      deliverer: "送货甲",
-      client: "专员甲",
-      encode: 12345,
-      customer: "客户甲",
-      address: "某地址",
-      info: "没开门",
-      date:"2023.08.24",
-    },
-    {
-      domain: "某配送域",
-      line: "某路线",
-      deliverer: "送货甲",
-      client: "专员甲",
-      encode: 12345,
-      customer: "客户甲",
-      address: "某地址",
-      info: "没开门",
-      date:"2023.08.24",
-    },
-    {
-      domain: "某配送域",
-      line: "某路线",
-      deliverer: "送货甲",
-      client: "专员甲",
-      encode: 12345,
-      customer: "客户甲",
-      address: "某地址",
-      info: "没开门",
-      date:"2023.08.24",
-    },
-    {
-      domain: "某配送域",
-      line: "某路线",
-      deliverer: "送货甲",
-      client: "专员甲",
-      encode: 12345,
-      customer: "客户甲",
-      address: "某地址",
-      info: "没开门",
-      date:"2023.08.24",
-    },
-    {
-      domain: "某配送域",
-      line: "某路线",
-      deliverer: "送货甲",
-      client: "专员甲",
-      encode: 12345,
-      customer: "客户甲",
-      address: "某地址",
-      info: "没开门",
-      date:"2023.08.24",
-    },
-    {
-      domain: "某配送域",
-      line: "某路线",
-      deliverer: "送货甲",
-      client: "专员甲",
-      encode: 12345,
-      customer: "客户甲",
-      address: "某地址",
-      info: "没开门",
-      date:"2023.08.24",
-    },
-    {
-      domain: "某配送域",
-      line: "某路线",
-      deliverer: "送货甲",
-      client: "专员甲",
-      encode: 12345,
-      customer: "客户甲",
-      address: "某地址",
-      info: "没开门",
-      date:"2023.08.24",
-    },
-    {
-      domain: "某配送域",
-      line: "某路线",
-      deliverer: "送货甲",
-      client: "专员甲",
-      encode: 12345,
-      customer: "客户甲",
-      address: "某地址",
-      info: "没开门",
-      date:"2023.08.24",
-    },
-    {
-      domain: "某配送域",
-      line: "某路线",
-      deliverer: "送货甲",
-      client: "专员甲",
-      encode: 12345,
-      customer: "客户甲",
-      address: "某地址",
-      info: "没开门",
-      date:"2023.08.24",
-    },
-    {
-      domain: "某配送域",
-      line: "某路线",
-      deliverer: "送货甲",
-      client: "专员甲",
-      encode: 12345,
-      customer: "客户甲",
-      address: "某地址",
-      info: "没开门",
-      date:"2023.08.24",
-    },
-    {
-      domain: "某配送域",
-      line: "某路线",
-      deliverer: "送货甲",
-      client: "专员甲",
-      encode: 12345,
-      customer: "客户甲",
-      address: "某地址",
-      info: "没开门",
-      date:"2023.08.24",
-    },
-    {
-      domain: "某配送域",
-      line: "某路线",
-      deliverer: "送货甲",
-      client: "专员甲",
-      encode: 12345,
-      customer: "客户甲",
-      address: "某地址",
-      info: "没开门",
-      date:"2023.08.24",
-    },
-    {
-      domain: "某配送域",
-      line: "某路线",
-      deliverer: "送货甲",
-      client: "专员甲",
-      encode: 12345,
-      customer: "客户甲",
-      address: "某地址",
-      info: "没开门",
-      date:"2023.08.24",
-    },
-    {
-      domain: "某配送域",
-      line: "某路线",
-      deliverer: "送货甲",
-      client: "专员甲",
-      encode: 12345,
-      customer: "客户甲",
-      address: "某地址",
-      info: "没开门",
-      date:"2023.08.24",
-    },
-    {
-      domain: "某配送域",
-      line: "某路线",
-      deliverer: "送货甲",
-      client: "专员甲",
-      encode: 12345,
-      customer: "客户甲",
-      address: "某地址",
-      info: "没开门",
-      date:"2023.08.24",
-    },
-    {
-      domain: "某配送域",
-      line: "某路线",
-      deliverer: "送货甲",
-      client: "专员甲",
-      encode: 12345,
-      customer: "客户甲",
-      address: "某地址",
-      info: "没开门",
-      date:"2023.08.24",
-    },
-    {
-      domain: "某配送域",
-      line: "某路线",
-      deliverer: "送货甲",
-      client: "专员甲",
-      encode: 12345,
-      customer: "客户甲",
-      address: "某地址",
-      info: "没开门",
-      date:"2023.08.24",
-    },
-    {
-      domain: "某配送域",
-      line: "某路线",
-      deliverer: "送货甲",
-      client: "专员甲",
-      encode: 12345,
-      customer: "客户甲",
-      address: "某地址",
-      info: "没开门",
-      date:"2023.08.24",
-    },
-  ];
 </script>
 <style lang="scss" scoped>
   .InfoTable {
