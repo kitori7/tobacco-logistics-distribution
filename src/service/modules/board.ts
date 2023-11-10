@@ -1,6 +1,6 @@
 import requests from "../index";
 
-import type { IBoardSearchData, IBoard, ICond } from "@/types/board";
+import type { IBoardSearchData, IBoard, ICond, IAddData } from "@/types/board";
 import { IRequest } from "../request/type";
 
 export function getList(params: IBoardSearchData) {
@@ -14,5 +14,13 @@ export function getList(params: IBoardSearchData) {
 export function getConditions() {
   return requests.get<IRequest<ICond>>({
     url: "/guestbook/feedback/getConditionsData",
+  });
+}
+
+// 添加add
+export function addFeedback(data: IAddData) {
+  return requests.post<IRequest<any>>({
+    url: "/guestbook/feedback/add",
+    data,
   });
 }
