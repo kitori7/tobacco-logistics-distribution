@@ -13,6 +13,7 @@ import {
   getList,
   getInfoDetail,
   postInfoAdd,
+  removeFeedback,
 } from "@/service/modules/board";
 
 export const useBoardStore = defineStore("board", () => {
@@ -41,9 +42,14 @@ export const useBoardStore = defineStore("board", () => {
     loading.value = false;
   }
 
-  // 添加数据
+  // 添加异常信息
   async function addFeedbackAction(data: IAddData) {
     const res = await addFeedback(data);
+    console.log(res);
+  }
+  // 删除异常信息
+  async function removeFeedbackAction(ids: string) {
+    const res = await removeFeedback(ids);
     console.log(res);
   }
   // 处理详情数据
@@ -70,6 +76,8 @@ export const useBoardStore = defineStore("board", () => {
     getCondAction,
     // 添加反馈
     addFeedbackAction,
+    // 删除反馈
+    removeFeedbackAction,
     // 处理详情数据
     detail,
     getDetailData,

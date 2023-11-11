@@ -184,7 +184,7 @@ export interface IAddData {
   /**
    * 反馈异常信息附带文件集合
    */
-  fileList?: string[];
+  fileList?: any[];
   managerWorkNumber?: string;
   /**
    * 订单日期

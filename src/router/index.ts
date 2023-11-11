@@ -66,8 +66,6 @@ export function resetRouter() {
 router.beforeEach((to) => {
   //登录成功有token进入main
   const token = localStorage.getItem("token");
-  console.log(token);
-
   if (to.path.startsWith("/home") && !token) {
     return "/login";
   }
