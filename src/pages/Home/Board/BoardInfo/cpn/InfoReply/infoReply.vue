@@ -149,10 +149,8 @@
   function httpRequest(option) {
     //将图片存到数组中
     console.log(option);
-
     fileList.value.push(option);
   }
-
   import { Delete, Download, Plus, ZoomIn } from "@element-plus/icons-vue";
   // import type { UploadFile } from "element-plus";
   // const dialogImageUrl = ref("");
