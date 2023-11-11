@@ -6,19 +6,16 @@
           <el-form :inline="true" :model="addForm" label-width="100">
             <el-form-item label="客户名称">
               <el-select
-                v-model="addForm.customerManagerName"
-                @change="selectChange"
+                v-model="addForm.customerCode"
                 placeholder="请选择客户名称"
               >
                 <el-option
-                  v-for="item in boardStore.cond?.customerManagerList"
-                  :key="item.workNumber"
-                  :value="item.userName"
+                  v-for="item in boardStore.cond?.storeList"
+                  :key="item.customerCode"
+                  :label="item.contactName"
+                  :value="item.customerCode"
                 ></el-option>
               </el-select>
-            </el-form-item>
-            <el-form-item label="客户编码">
-              <el-input v-model="addForm.customerCode"></el-input>
             </el-form-item>
             <el-form-item label="配送域">
               <el-select v-model="addForm.areaName" placeholder="请选择配送域">
@@ -32,7 +29,6 @@
             <el-form-item label="路径名称">
               <el-select
                 v-model="addForm.routeName"
-                @change="selectChange"
                 placeholder="请选择路径名称"
               >
                 <el-option
@@ -41,9 +37,6 @@
                   :value="item.routeName"
                 ></el-option>
               </el-select>
-            </el-form-item>
-            <el-form-item label="路径ID">
-              <el-input v-model="addForm.routeId"></el-input>
             </el-form-item>
             <el-form-item label="订单日期">
               <el-date-picker
@@ -54,10 +47,29 @@
               </el-date-picker>
             </el-form-item>
             <el-form-item label="送货员">
-              <el-input></el-input>
+              <el-select
+                v-model="addForm.deliveryName"
+                placeholder="请选择送货员名称"
+                @change="selectChange"
+              >
+                <el-option
+                  v-for="item in boardStore.cond?.deliveryUserList"
+                  :key="item.workNumber"
+                  :value="item.userName"
+                ></el-option>
+              </el-select>
             </el-form-item>
             <el-form-item label="客户专员">
-              <el-input></el-input>
+              <el-select
+                v-model="addForm.customerManagerName"
+                placeholder="请选择客户专员名称"
+              >
+                <el-option
+                  v-for="item in boardStore.cond?.customerManagerList"
+                  :key="item.workNumber"
+                  :value="item.userName"
+                ></el-option>
+              </el-select>
             </el-form-item>
             <el-form-item>
               <el-button style="margin-left: 100px">清空</el-button>
@@ -72,7 +84,11 @@
           ></el-input>
         </el-form-item>
         <el-form-item class="item" label="上传签收照片">
-          <el-upload list-type="picture-card">
+          <el-upload
+            :on-success="onSuccess"
+            v-model="addForm.fileList"
+            list-type="picture-card"
+          >
             <el-icon><Plus /></el-icon>
           </el-upload>
         </el-form-item>
@@ -115,14 +131,19 @@
   });
   // 选项修改
   function selectChange(value: string) {
-    const current = boardStore.cond?.customerManagerList.find((item) => {
+    const current = boardStore.cond?.deliveryUserList.find((item) => {
       return item.userName === value;
     });
-    addForm.value.customerCode = current?.workNumber as string;
+    addForm.value.deliveryWorkNumber = current?.workNumber as string;
   }
   // 提交
   function handelSubmit() {
     console.log({ ...addForm.value });
+  }
+
+  // 文件上传
+  function onSuccess(response: any, uploadFile: any, uploadFiles: any) {
+    console.log(response, uploadFile, uploadFiles);
   }
 </script>
 <style lang="scss" scoped>
