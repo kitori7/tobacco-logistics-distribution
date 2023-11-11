@@ -65,7 +65,32 @@ export interface IBoardItem {
   feedbackFileList: Array;
   feedbackStatus: string;
 }
-
+// 处理消息展示数据
+export interface ItemInfo {
+  contactName: string;
+  deliveryName: string;
+  orderDate: string;
+  customerCode: string;
+  customerManagerName: string;
+  routeName: string;
+  storeAddress: string;
+}
+// 处理消息详情返回参数
+export interface InfoDetail {
+  replyId?: string;
+  replyContent?: string;
+  createTime?: string;
+  replyType?: string;
+  replyFilePathList?: string[];
+}
+// 添加回复传入参数
+export interface IaddReply {
+  feedbackId: number;
+  replyContent: string;
+  replyType?: "1" | "2";
+  feedbackStatus: string;
+  fileList?: string[];
+}
 export interface ISearch {
   /**
    * 大区名称

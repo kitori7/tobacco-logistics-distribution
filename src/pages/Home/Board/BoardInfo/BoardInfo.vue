@@ -4,13 +4,16 @@
       @item-add="propItemAdd"
       @item-search="propItemSearch"
       @item-reset="propItemReset"
+      @item-state="propItemStateChange"
+      :feedbackType="feedbackType"
     ></info-search>
     <info-table
       class="info-table"
       :table-data="boardStore.boardData?.dataCurrentPage"
       @item-click="propItemClick"
     ></info-table>
-    <info-item ref="InfoItemRef"></info-item>
+    <info-item ref="InfoItemRef" @reply-click="propReplyClick"></info-item>
+    <info-reply ref="InfoReplyRef" :replyType="feedbackType"></info-reply>
     <el-pagination
       layout="prev, pager, next"
       :current-page="pageData.pageNum"
@@ -19,7 +22,6 @@
       @current-change="getDate()"
     />
     <InfoAdd ref="InfoAddRef"></InfoAdd>
-    <info-reply ref="InfoReplyRef" @click="propReplyClick"></info-reply>
   </div>
 </template>
 <script lang="ts" setup>
@@ -45,7 +47,6 @@
       ...searchData,
     });
   }
-
   watch(
     () => route.query.feedbackType,
     (newValue) => {
@@ -59,16 +60,22 @@
   import { ISearch } from "@/types/board";
   // 表格点击
   function propItemClick(item: IBoardItem) {
-    console.log(item);
     InfoItemRef.value?.handleOpen(item);
   }
-
+  // 回复点击
+  const InfoReplyRef = ref<InstanceType<typeof infoReply>>();
+  function propReplyClick(id: number) {
+    InfoReplyRef.value?.handleReply(id);
+  }
   // 添加点击
   const InfoAddRef = ref<InstanceType<typeof InfoAdd>>();
   function propItemAdd() {
     InfoAddRef.value?.handleOpen();
   }
-
+  // 下拉框选择
+  function propItemStateChange(searchData: ISearch) {
+    getDate(searchData);
+  }
   // 搜索点击
   function propItemSearch(searchData: ISearch) {
     getDate(searchData);
@@ -76,11 +83,6 @@
   // 重置点击
   function propItemReset() {
     getDate();
-  }
-  // 回复点击
-  const InfoReplyRef = ref<InstanceType<typeof infoReply>>();
-  function propReplyClick(id: number) {
-    InfoReplyRef.value?.handleReply(id);
   }
 </script>
 <style lang="scss" scoped>

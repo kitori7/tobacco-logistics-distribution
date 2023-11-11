@@ -1,33 +1,20 @@
 <template>
   <div class="InfoSearch">
     <div class="title">
-      <div class="round notProcessed"></div>
-      <p>营销反馈</p>
+      <div class="round" :class="stateColor(searchForm.feedbackStatus)"></div>
+      <p>{{ props.feedbackType == "1" ? "营销反馈" : "物流反馈" }}</p>
       <el-select
         v-model="searchForm.feedbackStatus"
         placeholder="全部信息"
         size="small"
+        v-on:change="changeState"
       >
-        <el-option label="全部" value="">
-          <div class="sRound round all"></div>
-          <span>全部</span>
+      <template v-for="item in options" :key="item.value">
+        <el-option :label="item.lable" :value="item.value">
+          <div :class="item.class"></div>
+          <span>{{ item.lable }}</span>
         </el-option>
-        <el-option label="未处理" value="0">
-          <div class="sRound round notProcessed"></div>
-          <span>未处理</span>
-        </el-option>
-        <el-option label="处理中" value="1">
-          <div class="sRound round dispose"></div>
-          <span>处理中</span>
-        </el-option>
-        <el-option label="已处理" value="2">
-          <div class="sRound round processed"></div>
-          <span>已处理</span>
-        </el-option>
-        <el-option label="无需处理" value="3">
-          <div class="sRound round notDispose"></div>
-          <span>无需处理</span>
-        </el-option>
+      </template>
       </el-select>
     </div>
     <div class="search-content">
@@ -84,11 +71,34 @@
   import type { ISearch } from "@/types/board";
   import { useBoardStore } from "@/store/board";
   const boardStore = useBoardStore();
-  const emit = defineEmits(["itemAdd", "itemSearch", "itemReset"]);
-
+  const emit = defineEmits(["itemAdd", "itemSearch", "itemReset", "itemState"]);
+  interface IProps {
+    feedbackType?: "1" | "2";
+  }
+  const props = defineProps<IProps>();
   onMounted(() => {
     boardStore.getCondAction();
   });
+  // 反馈颜色
+  const options = [
+    { lable: "全部", value: "", class: "sRound round all" },
+    { lable: "未处理", value: "0", class: "sRound round notProcessed" },
+    { lable: "处理中", value: "1", class: "sRound round dispose" },
+    { lable: "已处理", value: "2", class: "sRound round processed" },
+    { lable: "无需处理", value: "3", class: "sRound round notDispose" }
+  ];
+  function stateColor(state?: string) {
+    switch (state) {
+      case "0":
+        return "notProcessed";
+      case "1":
+        return "dispose";
+      case "2":
+        return "processed";
+      case "3":
+        return "notDispose";
+    }
+  }
   // 时间数据处理
   const time = ref();
   watch(time, (newValue) => {
@@ -103,7 +113,11 @@
     orderEndDate: "",
     orderStartDate: "",
   });
-  // 点击提交
+  // 下拉框改变请求数据
+  function changeState() {
+    emit("itemState", { ...searchForm.value });
+  }
+  // 点击搜索
   function handleSearch() {
     emit("itemSearch", { ...searchForm.value });
   }
@@ -128,7 +142,6 @@
     .title {
       display: flex;
       align-items: center;
-
       p {
         margin: 0 15px;
       }
