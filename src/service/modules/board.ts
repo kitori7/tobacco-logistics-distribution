@@ -1,6 +1,13 @@
 import requests from "../index";
 
-import type { IBoardSearchData, IBoard, ICond, IAddData } from "@/types/board";
+import type {
+  IBoardSearchData,
+  IBoard,
+  ICond,
+  InfoDetail,
+  IAddReply,
+  IAddData,
+} from "@/types/board";
 import { IRequest } from "../request/type";
 
 export function getList(params: IBoardSearchData) {
@@ -22,5 +29,18 @@ export function addFeedback(data: IAddData) {
   return requests.post<IRequest<any>>({
     url: "/guestbook/feedback/add",
     data,
+  });
+}
+// 处理信息详情
+export function getInfoDetail(id: number) {
+  return requests.get<IRequest<InfoDetail[]>>({
+    url: `/guestbook/feedback/details/${id}`,
+  });
+}
+// 处理信息添加
+export function postInfoAdd(addReply: IAddReply) {
+  return requests.post<any>({
+    url: "/guestbook/feedback/addReply",
+    data: addReply,
   });
 }

@@ -1,7 +1,20 @@
 import { defineStore } from "pinia";
-import type { IBoardSearchData, IBoard, IAddData } from "@/types/board";
-import { addFeedback, getConditions, getList } from "@/service/modules/board";
-import { ICond } from "../types/board";
+import type {
+  IBoardSearchData,
+  IBoard,
+  IAddData,
+  InfoDetail,
+  ICond,
+  IAddReply,
+} from "@/types/board";
+import {
+  addFeedback,
+  getConditions,
+  getList,
+  getInfoDetail,
+  postInfoAdd,
+} from "@/service/modules/board";
+
 export const useBoardStore = defineStore("board", () => {
   // 加载中
   const loading = ref<boolean>(false);
@@ -19,7 +32,6 @@ export const useBoardStore = defineStore("board", () => {
     boardData.value = res.data;
     loading.value = false;
   }
-
   //下拉框数据
   const cond = ref<ICond>();
   async function getCondAction() {
@@ -34,6 +46,19 @@ export const useBoardStore = defineStore("board", () => {
     const res = await addFeedback(data);
     console.log(res);
   }
+  // 处理详情数据
+  const detail = ref<InfoDetail[]>();
+  async function getDetailData(id: number) {
+    const res = await getInfoDetail(id);
+    console.log(id);
+    detail.value = res.data;
+  }
+  // 处理信息添加
+  async function postInfoAddAction(addReply: IAddReply) {
+    const res = await postInfoAdd(addReply);
+    console.log(res);
+    console.log(addReply);
+  }
   return {
     // 加载中
     loading,
@@ -45,5 +70,9 @@ export const useBoardStore = defineStore("board", () => {
     getCondAction,
     // 添加反馈
     addFeedbackAction,
+    // 处理详情数据
+    detail,
+    getDetailData,
+    postInfoAddAction,
   };
 });

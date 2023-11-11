@@ -162,7 +162,6 @@
         left: 50%;
       }
     }
-
     .el-form-item__label {
       font-size: 15px !important;
     }
