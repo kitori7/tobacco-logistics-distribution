@@ -2,7 +2,7 @@
   <div class="InfoSearch">
     <div class="title">
       <div class="round" :class="stateColor(searchForm.feedbackStatus)"></div>
-      <p>{{ props.feedbackType == "1" ? "营销反馈" : "物流反馈" }}</p>
+      <p>{{ props.feedbackType == "1" ? "物流反馈" : "营销反馈" }}</p>
       <el-select
         v-model="searchForm.feedbackStatus"
         placeholder="全部信息"

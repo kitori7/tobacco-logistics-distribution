@@ -4,8 +4,7 @@ import type {
   IBoardSearchData,
   IBoard,
   ICond,
-  InfoDetail,
-  IaddReply
+  InfoDetail
 } from "@/types/board";
 import { IRequest } from "../request/type";
 
@@ -29,8 +28,8 @@ export function getInfoDetail(id: number) {
   });
 }
 // 处理信息添加
-export function postInfoAdd(addReply:IaddReply) {
-  return requests.post<any>({
+export function postInfoAdd(addReply:any) {
+  return requests.post<IRequest<undefined>>({
     url: "/guestbook/feedback/addReply",
     data: addReply,
   });

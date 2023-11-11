@@ -1,13 +1,16 @@
 import { defineStore } from "pinia";
-import type { IBoardSearchData, IBoard ,InfoDetail,ICond,IaddReply} from "@/types/board";
+import type {
+  IBoardSearchData,
+  IBoard,
+  InfoDetail,
+  ICond,
+} from "@/types/board";
 import {
   getConditions,
   getList,
   getInfoDetail,
   postInfoAdd,
 } from "@/service/modules/board";
-
-
 
 export const useBoardStore = defineStore("board", () => {
   // 加载中
@@ -35,18 +38,19 @@ export const useBoardStore = defineStore("board", () => {
     loading.value = false;
   }
   // 处理详情数据
-  const detail = ref<InfoDetail[]>()
+  const detail = ref<InfoDetail[]>();
   async function getDetailData(id: number) {
     const res = await getInfoDetail(id);
     console.log(id);
-    detail.value = res.data 
+    detail.value = res.data;
   }
   // 处理信息添加
-  async function postInfoAddAction(addReply:IaddReply) {
+  const addState = ref<number>(1);
+  async function postInfoAddAction(addReply: any) {
     const res = await postInfoAdd(addReply);
     console.log(res);
     console.log(addReply);
-    
+    addState.value = res.code;
   }
   return {
     // 加载中
@@ -60,6 +64,7 @@ export const useBoardStore = defineStore("board", () => {
     // 处理详情数据
     detail,
     getDetailData,
+    addState,
     postInfoAddAction,
   };
 });

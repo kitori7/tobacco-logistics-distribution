@@ -84,13 +84,6 @@ export interface InfoDetail {
   replyFilePathList?: string[];
 }
 // 添加回复传入参数
-export interface IaddReply {
-  feedbackId: number;
-  replyContent: string;
-  replyType?: "1" | "2";
-  feedbackStatus: string;
-  fileList?: string[];
-}
 export interface ISearch {
   /**
    * 大区名称
