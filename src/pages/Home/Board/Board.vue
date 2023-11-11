@@ -51,7 +51,6 @@
         margin-left: 50px;
       }
     }
-
     .btn-content {
       width: 20px;
       display: flex;
