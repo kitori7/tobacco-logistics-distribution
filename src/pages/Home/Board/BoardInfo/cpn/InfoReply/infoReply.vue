@@ -110,7 +110,7 @@
     replyContent: "",
     feedbackStatus: "",
   });
-  const isReply = ref<boolean>(true);
+  const isReply = ref<boolean>(false);
   interface IProps {
     replyType: "1" | "2";
   }
