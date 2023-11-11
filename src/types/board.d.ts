@@ -83,7 +83,8 @@ export interface InfoDetail {
   replyType?: string;
   replyFilePathList?: string[];
 }
-// 添加回复传入参数
+
+
 export interface ISearch {
   /**
    * 大区名称
@@ -143,4 +144,53 @@ export interface IDeliveryUser {
 export interface ICustomerManager {
   userName: string;
   workNumber: string;
+}
+
+export interface IAddData {
+  /**
+   * 大区名称
+   */
+  areaName: string;
+  /**
+   * 客户编码
+   */
+  customerCode: string;
+  /**
+   * 客户专员名称
+   */
+  customerManagerName?: string;
+  /**
+   * 送货员名称
+   */
+  deliveryName: string;
+  /**
+   * 送货员工号
+   */
+  deliveryWorkNumber: string;
+  /**
+   * 反馈异常信息内容
+   */
+  feedbackInformation: string;
+  /**
+   * 反馈类型（1：物流反馈；2：营销反馈）
+   */
+  feedbackType: "1" | "2";
+  /**
+   * 反馈异常信息附带文件集合
+   */
+  fileList?: any[];
+  managerWorkNumber?: string;
+  /**
+   * 订单日期
+   */
+  orderDate: string;
+  /**
+   * 路线id
+   */
+  routeId: number;
+  /**
+   * 路线名称
+   */
+  routeName: string;
+  [property: string]: any;
 }

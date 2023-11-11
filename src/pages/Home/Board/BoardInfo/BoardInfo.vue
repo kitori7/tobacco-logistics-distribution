@@ -2,6 +2,7 @@
   <div class="BoardInfo">
     <info-search
       @item-add="propItemAdd"
+      @item-delete="propItemDelete"
       @item-search="propItemSearch"
       @item-reset="propItemReset"
       @item-state="propItemStateChange"
@@ -11,6 +12,7 @@
       class="info-table"
       :table-data="boardStore.boardData?.dataCurrentPage"
       @item-click="propItemClick"
+      ref="InfoTableRef"
     ></info-table>
     <info-item ref="InfoItemRef" @reply-click="propReplyClick"></info-item>
     <info-reply
@@ -43,7 +45,7 @@
     pageNum: 1,
     pageSize: 10,
   });
-  const feedbackType = ref<"1" | "2">();
+  const feedbackType = ref<"1" | "2">("1");
   function getDate(searchData: ISearch = {}) {
     boardStore.getBoardData({
       feedbackType: feedbackType.value,
@@ -67,7 +69,15 @@
   function propItemClick(item: IBoardItem) {
     InfoItemRef.value?.handleOpen(item);
   }
+  const InfoTableRef = ref<InstanceType<typeof InfoTable>>();
+  // 表格删除
+  function propItemDelete() {
+    if (InfoTableRef.value?.deleteData) {
+      console.log(InfoTableRef.value?.deleteData, 666);
 
+      boardStore.removeFeedbackAction(InfoTableRef.value?.deleteData);
+    }
+  }
   // 回复点击
 
   function propReplyClick(id: number) {
@@ -80,7 +90,7 @@
   // 添加点击
   const InfoAddRef = ref<InstanceType<typeof InfoAdd>>();
   function propItemAdd() {
-    InfoAddRef.value?.handleOpen();
+    InfoAddRef.value?.handleOpen(feedbackType.value);
   }
   // 下拉框选择
   function propItemStateChange(searchData: ISearch) {

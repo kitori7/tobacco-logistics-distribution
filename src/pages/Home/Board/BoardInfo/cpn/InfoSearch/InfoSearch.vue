@@ -9,12 +9,12 @@
         size="small"
         v-on:change="changeState"
       >
-      <template v-for="item in options" :key="item.value">
-        <el-option :label="item.lable" :value="item.value">
-          <div :class="item.class"></div>
-          <span>{{ item.lable }}</span>
-        </el-option>
-      </template>
+        <template v-for="item in options" :key="item.value">
+          <el-option :label="item.label" :value="item.value">
+            <div :class="item.class"></div>
+            <span>{{ item.label }}</span>
+          </el-option>
+        </template>
       </el-select>
     </div>
     <div class="search-content">
@@ -62,7 +62,7 @@
     </div>
     <div class="btn-content">
       <el-button :icon="Plus" @click="handleAdd">添加异常信息</el-button>
-      <el-button :icon="Delete">批量删除</el-button>
+      <el-button :icon="Delete" @click="handleDelete">批量删除</el-button>
     </div>
   </div>
 </template>
@@ -71,7 +71,13 @@
   import type { ISearch } from "@/types/board";
   import { useBoardStore } from "@/store/board";
   const boardStore = useBoardStore();
-  const emit = defineEmits(["itemAdd", "itemSearch", "itemReset", "itemState"]);
+  const emit = defineEmits([
+    "itemAdd",
+    "itemSearch",
+    "itemReset",
+    "itemState",
+    "itemDelete",
+  ]);
   interface IProps {
     feedbackType?: "1" | "2";
   }
@@ -81,11 +87,11 @@
   });
   // 反馈颜色
   const options = [
-    { lable: "全部", value: "", class: "sRound round all" },
-    { lable: "未处理", value: "0", class: "sRound round notProcessed" },
-    { lable: "处理中", value: "1", class: "sRound round dispose" },
-    { lable: "已处理", value: "2", class: "sRound round processed" },
-    { lable: "无需处理", value: "3", class: "sRound round notDispose" }
+    { label: "全部", value: "", class: "sRound round all" },
+    { label: "未处理", value: "0", class: "sRound round notProcessed" },
+    { label: "处理中", value: "1", class: "sRound round dispose" },
+    { label: "已处理", value: "2", class: "sRound round processed" },
+    { label: "无需处理", value: "3", class: "sRound round notDispose" },
   ];
   function stateColor(state?: string) {
     switch (state) {
@@ -133,8 +139,13 @@
     };
     emit("itemReset");
   }
+  // 点击添加
   function handleAdd() {
     emit("itemAdd");
+  }
+  // 点击删除
+  function handleDelete() {
+    emit("itemDelete");
   }
 </script>
 <style lang="scss" scoped>

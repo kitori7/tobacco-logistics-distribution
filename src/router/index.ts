@@ -24,7 +24,7 @@ const constantRoutes: RouteRecordRaw[] = [
       {
         path: "/home/board",
         component: Board,
-        redirect: "/home/board/info",
+        redirect: "/home/board/info?feedbackType=1",
         children: [
           {
             path: "/home/board/info",
@@ -65,11 +65,9 @@ export function resetRouter() {
 }
 router.beforeEach((to) => {
   //登录成功有token进入main
-  const token = localStorage.getItem("token")
-  console.log(token);
-  
-  if (to.path.startsWith('/home') && !token) {
-    return '/login'
+  const token = localStorage.getItem("token");
+  if (to.path.startsWith("/home") && !token) {
+    return "/login";
   }
-})
+});
 export default router;

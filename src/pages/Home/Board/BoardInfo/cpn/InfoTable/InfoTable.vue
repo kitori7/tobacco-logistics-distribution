@@ -7,9 +7,10 @@
       :header-cell-style="{ 'text-align': 'center' }"
       :row-style="{ height: '50px' }"
       :row-class-name="tableRowClassName"
-      :cell-style?="tableCellStyle"
+      :cell-style="(tableCellStyle as any)"
       style="font-size: 14px"
       max-height="330"
+      @selection-change="toggleSelection"
     >
       <el-table-column type="selection" />
       <el-table-column type="index" label="序号" />
@@ -82,6 +83,15 @@
   function handleEdit(item: IBoardItem) {
     emit("itemClick", item);
   }
+  // 多选
+  const deleteData = ref<string[]>();
+  function toggleSelection(items: IBoardItem[]) {
+    deleteData.value = items
+      .map((item) => {
+        return item.feedbackId.toString();
+      })
+  }
+  defineExpose({deleteData});
 </script>
 <style lang="scss" scoped>
   .InfoTable {

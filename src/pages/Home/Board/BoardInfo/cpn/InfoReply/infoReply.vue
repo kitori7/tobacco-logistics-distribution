@@ -37,7 +37,7 @@
               :show-file-list="true"
               list-type="picture-card"
               :auto-upload="false"
-              :on-change?="handleChange"
+              :on-change="(handleChange as any)"
               ref="uploadrefss"
             >
               <el-icon><Plus /></el-icon>
