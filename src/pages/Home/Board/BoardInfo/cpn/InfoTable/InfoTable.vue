@@ -9,6 +9,7 @@
       :row-class-name="tableRowClassName"
       :cell-style="tableCellStyle"
       style="font-size: 14px"
+      @selection-change="toggleSelection"
     >
       <el-table-column type="selection" />
       <el-table-column type="index" label="序号" />
@@ -81,6 +82,15 @@
   function handleEdit(item: IBoardItem) {
     emit("itemClick", item);
   }
+  // 多选
+  const deleteData = ref<string[]>();
+  function toggleSelection(items: IBoardItem[]) {
+    deleteData.value = items
+      .map((item) => {
+        return item.feedbackId.toString();
+      })
+  }
+  defineExpose({deleteData});
 </script>
 <style lang="scss" scoped>
   .InfoTable {
