@@ -15,7 +15,11 @@
       ref="InfoTableRef"
     ></info-table>
     <info-item ref="InfoItemRef" @reply-click="propReplyClick"></info-item>
-    <info-reply ref="InfoReplyRef" :replyType="feedbackType"></info-reply>
+    <info-reply
+      ref="InfoReplyRef"
+      :replyType="feedbackType"
+      @getnew-click="submitReplyClick"
+    ></info-reply>
     <el-pagination
       layout="prev, pager, next"
       :current-page="pageData.pageNum"
@@ -58,6 +62,7 @@
     { immediate: true }
   );
   const InfoItemRef = ref<InstanceType<typeof InfoItem>>();
+  const InfoReplyRef = ref<InstanceType<typeof infoReply>>();
   import type { IBoardItem, IBoardSearchData } from "@/types/board";
   import { ISearch } from "@/types/board";
   // 表格点击
@@ -74,9 +79,13 @@
     }
   }
   // 回复点击
-  const InfoReplyRef = ref<InstanceType<typeof infoReply>>();
+
   function propReplyClick(id: number) {
     InfoReplyRef.value?.handleReply(id);
+  }
+  // 提交回复点击
+  function submitReplyClick() {
+    InfoItemRef.value?.getReplyData();
   }
   // 添加点击
   const InfoAddRef = ref<InstanceType<typeof InfoAdd>>();

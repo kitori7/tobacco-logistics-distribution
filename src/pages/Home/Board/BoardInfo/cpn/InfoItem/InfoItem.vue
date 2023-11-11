@@ -2,53 +2,58 @@
   <div class="InfoItem">
     <el-dialog v-model="isOpen" width="70%" top="4%" title="nihao">
       <template #header>
-      <div class="my-header">
-        <div class="el-dialog-div-top">
-          <div class="round" :class="stateColor(Item?.feedbackStatus)"></div>
-          <p>
-            {{ Item?.feedbackInformation }}&nbsp;&nbsp;({{
-              stateText(Item?.feedbackStatus)
-            }})
-          </p>
+        <div class="my-header">
+          <div class="el-dialog-div-top">
+            <div class="round" :class="stateColor(Item?.feedbackStatus)"></div>
+            <p>
+              {{ Item?.feedbackInformation }}&nbsp;&nbsp;({{
+                stateText(Item?.feedbackStatus)
+              }})
+            </p>
+          </div>
         </div>
-      </div>
-    </template>
+      </template>
       <div class="el-dialog-div">
         <el-scrollbar class="scroll">
-        <div class="el-dialog-div-info">
-          <template v-for="(value,,index) in itemInfo" :key="index"
-            ><div class="el-dialog-div-info-item">
-              {{ InfoArray[index] }}:&nbsp;&nbsp;{{ value }}
-            </div></template>
-        </div>
-        <div class="el-dialog-div-img">
-          <template v-for="item in feedbackImg" :key="item">
-            <div class="el-dialog-div-img-item"><img :src="item" alt="" /></div>
-          </template>
-        </div>
-        <div class="el-dialog-div-recover">
-          <span class="line"></span>
-          <el-button @click="replyItemClick(id)">点击回复</el-button>
-          <span class="line"></span>
-        </div>
-        <template v-for="item in replyData" :key="item.replyId">
-          <div class="reply-text">
-            <span>{{
-                item.replyType == "1" ? "送货部回复" : "营销部回复"
-              }}:&nbsp;&nbsp;{{ item.replyContent || "没有回复消息" }}</span
+          <div class="el-dialog-div-info">
+            <template v-for="(value,,index) in itemInfo" :key="index"
+              ><div class="el-dialog-div-info-item">
+                {{ InfoArray[index] }}:&nbsp;&nbsp;{{ value }}
+              </div></template
             >
-            <div class="reply-date">{{ item.createTime }}</div>
           </div>
-          <template
-            v-for="imglist in mapPath(item.replyFilePathList as string[])"
-            :key="index">
-            <div class="reply-img">
-              <div class="reply-img-item">
-                <img :src="imglist" alt="" />
+          <div class="el-dialog-div-img">
+            <template v-for="item in feedbackImg" :key="item">
+              <div class="el-dialog-div-img-item">
+                <img :src="item" alt="" />
               </div>
+            </template>
+          </div>
+          <div class="el-dialog-div-recover">
+            <span class="line"></span>
+            <el-button @click="replyItemClick(id)">点击回复</el-button>
+            <span class="line"></span>
+          </div>
+          <template v-for="item in replyData" :key="item.replyId">
+            <div class="reply-text">
+              <span
+                >{{
+                  item.replyType == "1" ? "送货部回复" : "营销部回复"
+                }}:&nbsp;&nbsp;{{ item.replyContent || "没有回复消息" }}</span
+              >
+              <div class="reply-date">{{ item.createTime }}</div>
+            </div>
+            <div class="reply-img">
+              <template
+                v-for="imglist in mapPath(item.replyFilePathList as string[])"
+                :key="index"
+              >
+                <div class="reply-img-item">
+                  <img :src="imglist" alt="" />
+                </div>
+              </template>
             </div>
           </template>
-        </template>
         </el-scrollbar>
       </div>
     </el-dialog>
@@ -116,27 +121,25 @@
   const replyData = ref<InfoDetail[]>([]);
   // 获取数据和图片
   const feedbackImg = ref<string[]>([]);
+
   function handleOpen(item: IBoardItem) {
     isOpen.value = true;
     id.value = item.feedbackId;
     Item.value = item;
     boardStore.getDetailData(id.value);
-    watch(
-      () => boardStore.detail,
-      (newValue) => {
-        if (newValue != undefined) {
-          replyData.value = newValue;
-        }
-      }
-    );
     let key: keyof ItemInfo;
     for (key in itemInfo.value) {
       itemInfo.value[key] = item[key];
     }
-    feedbackImg.value = mapPath(item.feedbackFileList)
+    feedbackImg.value = mapPath(item.feedbackFileList);
+  }
+  function getReplyData() {
+    console.log(123);
+    handleOpen(Item as any);
   }
   defineExpose({
     handleOpen,
+    getReplyData,
   });
   // 点击回复
   function replyItemClick(id: number) {
@@ -150,17 +153,17 @@
     div::-webkit-scrollbar {
       display: none;
     }
-    .my-header{
+    .my-header {
       height: 10px;
     }
     .el-dialog-div-top {
-        display: flex;
-        align-items: center;
-        p {
-          margin: 0 15px;
-          font-size: 25px;
-        }
+      display: flex;
+      align-items: center;
+      p {
+        margin: 0 15px;
+        font-size: 25px;
       }
+    }
     .el-dialog-div {
       height: 69vh;
       overflow: auto;

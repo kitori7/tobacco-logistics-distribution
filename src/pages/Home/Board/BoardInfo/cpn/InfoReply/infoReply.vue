@@ -17,9 +17,7 @@
           status-icon
         >
           <el-form-item
-            :label="
-              props.replyType == String(1) ? '营销部反馈 :' : '物流部反馈 :'
-            "
+            :label="props.replyType == '1' ? '物流部反馈 :' : '营销部反馈 :'"
             prop="replyContent"
           >
             <el-input
@@ -32,46 +30,17 @@
           /></el-form-item>
           <el-form-item label="上传照片 :">
             <el-upload
+              v-model:file-list="replyForm.UploadFile"
               accept="image/*"
               multiple
+              action="fakeaction"
               :show-file-list="true"
               list-type="picture-card"
-              :on-change="handleChange"
               :auto-upload="false"
-              :http-request="httpRequest"
+              :on-change="(handleChange as any)"
+              ref="uploadrefss"
             >
               <el-icon><Plus /></el-icon>
-              <!-- <template #file="{ file }">
-                <div>
-                  <img
-                    class="el-upload-list__item-thumbnail"
-                    :src="file.url"
-                    alt=""
-                  />
-                  <span class="el-upload-list__item-actions">
-                    <span
-                      class="el-upload-list__item-preview"
-                      @click="handlePictureCardPreview(file)"
-                    >
-                      <el-icon><zoom-in /></el-icon>
-                    </span>
-                    <span
-                      v-if="!disabled"
-                      class="el-upload-list__item-delete"
-                      @click="handleDownload(file)"
-                    >
-                      <el-icon><Download /></el-icon>
-                    </span>
-                    <span
-                      v-if="!disabled"
-                      class="el-upload-list__item-delete"
-                      @click="handleRemove(file)"
-                    >
-                      <el-icon><Delete /></el-icon>
-                    </span>
-                  </span>
-                </div>
-              </template> -->
             </el-upload>
           </el-form-item>
           <el-form-item label="状态修改为 :" prop="feedbackStatus">
@@ -93,7 +62,10 @@
   </div>
 </template>
 <script lang="ts" setup>
+  import { storeToRefs } from "pinia";
   import { useBoardStore } from "@/store/board";
+  import type { UploadUserFile, UploadFile, UploadFiles } from "element-plus";
+
   const boardStore = useBoardStore();
   const stateBtn = [
     { index: "0", stateText: "未处理" },
@@ -105,14 +77,16 @@
   interface ReplyForm {
     replyContent: string;
     feedbackStatus: string;
+    UploadFile: UploadUserFile[];
   }
   const replyForm = reactive<ReplyForm>({
     replyContent: "",
     feedbackStatus: "",
+    UploadFile: [],
   });
   const isReply = ref<boolean>(false);
   interface IProps {
-    replyType: "1" | "2";
+    replyType?: "1" | "2";
   }
   const props = defineProps<IProps>();
   const feedbackId = ref<number>(13);
@@ -140,56 +114,43 @@
     ],
   });
   // 上传图片
-  const fileList = ref([]);
-
-  const handleChange = (file: any) => {
-    console.log(file);
-    fileList.value = file;
+  const fileList = ref<UploadFiles>([]);
+  const uploadrefss = ref();
+  const handleChange = (files: UploadFiles) => {
+    fileList.value = files;
+    console.log(fileList.value);
+    console.log(props.replyType);
   };
-  function httpRequest(option) {
-    //将图片存到数组中
-    console.log(option);
-    fileList.value.push(option);
-  }
-  import { Delete, Download, Plus, ZoomIn } from "@element-plus/icons-vue";
-  // import type { UploadFile } from "element-plus";
-  // const dialogImageUrl = ref("");
-  // const dialogVisible = ref(false);
-  // const disabled = ref(false);
-  // const handleRemove = (file: UploadFile) => {
-  //   console.log(file);
-  // };
-  // const handlePictureCardPreview = (file: UploadFile) => {
-  //   dialogImageUrl.value = file.url!;
-  //   dialogVisible.value = true;
-  // };
-  // const handleDownload = (file: UploadFile) => {
-  //   console.log(file);
-  // };
+  import { Plus } from "@element-plus/icons-vue";
   // 提交
+  const emit = defineEmits(["getnewClick"]);
+  const { addState } = storeToRefs(boardStore);
   const submitForm = async (formEl?: FormInstance) => {
     if (!formEl) return;
     await formEl.validate((valid, fields) => {
       if (valid) {
-        console.log(fileList.value);
         let dataForm = new FormData();
-        dataForm.append("feedbackId", feedbackId.value);
+        dataForm.append("feedbackId", feedbackId.value as any);
         dataForm.append("replyContent", replyForm.replyContent);
-        dataForm.append("replyType", props.replyType);
+        dataForm.append("replyType", props.replyType as string);
         dataForm.append("feedbackStatus", replyForm.feedbackStatus);
-
-        dataForm.append("fileList", fileList.value.raw);
-        // fileList.value.forEach((it, index) => {
-        //   dataForm.append("fileList", it.file);
-        // });
+        fileList.value.forEach((it: UploadFile) => {
+          dataForm.append("fileList", it.raw as any);
+        });
         boardStore.postInfoAddAction(dataForm);
+        if (addState.value == 200) {
+          isReply.value = false;
+          emit("getnewClick");
+        }
       } else {
         console.log("error", fields);
       }
     });
   };
+
   const Replyclose = (formEl?: FormInstance) => {
     if (!formEl) return;
+    uploadrefss.value.clearFiles();
     formEl.resetFields();
   };
 </script>

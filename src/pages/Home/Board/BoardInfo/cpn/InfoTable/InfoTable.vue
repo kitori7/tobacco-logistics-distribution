@@ -7,8 +7,9 @@
       :header-cell-style="{ 'text-align': 'center' }"
       :row-style="{ height: '50px' }"
       :row-class-name="tableRowClassName"
-      :cell-style="tableCellStyle"
+      :cell-style="(tableCellStyle as any)"
       style="font-size: 14px"
+      max-height="330"
       @selection-change="toggleSelection"
     >
       <el-table-column type="selection" />
