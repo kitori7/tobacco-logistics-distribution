@@ -25,7 +25,7 @@
       :current-page="pageData.pageNum"
       :page-size="pageData.pageSize"
       :total="boardStore.boardData.totalCount"
-      @current-change="getDate()"
+      @current-change="currentChange"
     />
     <InfoAdd ref="InfoAddRef"></InfoAdd>
   </div>
@@ -43,15 +43,25 @@
   const route = useRoute();
   const pageData = ref<IBoardSearchData>({
     pageNum: 1,
-    pageSize: 10,
+    pageSize: 6,
   });
+  // 页码改变
+  function currentChange(value: number) {
+    pageData.value.pageNum = value;
+    getDate();
+  }
   const feedbackType = ref<"1" | "2">("1");
   function getDate(searchData: ISearch = {}) {
-    boardStore.getBoardData({
-      feedbackType: feedbackType.value,
-      ...pageData.value,
-      ...searchData,
-    });
+    console.log(pageData.value);
+    boardStore
+      .getBoardData({
+        feedbackType: feedbackType.value,
+        ...pageData.value,
+        ...searchData,
+      })
+      .then(() => {
+        pageData.value.pageNum = boardStore.boardData.currentPageNum;
+      });
   }
   watch(
     () => route.query.feedbackType,
@@ -73,8 +83,7 @@
   // 表格删除
   function propItemDelete() {
     if (InfoTableRef.value?.deleteData) {
-      console.log(InfoTableRef.value?.deleteData, 666);
-
+      console.log(InfoTableRef.value?.deleteData);
       boardStore.removeFeedbackAction(InfoTableRef.value?.deleteData);
     }
   }

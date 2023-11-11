@@ -84,12 +84,12 @@
     emit("itemClick", item);
   }
   // 多选
-  const deleteData = ref<string[]>();
+  const deleteData = ref<string>();
   function toggleSelection(items: IBoardItem[]) {
     deleteData.value = items
       .map((item) => {
         return item.feedbackId.toString();
-      })
+      }).join()
   }
   defineExpose({deleteData});
 </script>
