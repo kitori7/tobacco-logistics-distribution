@@ -5,6 +5,8 @@ import Home from "@/pages/Home/Home.vue";
 import Board from "@/pages/Home/Board/Board.vue";
 import BoardInfo from "@/pages/Home/Board/BoardInfo/BoardInfo.vue";
 import BoardAnalyze from "@/pages/Home/Board/BoardAnalyze/BoardAnalyze.vue";
+import Group from "@/pages/Home/Group/Group.vue";
+
 
 // 静态路由
 const constantRoutes: RouteRecordRaw[] = [
@@ -35,6 +37,11 @@ const constantRoutes: RouteRecordRaw[] = [
             component: BoardAnalyze,
           },
         ],
+      },
+      {
+        path: "/home/group",
+        component: Group,
+        name: "group",
       },
     ],
   },
