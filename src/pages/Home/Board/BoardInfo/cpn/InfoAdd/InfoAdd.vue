@@ -196,7 +196,7 @@
       const current = boardStore.cond?.routeList.find((item) => {
         return item.routeName === value;
       });
-      addForm.value.routeId = current?.routeId as number;
+      addForm.value.routeId = Number(current?.routeId);
     }
   }
   // 提交
@@ -212,11 +212,42 @@
           if (valid) {
             if (res) {
               // 处理图片
-              addForm.value.fileList = addForm.value.fileList?.map((item) => {
-                return item.raw;
-              });
+
               // 发请求
-              boardStore.addFeedbackAction(addForm.value);
+              const formData = new FormData();
+              formData.append("areaName", addForm.value.areaName);
+              formData.append("customerCode", addForm.value.customerCode);
+              formData.append("deliveryName", addForm.value.deliveryName);
+              formData.append(
+                "deliveryWorkNumber",
+                addForm.value.deliveryWorkNumber
+              );
+              formData.append(
+                "feedbackInformation",
+                addForm.value.feedbackInformation
+              );
+              formData.append("feedbackType", addForm.value.feedbackType);
+              formData.append(
+                "routeId",
+                addForm.value.routeId as unknown as string
+              );
+              formData.append("routeName", addForm.value.routeName);
+              formData.append(
+                "customerManagerName",
+                addForm.value.customerManagerName as unknown as string
+              );
+              formData.append(
+                "orderDate",
+                addForm.value.orderDate as unknown as string
+              );
+              addForm.value.fileList?.forEach((item) => {
+                formData.append("fileList", item.raw);
+              });
+              boardStore
+                .addFeedbackAction(formData as unknown as IAddData)
+                .then(() => {
+                  isOpen.value = false;
+                });
             }
           } else {
             console.log("error submit!", fields);
