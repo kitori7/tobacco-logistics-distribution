@@ -121,21 +121,31 @@
   const replyData = ref<InfoDetail[]>([]);
   // 获取数据和图片
   const feedbackImg = ref<string[]>([]);
-
   function handleOpen(item: IBoardItem) {
     isOpen.value = true;
     id.value = item.feedbackId;
     Item.value = item;
     boardStore.getDetailData(id.value);
-    let key: keyof ItemInfo;
+    watch(
+      () => boardStore.detail,
+      (n) => {
+        replyData.value = n as InfoDetail[];
+        let key: keyof ItemInfo;
     for (key in itemInfo.value) {
       itemInfo.value[key] = item[key];
     }
     feedbackImg.value = mapPath(item.feedbackFileList);
+      }
+    );
   }
-  function getReplyData() {
-    console.log(123);
-    handleOpen(Item as any);
+  function getReplyData(id: number) {
+    boardStore.getDetailData(id);
+    watch(
+      () => boardStore.detail,
+      (n) => {
+        replyData.value = n as InfoDetail[];
+      }
+    );
   }
   defineExpose({
     handleOpen,

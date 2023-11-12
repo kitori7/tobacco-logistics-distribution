@@ -37,7 +37,7 @@
               :show-file-list="true"
               list-type="picture-card"
               :auto-upload="false"
-              :on-change="(handleChange as any)"
+              :on-change="handleChange"
               ref="uploadrefss"
             >
               <el-icon><Plus /></el-icon>
@@ -62,7 +62,6 @@
   </div>
 </template>
 <script lang="ts" setup>
-  import { storeToRefs } from "pinia";
   import { useBoardStore } from "@/store/board";
   import type { UploadUserFile, UploadFile, UploadFiles } from "element-plus";
 
@@ -116,32 +115,59 @@
   // 上传图片
   const fileList = ref<UploadFiles>([]);
   const uploadrefss = ref();
-  const handleChange = (files: UploadFiles) => {
+  const handleChange = (file: UploadFile, files: UploadFiles) => {
     fileList.value = files;
-    console.log(fileList.value);
-    console.log(props.replyType);
+    console.log(file);
   };
   import { Plus } from "@element-plus/icons-vue";
   // 提交
-  const emit = defineEmits(["getnewClick"]);
-  const { addState } = storeToRefs(boardStore);
+  const emit = defineEmits(["renewClick"]);
+
   const submitForm = async (formEl?: FormInstance) => {
     if (!formEl) return;
+
     await formEl.validate((valid, fields) => {
       if (valid) {
-        let dataForm = new FormData();
-        dataForm.append("feedbackId", feedbackId.value as any);
-        dataForm.append("replyContent", replyForm.replyContent);
-        dataForm.append("replyType", props.replyType as string);
-        dataForm.append("feedbackStatus", replyForm.feedbackStatus);
-        fileList.value.forEach((it: UploadFile) => {
-          dataForm.append("fileList", it.raw as any);
-        });
-        boardStore.postInfoAddAction(dataForm);
-        if (addState.value == 200) {
-          isReply.value = false;
-          emit("getnewClick");
-        }
+        ElMessageBox.confirm("你是确认提交回复吗?")
+          .then(() => {
+            const loading = ElLoading.service({
+              lock: true,
+              text: "正在提交中",
+              background: "rgba(0, 0, 0, 0.7)",
+            });
+            let dataForm = new FormData();
+            dataForm.append("feedbackId", feedbackId.value as any);
+            dataForm.append("replyContent", replyForm.replyContent);
+            dataForm.append("replyType", props.replyType as string);
+            dataForm.append("feedbackStatus", replyForm.feedbackStatus);
+            fileList.value.forEach((it: UploadFile) => {
+              dataForm.append("fileList", it.raw as any);
+            });
+            console.log(fileList.value);
+
+            boardStore
+              .postInfoAddAction(dataForm)
+              .then((res) => {
+                loading.close();
+                if (res.code == 200) {
+                  isReply.value = false;
+                  emit("renewClick", feedbackId.value);
+                  ElMessage({
+                    type: "success",
+                    message: "提交成功",
+                  });
+                }
+              })
+              .catch(() => {
+                ElMessage({
+                  message: "提交失败",
+                  type: "warning",
+                });
+              });
+          })
+          .catch(() => {
+            // catch error
+          });
       } else {
         console.log("error", fields);
       }
