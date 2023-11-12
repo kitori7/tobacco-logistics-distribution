@@ -27,7 +27,7 @@
       :total="boardStore.boardData.totalCount"
       @current-change="currentChange"
     />
-    <InfoAdd ref="InfoAddRef"></InfoAdd>
+    <InfoAdd ref="InfoAddRef" @add-success="getDate"></InfoAdd>
   </div>
 </template>
 <script lang="ts" setup>
@@ -83,8 +83,11 @@
   // 表格删除
   function propItemDelete() {
     if (InfoTableRef.value?.deleteData) {
-      console.log(InfoTableRef.value?.deleteData);
-      boardStore.removeFeedbackAction(InfoTableRef.value?.deleteData);
+      boardStore
+        .removeFeedbackAction(InfoTableRef.value?.deleteData)
+        .then(() => {
+          getDate();
+        });
     }
   }
   // 回复点击

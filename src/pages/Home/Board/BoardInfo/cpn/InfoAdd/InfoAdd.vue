@@ -149,6 +149,7 @@
   defineExpose({
     handleOpen,
   });
+  const emit = defineEmits(["addSuccess"])
   const ruleFormRef = ref<FormInstance>();
   const ruleFormRef2 = ref<FormInstance>();
   //校验
@@ -247,6 +248,7 @@
                 .addFeedbackAction(formData as unknown as IAddData)
                 .then(() => {
                   isOpen.value = false;
+                  emit("addSuccess")
                 });
             }
           } else {
