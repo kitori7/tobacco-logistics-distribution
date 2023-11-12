@@ -101,6 +101,8 @@
   --el-button-text-color: rgb(0, 0, 51);
   --el-button-hover-bg-color: #041c3f;
   --el-button-hover-border-color: #1f3d45;
+
+  background: #73e1ff;
 }
 
 .el-button.active {
@@ -175,4 +177,22 @@
 .el-scrollbar {
   --el-scrollbar-bg-color: #ffffff;
   --el-button-hover-border-color: #ffffff;
+}
+// 弹框
+.el-message-box {
+  background-color: #001731 !important;
+  border: 1px solid rgb(204, 255, 255) !important;
+}
+.el-message-box__content {
+  color: #73e1ff !important;
+}
+.el-button--primary {
+  --el-color-primary: #73e1ff !important;
+  --el-button-bg-color: #73e1ff !important;
+  --el-button-border-color: #46899c !important;
+  --el-button-text-color: rgb(0, 0, 51) !important;
+  --el-button-hover-bg-color: #041c3f !important;
+  --el-button-hover-border-color: #1f3d45 !important;
+  background: #73e1ff !important;
+  color: black !important;
 }
