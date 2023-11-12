@@ -41,9 +41,9 @@
 // el-input
 .el-input {
   width: 200px !important;
-  --el-input-border-color: rgb(204, 255, 255);
-  --el-input-bg-color: rgba(0, 0, 0, 0);
-  --el-input-text-color: rgb(204, 255, 255);
+  --el-input-border-color: rgb(204, 255, 255) !important;
+  --el-input-bg-color: rgba(0, 0, 0, 0) !important;
+  --el-input-text-color: rgb(204, 255, 255) !important;
 }
 
 // textarea
@@ -80,7 +80,7 @@
 }
 
 .el-textarea .el-input__count {
-  background: none;
+  background: none !important;
 }
 
 // el-pagination

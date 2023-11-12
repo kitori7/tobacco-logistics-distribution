@@ -59,12 +59,9 @@ export const useBoardStore = defineStore("board", () => {
     detail.value = res.data;
   }
   // 处理信息添加
-  const addState = ref<number>(1);
   async function postInfoAddAction(addReply: any) {
     const res = await postInfoAdd(addReply);
-    console.log(res);
-    console.log(addReply);
-    addState.value = res.code;
+    return res;
   }
   return {
     // 加载中
@@ -82,7 +79,6 @@ export const useBoardStore = defineStore("board", () => {
     // 处理详情数据
     detail,
     getDetailData,
-    addState,
     postInfoAddAction,
   };
 });

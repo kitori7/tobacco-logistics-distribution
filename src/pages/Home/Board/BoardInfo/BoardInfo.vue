@@ -18,7 +18,7 @@
     <info-reply
       ref="InfoReplyRef"
       :replyType="feedbackType"
-      @getnew-click="submitReplyClick"
+      @renew-click="submitReplyClick"
     ></info-reply>
     <el-pagination
       layout="prev, pager, next"
@@ -84,8 +84,8 @@
     InfoReplyRef.value?.handleReply(id);
   }
   // 提交回复点击
-  function submitReplyClick() {
-    InfoItemRef.value?.getReplyData();
+  function submitReplyClick(id: number) {
+    InfoItemRef.value?.getReplyData(id);
   }
   // 添加点击
   const InfoAddRef = ref<InstanceType<typeof InfoAdd>>();

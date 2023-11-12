@@ -103,6 +103,8 @@
         return "processed";
       case "3":
         return "notDispose";
+      case "":
+        return "all";
     }
   }
   // 时间数据处理
