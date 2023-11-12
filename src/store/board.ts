@@ -44,12 +44,16 @@ export const useBoardStore = defineStore("board", () => {
   // 添加异常信息
   async function addFeedbackAction(data: IAddData) {
     const res = await addFeedback(data);
-    console.log(res);
+    if (res.code === 200) {
+      ElMessage.success(res.msg);
+    }
   }
   // 删除异常信息
   async function removeFeedbackAction(ids: string) {
     const res = await removeFeedback(ids);
-    console.log(res);
+    if (res.code === 200) {
+      ElMessage.success(res.msg);
+    }
   }
   // 处理详情数据
   const detail = ref<InfoDetail[]>();

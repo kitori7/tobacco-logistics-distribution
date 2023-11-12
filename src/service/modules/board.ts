@@ -33,8 +33,10 @@ export function addFeedback(data: IAddData) {
 // 删除异常信息
 export function removeFeedback(ids: string) {
   return requests.delete({
-    url: "/guestbook/feedback/delete/",
-    params: ids,
+    url: `/guestbook/feedback/delete/${ids}`,
+    headers:{
+      "Content-Type":"application/x-www-form-urlencoded"
+    }
   });
 }
 // 处理信息详情
