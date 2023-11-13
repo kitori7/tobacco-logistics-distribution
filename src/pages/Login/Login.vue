@@ -3,7 +3,7 @@
     <div class="login-content">
       <h1 class="title">粤北卷烟物流管理系统</h1>
       <div class="login-form">
-        <el-form :model="loginForm">
+        <el-form :model="loginForm" @keyup.enter="handleLogin">
           <el-form-item>
             <el-input
               v-model.trim="loginForm.loginName"
@@ -30,16 +30,16 @@
             />
           </el-form-item>
         </el-form>
-        <div class="button" @click="handleLogin">GO</div>
+        <div class="button" @click="handleLogin">
+          GO
+        </div>
       </div>
     </div>
   </div>
 </template>
 <script lang="ts" setup>
   import { ILoginForm } from "./types.ts";
-  import { useRouter } from "vue-router";
   import { useLoginStore } from "@/store/login";
-  const router = useRouter();
   const loginStore = useLoginStore();
   const loginForm = ref<ILoginForm>({
     loginName: "",
@@ -49,11 +49,13 @@
   // 获取二维码
   loginStore.getCaptchaAction();
   function handleLogin() {
-    loginStore.loginAction({ ...loginForm.value });
-    router.push("/home");
+    if (loginForm.value.captcha === loginStore.captchaText) {
+      loginStore.loginAction({ ...loginForm.value });
+    } else {
+      ElMessage.warning("验证码错误");
+      loginStore.getCaptchaAction();
+    }
   }
-  // 目录
-  // const isLogin = ref<boolean>(false)
 </script>
 <style lang="scss" scoped>
   .login {
@@ -98,7 +100,7 @@
           height: 45px;
           object-fit: contain;
         }
-        .button { 
+        .button {
           position: relative;
           margin: 0 auto;
           color: #0c2e48;
@@ -111,17 +113,18 @@
           background-color: #73e5ff;
           transition: box-shadow 0.5s;
           cursor: pointer;
-          box-shadow:
-            rgba(0, 0, 0, 0.17) 0px -23px 25px 0px inset,
-            rgba(0, 0, 0, 0.15) 0px -36px 30px 0px inset,
-            rgba(0, 0, 0, 0.1) 0px -79px 40px 0px inset,
-            rgba(0, 0, 0, 0.06) 0px 2px 1px,
-            rgba(0, 0, 0, 0.09) 0px 4px 2px,
-            rgba(0, 0, 0, 0.09) 0px 8px 4px,
-            rgba(0, 0, 0, 0.09) 0px 16px 8px,
-            rgba(0, 0, 0, 0.09) 0px 32px 16px;
+          box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
+
           &:hover {
-            box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
+            box-shadow:
+              rgba(0, 0, 0, 0.17) 0px -23px 25px 0px inset,
+              rgba(0, 0, 0, 0.15) 0px -36px 30px 0px inset,
+              rgba(0, 0, 0, 0.1) 0px -79px 40px 0px inset,
+              rgba(0, 0, 0, 0.06) 0px 2px 1px,
+              rgba(0, 0, 0, 0.09) 0px 4px 2px,
+              rgba(0, 0, 0, 0.09) 0px 8px 4px,
+              rgba(0, 0, 0, 0.09) 0px 16px 8px,
+              rgba(0, 0, 0, 0.09) 0px 32px 16px;
           }
           &::before {
             content: "";
