@@ -15,7 +15,7 @@
                 </el-form>
             </div>
             <el-button class="groupSearchButton" :icon="Search" ></el-button>
-            <el-button class="groupSet" :icon="Tools">设置权限</el-button>
+            <el-button class="groupSet" :icon="Tools" @click="groupSettingOpen = true">设置权限</el-button>
             <el-button class="groupAdd" :icon="Plus" @click="groupAddOpen = true">添加用户</el-button>
         </div>
         <div class="useInfo">
@@ -36,14 +36,11 @@
             v-model="groupAddOpen"
             width="70%"
             >
-            
-            
             <div class="groupAddInfo">
                 <div class="groupAddOne">
                     <div class="groupAvatarBorder"></div>
                 <el-button  class="groupAvatarUploadButton" >上传头像</el-button>
                 </div>
-
                 <div  class="groupAddTwo">
                     <el-form :inline="true" style="height: 100%;" label-width="100">
                         <div>
@@ -71,7 +68,7 @@
                         </div>
                         <div class="groupAddRadio">
                             <span>角色：</span>
-                            <el-radio-group v-model="radio1" class="groupAddRadioGroup">
+                            <el-radio-group v-model="addRadio" class="groupAddRadioGroup">
                                 <el-radio label="1" size="large">班组长</el-radio>
                                 <el-radio label="2" size="large">送货员</el-radio>
                                 <el-radio label="3" size="large">市场经理</el-radio>
@@ -87,6 +84,31 @@
             </div>
                 
             </el-dialog>
+            <el-dialog
+            v-model="groupSettingOpen"
+            width="69%"
+            >
+                <div class="groupSettingTopText">设置角色权限点：</div>
+                <div class="groupSettingcontent">
+                    <div class="groupSettingLeft">
+                        <el-button class="groupSettingLeftButton" >班组长权限</el-button>
+                        <el-button class="groupSettingLeftButton" >送货员权限</el-button>
+                        <el-button class="groupSettingLeftButton" >市场经理权限</el-button>
+                        <el-button class="groupSettingLeftButton" >客户专员权限</el-button>
+                    </div>
+                    <div class="groupSettingRight">
+                        <el-transfer class="groupSettingTransfer" 
+                        v-model="value" 
+                        :data="data" 
+                        :titles="['权限点', '该角色权限点']"
+                        />
+                        <div class="groupSettingRightBtn">
+                            <el-button class="groupSettingRighCancel" >取消</el-button>
+                            <el-button class="groupSettingRighConfirm">确认</el-button>
+                        </div>
+                    </div>
+                </div>
+            </el-dialog>
         </div>
     </div>
 </template>
@@ -95,7 +117,10 @@ import {  Plus, Search, Tools,EditPen } from '@element-plus/icons-vue'
 import { ref } from 'vue'
 
 const groupAddOpen = ref(false)
-const radio1 = ref('1')
+const groupSettingOpen = ref(false)
+const addRadio = ref('1')
+
+
 interface useInfo  {
     name:string,
     position:string,
@@ -193,7 +218,24 @@ const info: useInfo[] = [
         jobNumber:45699,
     }
 ]
+interface Option {
+    key: number
+    label: string
+}
 
+const generateData = () => {
+const data: Option[] = []
+for (let i = 1; i <= 15; i++) {
+    data.push({
+        key: i,
+        label: `Option ${i}`,
+    })
+}
+    return data
+}
+
+const data = ref<Option[]>(generateData())
+const value = ref([])
 
 </script>
 <style lang="scss" scoped>
@@ -205,7 +247,7 @@ const info: useInfo[] = [
             justify-content: space-between;
             height: 5vh;
             .groupSearch{
-                flex: 11;
+                flex: 12;
                 border: 2px solid  #73e1ff;
             }
             .groupSearchButton{
@@ -309,7 +351,44 @@ const info: useInfo[] = [
 
                 }
             }
-
+            .groupSettingTopText{
+                margin-left: 4.5vw;
+                font-size: 25px;
+            }
+            .groupSettingcontent{
+                display: flex;
+                justify-content: center;
+                margin-top: 20px;
+                .groupSettingLeft{
+                display: flex;
+                flex-direction: column;
+                    .groupSettingLeftButton{
+                        margin: 10px;
+                        width: 8vw;
+                        height: 6vh;
+                        font-size: 20px;
+                    }
+                }
+                .groupSettingRight{
+                    margin: 10px;
+                    padding: 30px;
+                    border: 1px solid #73e1ff;
+                    .groupSettingTransfer{
+                        margin: 10px;
+                    }
+                    .groupSettingRightBtn{
+                        margin-top: 30px;
+                        display: flex;
+                        justify-content: center;
+                        .groupSettingRighCancel,.groupSettingRighConfirm{
+                            font-size: 20px;
+                            width: 100px;
+                            height: 35px;
+                        }
+                    }
+                }
+                
+            }
         }
     }
 

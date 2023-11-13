@@ -175,3 +175,27 @@
     border-color: #00b7ff !important;
   }
 }
+//transfer
+.el-transfer{
+  .el-transfer-panel {
+    width:18vw;
+    background-color: #011631 !important;
+    border-color: #73e1ff !important;
+    .el-transfer-panel__header{
+      background-color: #011631 !important;
+      border-color: #73e1ff !important;
+      .el-checkbox__label{
+        color: #73e1ff !important;
+      }
+    }
+    .el-transfer-panel__body{
+      border-color: #73e1ff !important;
+      .el-transfer-panel__list::-webkit-scrollbar{
+          display: none;
+      }
+      .el-checkbox__label{
+        color: #73e1ff !important;
+      }
+    }
+  }
+}
