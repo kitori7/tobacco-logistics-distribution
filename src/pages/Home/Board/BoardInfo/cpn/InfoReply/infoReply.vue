@@ -128,7 +128,7 @@
 
     await formEl.validate((valid, fields) => {
       if (valid) {
-        ElMessageBox.confirm("你是确认提交回复吗?")
+        ElMessageBox.confirm("确认提交回复?")
           .then(() => {
             const loading = ElLoading.service({
               lock: true,

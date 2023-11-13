@@ -1,13 +1,13 @@
 <template>
   <div class="home">
     <div class="main">
-      <div class="title"></div>
+      <div class="title" @click="loginOut"></div>
       <div class="menu">
         <div
           v-for="(item, index) in MenuList"
           :class="{ active: activeMenu === index }"
           :key="index"
-          @click="handleMenu(item.router,index)"
+          @click="handleMenu(item.router, index)"
         >
           {{ item.name }}
         </div>
@@ -20,12 +20,22 @@
 </template>
 <script lang="ts" setup>
   import { MenuList } from "./config";
-  import {useRouter} from 'vue-router';
-  const router = useRouter()
+  import { useRouter } from "vue-router";
+  const router = useRouter();
   const activeMenu = ref<number>(0);
-  function handleMenu(activeRouter: string,index: number) {
+  function handleMenu(activeRouter: string, index: number) {
     activeMenu.value = index;
-    router.push(activeRouter)
+    router.push(activeRouter);
+  }
+  function loginOut() {
+    ElMessageBox.confirm("确认退出登录？").then((res) => {
+      if (res) {
+        localStorage.removeItem("token");
+        localStorage.removeItem("userInfo");
+        localStorage.removeItem("operation");
+        router.push("/login");
+      }
+    });
   }
 </script>
 <style lang="scss" scoped>
@@ -61,7 +71,7 @@
           height: 45px;
           font-size: 20px;
           cursor: pointer;
-          transition: all .2s;
+          transition: all 0.2s;
           &.active {
             background-color: #006a94;
             box-shadow:
@@ -71,7 +81,7 @@
         }
       }
     }
-    .content{
+    .content {
       flex: 1;
     }
   }
