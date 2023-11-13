@@ -205,12 +205,13 @@ const info: useInfo[] = [
             justify-content: space-between;
             height: 5vh;
             .groupSearch{
-                flex: 6;
+                flex: 11;
                 border: 2px solid  #73e1ff;
             }
             .groupSearchButton{
                 height: 100%;
                 width: 2vw;
+                border-radius: 0%;
             }
             .groupSet{
                 margin: 0 2vw 0 4vw;
@@ -251,8 +252,9 @@ const info: useInfo[] = [
                     position: relative;
                     .groupInfoItemButton{
                         position: absolute;
-                        bottom: 0;
-                        right: 0;
+                        bottom: -2px;
+                        right: -2px;
+                        border-radius: 0%;
                     }
                 }
             }
