@@ -1,20 +1,20 @@
 import { defineStore } from "pinia";
-import { getCaptcha, getCaptchaText, postLogin } from "@/service/modules/login";
+import { getCaptcha, postLogin } from "@/service/modules/login";
 import type { ILoginForm } from "@/pages/Login/types";
 import { ILoginData } from "@/types/login";
+import { useRouter } from "vue-router";
 
 export const useLoginStore = defineStore("login", () => {
   // 二维码模块
+  const router = useRouter();
   const captcha = ref<string>();
+  const captchaText = ref<string>();
   async function getCaptchaAction() {
     getCaptcha().then((res) => {
-      const url = URL.createObjectURL(res);
+      const headers = res.headers;
+      captchaText.value = headers.captcha;
+      const url = URL.createObjectURL(res.data);
       captcha.value = url;
-      setTimeout(()=>{
-        getCaptchaText().then((text) => {
-          console.log(text);
-        });
-      },3000)
     });
   }
   // 登录模块
@@ -22,19 +22,26 @@ export const useLoginStore = defineStore("login", () => {
   const token = ref<string>();
   async function loginAction(data: ILoginForm) {
     const res = await postLogin(data);
-    token.value = res.data.token;
-    localStorage.setItem("token", token.value);
-    userInfo.value = res.data;
-    localStorage.setItem("userInfo", JSON.stringify(userInfo.value?.user));
-    localStorage.setItem(
-      "operation",
-      JSON.stringify(userInfo.value?.operation)
-    );
+    if (res.code === 200) {
+      token.value = res.data.token;
+      localStorage.setItem("token", token.value);
+      userInfo.value = res.data;
+      localStorage.setItem("userInfo", JSON.stringify(userInfo.value?.user));
+      localStorage.setItem(
+        "operation",
+        JSON.stringify(userInfo.value?.operation)
+      );
+      ElMessage.success("登录成功");
+      router.push("/home");
+    } else {
+      ElMessage.error(res.msg);
+    }
   }
 
   return {
     // 二维码
     captcha,
+    captchaText,
     getCaptchaAction,
     // 登录
     loginAction,

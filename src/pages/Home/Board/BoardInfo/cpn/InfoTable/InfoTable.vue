@@ -3,18 +3,22 @@
     <el-table
       v-loading="loading"
       :data="props.tableData"
-      :row-class-name="tableRowClassName"
       size="small"
-      :cell-style="{ textAlign: 'center' }"
       :header-cell-style="{ 'text-align': 'center' }"
+      :row-style="{ height: '50px' }"
+      :row-class-name="tableRowClassName"
+      :cell-style="(tableCellStyle as any)"
+      style="font-size: 14px"
+      max-height="330"
+      @selection-change="toggleSelection"
     >
       <el-table-column type="selection" />
       <el-table-column type="index" label="序号" />
-      <el-table-column prop="areaName" label="配送域" width="180" />
+      <el-table-column prop="areaName" label="配送域" width="160" />
       <el-table-column prop="storeName" label="线路名称" width="180" />
-      <el-table-column prop="deliveryName" label="送货员" width="60" />
-      <el-table-column prop="customerManagerName" label="客户专员" width="65" />
-      <el-table-column prop="customerCode" label="客户编码" width="65" />
+      <el-table-column prop="deliveryName" label="送货员" width="80" />
+      <el-table-column prop="customerManagerName" label="客户专员" width="80" />
+      <el-table-column prop="customerCode" label="客户编码" width="75" />
       <el-table-column prop="contactName" label="客户名称" width="75" />
       <el-table-column prop="storeAddress" label="客户地址" />
       <el-table-column prop="feedbackInformation" label="异常信息反馈" />
@@ -34,6 +38,7 @@
   import { Edit } from "@element-plus/icons-vue";
   const emit = defineEmits(["itemClick"]);
   import { useBoardStore } from "@/store/board";
+
   const boardStore = useBoardStore();
   const { loading } = storeToRefs(boardStore);
   interface IProps {
@@ -44,24 +49,49 @@
       return [];
     },
   });
-  const tableRowClassName = ({
-    rowIndex,
-  }: {
-    row: IBoardItem;
-    rowIndex: number;
-  }) => {
+
+  // 修改表格每一行颜色
+  const tableRowClassName = ({ rowIndex }: { rowIndex: number }) => {
     if (rowIndex % 2 == 1) {
       return "odd";
     } else if (rowIndex % 2 == 0) {
       return "even";
+    } else {
+      return "";
     }
-    return "";
   };
-
+  const tableCellStyle = ({ row }: { row: IBoardItem }) => {
+    if (row.feedbackStatus == "0") {
+      return {
+        color: "rgb(255, 51, 204)",
+        textAlign: "center",
+      };
+    } else if (row.feedbackStatus == "1") {
+      return {
+        color: "rgb(255,255,102)",
+        textAlign: "center",
+      };
+    } else if (row) {
+      return {
+        textAlign: "center",
+      };
+    } else {
+      return "";
+    }
+  };
   // 点击编辑
   function handleEdit(item: IBoardItem) {
     emit("itemClick", item);
   }
+  // 多选
+  const deleteData = ref<string>();
+  function toggleSelection(items: IBoardItem[]) {
+    deleteData.value = items
+      .map((item) => {
+        return item.feedbackId.toString();
+      }).join()
+  }
+  defineExpose({deleteData});
 </script>
 <style lang="scss" scoped>
   .InfoTable {

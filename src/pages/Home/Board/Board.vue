@@ -11,12 +11,12 @@
       <el-button
         :class="{ vertical: true, active: currentIndex === 1 }"
         @click="routerChange('1')"
-        >营销反馈</el-button
+        >物流反馈</el-button
       >
       <el-button
         :class="{ vertical: true, active: currentIndex === 2 }"
         @click="routerChange('2')"
-        >物流反馈</el-button
+        >营销反馈</el-button
       >
     </div>
   </div>
@@ -51,7 +51,6 @@
         margin-left: 50px;
       }
     }
-
     .btn-content {
       width: 20px;
       display: flex;

@@ -4,7 +4,7 @@
       v-model="isReply"
       width="70%"
       center
-      top="6%"
+      top="4%"
       @close="Replyclose(replyFormRef)"
     >
       <div class="el-dialog-div">
@@ -16,56 +16,38 @@
           class="demo-ruleForm"
           status-icon
         >
-          <el-form-item label="营销部回复 :" prop="name">
+          <el-form-item
+            :label="props.replyType == '1' ? '物流部反馈 :' : '营销部反馈 :'"
+            prop="replyContent"
+          >
             <el-input
-              v-model="replyForm.name"
+              v-model="replyForm.replyContent"
               maxlength="100"
               placeholder="点击输入自定义内容......"
               show-word-limit
               :autosize="{ minRows: 5, maxRows: 10 }"
               type="textarea"
           /></el-form-item>
-          <el-form-item label="上传照片 :" prop="">
-            <el-upload action="#" list-type="picture-card" :auto-upload="false">
+          <el-form-item label="上传照片 :">
+            <el-upload
+              v-model:file-list="replyForm.UploadFile"
+              accept="image/*"
+              multiple
+              action="fakeaction"
+              :show-file-list="true"
+              list-type="picture-card"
+              :auto-upload="false"
+              :on-change="handleChange"
+              ref="uploadrefss"
+            >
               <el-icon><Plus /></el-icon>
-              <template #file="{ file }">
-                <div>
-                  <img
-                    class="el-upload-list__item-thumbnail"
-                    :src="file.url"
-                    alt=""
-                  />
-                  <span class="el-upload-list__item-actions">
-                    <span
-                      class="el-upload-list__item-preview"
-                      @click="handlePictureCardPreview(file)"
-                    >
-                      <el-icon><zoom-in /></el-icon>
-                    </span>
-                    <span
-                      v-if="!disabled"
-                      class="el-upload-list__item-delete"
-                      @click="handleDownload(file)"
-                    >
-                      <el-icon><Download /></el-icon>
-                    </span>
-                    <span
-                      v-if="!disabled"
-                      class="el-upload-list__item-delete"
-                      @click="handleRemove(file)"
-                    >
-                      <el-icon><Delete /></el-icon>
-                    </span>
-                  </span>
-                </div>
-              </template>
             </el-upload>
           </el-form-item>
-          <el-form-item label="状态修改为 :" prop="count">
-            <el-radio-group v-model="radio">
-              <el-radio :label="3">处理中</el-radio>
-              <el-radio :label="6">已处理</el-radio>
-              <el-radio :label="9">无需处理</el-radio>
+          <el-form-item label="状态修改为 :" prop="feedbackStatus">
+            <el-radio-group v-model="replyForm.feedbackStatus">
+              <template v-for="item in stateBtn" :key="item.index">
+                <el-radio :label="item.index">{{ item.stateText }}</el-radio>
+              </template>
             </el-radio-group>
           </el-form-item>
           <el-button
@@ -80,58 +62,121 @@
   </div>
 </template>
 <script lang="ts" setup>
+  import { useBoardStore } from "@/store/board";
+  import type { UploadUserFile, UploadFile, UploadFiles } from "element-plus";
+
+  const boardStore = useBoardStore();
+  const stateBtn = [
+    { index: "0", stateText: "未处理" },
+    { index: "1", stateText: "处理中" },
+    { index: "2", stateText: "已处理" },
+    { index: "3", stateText: "无需处理" },
+  ];
+  // 表单信息
   interface ReplyForm {
-    name: string;
+    replyContent: string;
+    feedbackStatus: string;
+    UploadFile: UploadUserFile[];
   }
   const replyForm = reactive<ReplyForm>({
-    name: "",
+    replyContent: "",
+    feedbackStatus: "",
+    UploadFile: [],
   });
   const isReply = ref<boolean>(false);
+  interface IProps {
+    replyType?: "1" | "2";
+  }
+  const props = defineProps<IProps>();
+  const feedbackId = ref<number>(13);
   function handleReply(id: number) {
     isReply.value = true;
-    console.log(id);
-    console.log(isReply);
+    feedbackId.value = id;
   }
   defineExpose({
-    handleReply: handleReply,
+    handleReply,
   });
+
   //  文本框
   import type { FormInstance, FormRules } from "element-plus";
   const replyFormRef = ref<FormInstance>();
   const rules = reactive<FormRules<ReplyForm>>({
-    name: [{ required: true, message: "请输入自定义内容", trigger: "blur" }],
+    replyContent: [
+      { required: true, message: "请输入自定义内容", trigger: "blur" },
+    ],
+    feedbackStatus: [
+      {
+        required: true,
+        message: "请选择反馈信息处理状态",
+        trigger: "change",
+      },
+    ],
   });
   // 上传图片
-  import { Delete, Download, Plus, ZoomIn } from "@element-plus/icons-vue";
-  import type { UploadFile } from "element-plus";
-  const dialogImageUrl = ref("");
-  const dialogVisible = ref(false);
-  const disabled = ref(false);
-  const handleRemove = (file: UploadFile) => {
+  const fileList = ref<UploadFiles>([]);
+  const uploadrefss = ref();
+  const handleChange = (file: UploadFile, files: UploadFiles) => {
+    fileList.value = files;
     console.log(file);
   };
-  const handlePictureCardPreview = (file: UploadFile) => {
-    dialogImageUrl.value = file.url!;
-    dialogVisible.value = true;
-  };
-  const handleDownload = (file: UploadFile) => {
-    console.log(file);
-  };
-  // 单选框
-  const radio = ref(3);
+  import { Plus } from "@element-plus/icons-vue";
   // 提交
-  const submitForm = async (formEl: FormInstance | undefined) => {
+  const emit = defineEmits(["renewClick"]);
+
+  const submitForm = async (formEl?: FormInstance) => {
     if (!formEl) return;
+
     await formEl.validate((valid, fields) => {
       if (valid) {
-        console.log("submit!");
+        ElMessageBox.confirm("确认提交回复?")
+          .then(() => {
+            const loading = ElLoading.service({
+              lock: true,
+              text: "正在提交中",
+              background: "rgba(0, 0, 0, 0.7)",
+            });
+            let dataForm = new FormData();
+            dataForm.append("feedbackId", feedbackId.value as any);
+            dataForm.append("replyContent", replyForm.replyContent);
+            dataForm.append("replyType", props.replyType as string);
+            dataForm.append("feedbackStatus", replyForm.feedbackStatus);
+            fileList.value.forEach((it: UploadFile) => {
+              dataForm.append("fileList", it.raw as any);
+            });
+            console.log(fileList.value);
+
+            boardStore
+              .postInfoAddAction(dataForm)
+              .then((res) => {
+                loading.close();
+                if (res.code == 200) {
+                  isReply.value = false;
+                  emit("renewClick", feedbackId.value);
+                  ElMessage({
+                    type: "success",
+                    message: "提交成功",
+                  });
+                }
+              })
+              .catch(() => {
+                ElMessage({
+                  message: "提交失败",
+                  type: "warning",
+                });
+              });
+          })
+          .catch(() => {
+            // catch error
+          });
       } else {
-        console.log("error submit!", fields);
+        console.log("error", fields);
       }
     });
   };
-  const Replyclose = (formEl: FormInstance | undefined) => {
+
+  const Replyclose = (formEl?: FormInstance) => {
     if (!formEl) return;
+    uploadrefss.value.clearFiles();
     formEl.resetFields();
   };
 </script>
@@ -156,5 +201,4 @@
       }
     }
   }
-  
 </style>

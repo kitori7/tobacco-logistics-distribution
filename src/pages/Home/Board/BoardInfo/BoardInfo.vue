@@ -2,24 +2,32 @@
   <div class="BoardInfo">
     <info-search
       @item-add="propItemAdd"
+      @item-delete="propItemDelete"
       @item-search="propItemSearch"
       @item-reset="propItemReset"
+      @item-state="propItemStateChange"
+      :feedbackType="feedbackType"
     ></info-search>
     <info-table
       class="info-table"
       :table-data="boardStore.boardData?.dataCurrentPage"
       @item-click="propItemClick"
+      ref="InfoTableRef"
     ></info-table>
-    <info-item ref="InfoItemRef"></info-item>
+    <info-item ref="InfoItemRef" @reply-click="propReplyClick"></info-item>
+    <info-reply
+      ref="InfoReplyRef"
+      :replyType="feedbackType"
+      @renew-click="submitReplyClick"
+    ></info-reply>
     <el-pagination
       layout="prev, pager, next"
       :current-page="pageData.pageNum"
       :page-size="pageData.pageSize"
       :total="boardStore.boardData.totalCount"
-      @current-change="getDate()"
+      @current-change="currentChange"
     />
-    <InfoAdd ref="InfoAddRef"></InfoAdd>
-    <info-reply ref="InfoReplyRef" @click="propReplyClick"></info-reply>
+    <InfoAdd ref="InfoAddRef" @add-success="getDate"></InfoAdd>
   </div>
 </template>
 <script lang="ts" setup>
@@ -35,17 +43,26 @@
   const route = useRoute();
   const pageData = ref<IBoardSearchData>({
     pageNum: 1,
-    pageSize: 10,
+    pageSize: 6,
   });
-  const feedbackType = ref<"1" | "2">();
-  function getDate(searchData: ISearch = {}) {
-    boardStore.getBoardData({
-      feedbackType: feedbackType.value,
-      ...pageData.value,
-      ...searchData,
-    });
+  // 页码改变
+  function currentChange(value: number) {
+    pageData.value.pageNum = value;
+    getDate();
   }
-
+  const feedbackType = ref<"1" | "2">("1");
+  function getDate(searchData: ISearch = {}) {
+    console.log(pageData.value);
+    boardStore
+      .getBoardData({
+        feedbackType: feedbackType.value,
+        ...pageData.value,
+        ...searchData,
+      })
+      .then(() => {
+        pageData.value.pageNum = boardStore.boardData.currentPageNum;
+      });
+  }
   watch(
     () => route.query.feedbackType,
     (newValue) => {
@@ -55,20 +72,42 @@
     { immediate: true }
   );
   const InfoItemRef = ref<InstanceType<typeof InfoItem>>();
+  const InfoReplyRef = ref<InstanceType<typeof infoReply>>();
   import type { IBoardItem, IBoardSearchData } from "@/types/board";
   import { ISearch } from "@/types/board";
   // 表格点击
   function propItemClick(item: IBoardItem) {
-    console.log(item);
     InfoItemRef.value?.handleOpen(item);
   }
+  const InfoTableRef = ref<InstanceType<typeof InfoTable>>();
+  // 表格删除
+  function propItemDelete() {
+    if (InfoTableRef.value?.deleteData) {
+      boardStore
+        .removeFeedbackAction(InfoTableRef.value?.deleteData)
+        .then(() => {
+          getDate();
+        });
+    }
+  }
+  // 回复点击
 
+  function propReplyClick(id: number) {
+    InfoReplyRef.value?.handleReply(id);
+  }
+  // 提交回复点击
+  function submitReplyClick(id: number) {
+    InfoItemRef.value?.getReplyData(id);
+  }
   // 添加点击
   const InfoAddRef = ref<InstanceType<typeof InfoAdd>>();
   function propItemAdd() {
-    InfoAddRef.value?.handleOpen();
+    InfoAddRef.value?.handleOpen(feedbackType.value);
   }
-
+  // 下拉框选择
+  function propItemStateChange(searchData: ISearch) {
+    getDate(searchData);
+  }
   // 搜索点击
   function propItemSearch(searchData: ISearch) {
     getDate(searchData);
@@ -76,11 +115,6 @@
   // 重置点击
   function propItemReset() {
     getDate();
-  }
-  // 回复点击
-  const InfoReplyRef = ref<InstanceType<typeof infoReply>>();
-  function propReplyClick(id: number) {
-    InfoReplyRef.value?.handleReply(id);
   }
 </script>
 <style lang="scss" scoped>
