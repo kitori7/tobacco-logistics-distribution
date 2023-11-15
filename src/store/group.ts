@@ -11,8 +11,8 @@ import {
 export const useGroupStore = defineStore("group", () => {
 
     //添加用户
-    async function postAddUserAction(data: addUserForm) {
-        const res = await postAddUser(data);
+    async function postAddUserAction(userData: addUserForm) {
+        const res = await postAddUser(userData);
         if (res.code === 200) {
             ElMessage.success(res.msg);
         }

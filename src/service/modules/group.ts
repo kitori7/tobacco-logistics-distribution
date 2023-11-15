@@ -3,13 +3,13 @@ import { addUserForm , userAuthorityDataType } from "@/types/group";
 import { IRequest } from "../request/type";
 
 // 添加用户接口
-export function postAddUser(data: addUserForm) {
+export function postAddUser(userData: addUserForm) {
     return requests.post<IRequest<any>>({
         url: "/userservice/user/add",
         headers: {
             "Content-Type": "application/x-www-form-urlencoded",
         },
-        data,
+        data:userData,
     });
 }
 //设置权限接口

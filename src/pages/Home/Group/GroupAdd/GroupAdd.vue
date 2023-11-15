@@ -21,7 +21,7 @@
                     >
                             <el-form-item label="姓名" prop="userName">
                                 <el-input
-                                v-model="addUserData.userName"
+                                v-model="addUserData.user_name"
                                 ></el-input>
                             </el-form-item>
                             <el-form-item label="电话" prop="phone">
@@ -48,14 +48,14 @@
                             </el-form-item>
                             <el-form-item label="入职" prop="signTime">
                                 <el-date-picker
-                                v-model="addUserData.signTime"
+                                v-model="addUserData.sign_time"
                                 value-format="YYYY-MM-DD hh:mm:ss"
                                 type="datetime"
                                 ></el-date-picker>
                             </el-form-item>
                             <el-form-item label="工号"  prop="workNumber">
                                 <el-input
-                                v-model="addUserData.workNumber"
+                                v-model="addUserData.work_number"
                                 ></el-input>
                             </el-form-item>
                         <div class="groupAddMessage">
@@ -100,22 +100,22 @@ defineExpose({
 })
 const ruleFormRef = ref<FormInstance>();
 const rules = reactive<FormRules<addUserForm>>({
-    userName:[{required: true,trigger: 'blur',}],
+    user_name:[{required: true,trigger: 'blur',}],
     phone:[{required: true,trigger: 'blur',}],
     email:[{required: true,trigger: 'blur',}],
     department:[{required: true,trigger: 'blur',}],
-    signTime:[{required: true,trigger: 'blur',}],
-    workNumber:[{required: true,trigger: 'blur',}],
+    sign_time:[{required: true,trigger: 'blur',}],
+    work_number:[{required: true,trigger: 'blur',}],
 })
 const addUserData = ref<addUserForm>({
-    userName: '',
-    password: '2231213aa',
+    user_name: '',
+    password: '',
     phone: '',
     email: '',
     department: '',
-    roleId: addRadio.value,
-    workNumber: '1232131321',
-    signTime:'',
+    role_id: addRadio.value,
+    work_number: '1232131321',
+    sign_time:'',
     avatarPath:'',
 });
 //临时
@@ -123,8 +123,13 @@ const linshiList = ['a部门','b部门','c部门']
 
 
 const groupAddConfirm =  ( data : addUserForm) => {
-    console.log({...data});
-    groupStore.postAddUserAction({...data});
+    console.log(data);
+    groupStore
+    .postAddUserAction(data)
+    .then((res)=>{
+        console.log(res);
+    });
+    
 }
 
 </script>

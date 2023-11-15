@@ -75,12 +75,12 @@ const userAuthorityData =reactive({
 const groupSettingConfirm = ( authority :userAuthorityDataType ) =>{
     const arr =Array.from(value.value);
     userAuthorityData.idList=arr.toString();
-    console.log({...authority});
+    console.log(authority);
     groupStore
     .setUserAuthorityAction(authority)
     .then(()=>{
-        closeGroupSetting()
-    });
+        closeGroupSetting();
+    })
     
 }
 

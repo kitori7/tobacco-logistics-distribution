@@ -1,12 +1,12 @@
 export interface addUserForm {
-    userName: string;
+    user_name: string;
     password: string;
     phone: string;
     email: string;
     department: string;
-    roleId: number;
-    workNumber: string;
-    signTime:string;
+    role_id: number;
+    work_number: string;
+    sign_time:string;
     avatarPath?:string;
 }
 export interface userAuthorityDataType {
