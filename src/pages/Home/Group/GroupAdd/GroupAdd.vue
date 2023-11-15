@@ -11,7 +11,11 @@
                 <el-button  class="groupAvatarUploadButton" >上传头像</el-button>
                 </div>
                 <div  class="groupAddTwo">
-                    <el-form :inline="true" style="height: 100%;" label-width="100">
+                    <el-form 
+                    :inline="true" 
+                    style="height: 100%;" 
+                    label-width="100"
+                    >
                             <el-form-item label="姓名">
                                 <el-input></el-input>
                             </el-form-item>
@@ -28,6 +32,7 @@
                             <el-form-item label="入职时间">
                                 <el-input></el-input>
                             </el-form-item>
+
                         <div class="groupAddMessage">
                             <span>工号：1232131321</span>
                             <span style="margin-left: 7vw;">默认密码：2231213aa</span>
@@ -53,7 +58,9 @@
     </div>
 </template>
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { useGroupStore } from "@/store/group";
+import { addUserForm } from "@/types/group";
+const groupStore = useGroupStore();
 
 const addRadio = ref('1')
 const groupAddOpen =ref(false)
@@ -69,6 +76,16 @@ function confirm() {
 defineExpose({
     groupAddOpen
 })
+const addUserData = ref<addUserForm>({
+    userName: '',
+    password: '',
+    phone: '',
+    email: '',
+    department: '',
+    roleId: 1,
+    workNumber: '',
+    avatarPath:'',
+  });
 </script>
 <style lang="scss" scoped>
 .groupAddInfo{
