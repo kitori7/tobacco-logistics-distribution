@@ -2,7 +2,7 @@
     <div class="Group">
         <div class="groupControl">
             <div class="groupSearch">
-                <el-form :inline="true" style="height: 100%;margin-top: 0.5vh;" label-width="100">
+                <el-form :inline="true" style="height: 100%;margin-top: 7px;" label-width="100">
                 <el-form-item label="姓名">
                     <el-input></el-input>
                 </el-form-item>
@@ -151,32 +151,32 @@ const openGroupSetting = () => {
 </script>
 <style lang="scss" scoped>
     .Group{
-        margin: 1vh auto;
+        margin: 5px auto;
         width: 90vw;
         .groupControl{
             display: flex;
             justify-content: space-between;
-            height: 5vh;
+            height: 50px;
             .groupSearch{
                 flex: 12;
                 border: 2px solid  #73e1ff;
             }
             .groupSearchButton{
                 height: 100%;
-                width: 2vw;
+                width: 50px;
                 border-radius: 0%;
             }
             .groupSet{
-                margin: 0 2vw 0 4vw;
+                margin: 0 20px 0 70px;
                 flex: 1;
-                height: 5vh;
+                height: 100%;
                 text-align: center;
                 border: 2px solid  #73e1ff;
             }
             .groupAdd{
-                margin: 0 2vw;
+                margin: 0 50px;
                 flex: 1;
-                height: 5vh;
+                height: 100%;
                 text-align: center;
                 border: 2px solid  #73e1ff;
             }
@@ -192,7 +192,6 @@ const openGroupSetting = () => {
             flex-wrap: wrap;
             overflow-x: hidden;
             overflow-y: auto;
-            
             .useInfoItem{
                 margin: 5vh 3vw 0 0;
                 width: 10vw;

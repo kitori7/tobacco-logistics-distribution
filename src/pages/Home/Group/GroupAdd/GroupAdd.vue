@@ -83,17 +83,17 @@ defineExpose({
         justify-content: center;
     
         .groupAvatarBorder{
-            width: 9vw;
-            height: 22vh;
+            width: 170px;
+            height: 200px;
             border: 1px solid  #73e1ff;
         }
         .groupAvatarUploadButton{
+            box-sizing: border-box;
             position: absolute;
-            right: 15vw;
-            margin: 0 1vw;
-            margin-top: 17vh;
-            width: 5vw;
-            height: 5vh;
+            right: 300px;
+            margin-top: 160px;
+            width: 90px;
+            height: 42px;
         }
     }
     .groupAddTwo{
@@ -117,7 +117,7 @@ defineExpose({
         display: flex;
         justify-content: center;
         .groupAddCancel,.groupAddConfirm{
-            width: 5vw;
+            width: 85px;
             margin: 0 5vw ;
         }
     }

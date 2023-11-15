@@ -13,7 +13,6 @@
                         <el-button class="groupSettingLeftButton" >市场经理权限</el-button>
                         <el-button class="groupSettingLeftButton" >客户专员权限</el-button>
                         <el-button class="groupSettingLeftButton" >领导权限</el-button>
-
                     </div>
                     <div class="groupSettingRight">
                         <el-transfer class="groupSettingTransfer" 
