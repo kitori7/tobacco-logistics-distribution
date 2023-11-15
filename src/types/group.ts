@@ -6,5 +6,6 @@ export interface addUserForm {
     department: string;
     roleId: number;
     workNumber: string;
+    signTime:string;
     avatarPath?:string;
 }

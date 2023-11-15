@@ -16,20 +16,35 @@
                     style="height: 100%;" 
                     label-width="100"
                     >
-                            <el-form-item label="姓名">
+                            <el-form-item 
+                            label="姓名"
+                            v-model="addUserData.userName"
+                            >
                                 <el-input></el-input>
                             </el-form-item>
-                            <el-form-item label="电话">
+                            <el-form-item 
+                            label="电话"
+                            v-model="addUserData.phone"
+                            >
                                 <el-input></el-input>
                             </el-form-item>
-                            <el-form-item label="邮箱">
+                            <el-form-item 
+                            label="邮箱"
+                            v-model="addUserData.email"
+                            >
                                 <el-input></el-input>
                             </el-form-item>
                         
-                            <el-form-item label="部门">
+                            <el-form-item 
+                            label="部门"
+                            v-model="addUserData.department"
+                            >
                                 <el-select></el-select>
                             </el-form-item>
-                            <el-form-item label="入职时间">
+                            <el-form-item 
+                            label="入职时间"
+                            v-model="addUserData.signTime"
+                            >
                                 <el-input></el-input>
                             </el-form-item>
 
@@ -84,8 +99,9 @@ const addUserData = ref<addUserForm>({
     department: '',
     roleId: 1,
     workNumber: '',
+    signTime:'',
     avatarPath:'',
-  });
+});
 </script>
 <style lang="scss" scoped>
 .groupAddInfo{
