@@ -153,6 +153,8 @@ const openGroupSetting = () => {
     .Group{
         margin: 5px auto;
         width: 90vw;
+        height: 83vh;
+        overflow: hidden;
         .groupControl{
             display: flex;
             justify-content: space-between;
@@ -185,7 +187,7 @@ const openGroupSetting = () => {
                 display: none;
         }
         .useInfo{
-            height: 80vh;
+            height: 750px;
             display: flex;
             justify-content: space-between;
             flex-direction: row;
@@ -193,13 +195,13 @@ const openGroupSetting = () => {
             overflow-x: hidden;
             overflow-y: auto;
             .useInfoItem{
-                margin: 5vh 3vw 0 0;
-                width: 10vw;
+                margin: 3vh 3vw 0 0;
+                width: 190px;
                 text-align: center;
-                line-height: 2.5vh;
+                line-height: 23px;
                 .usePhoto{
-                    width: 10vw;
-                    height: 25vh;
+                    width: 190px;
+                    height: 250px;
                     border: 2px solid   #73e1ff;
                     position: relative;
                     .groupInfoItemButton{
