@@ -1,9 +1,11 @@
 import { defineStore } from "pinia";
 import type{ 
-    addUserForm 
+    addUserForm,
+    userAuthorityDataType,
 } from "@/types/group";
 import {
-    postAddUser
+    postAddUser,
+    setUserAuthority,
 } from "@/service/modules/group";
 
 export const useGroupStore = defineStore("group", () => {
@@ -15,7 +17,15 @@ export const useGroupStore = defineStore("group", () => {
             ElMessage.success(res.msg);
         }
     }
-        return {
-            postAddUserAction
+    //设置权限
+    async function setUserAuthorityAction(authority: userAuthorityDataType) {
+        const res = await setUserAuthority(authority);
+        if (res.code === 200) {
+            ElMessage.success(res.msg);
+        }
+    }
+    return {
+        postAddUserAction,
+        setUserAuthorityAction,
     };
 });

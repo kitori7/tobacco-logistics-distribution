@@ -8,11 +8,11 @@
                 <div class="groupSettingTopText">设置角色权限点：</div>
                 <div class="groupSettingcontent">
                     <div class="groupSettingLeft">
-                        <el-button class="groupSettingLeftButton" >班组长权限</el-button>
-                        <el-button class="groupSettingLeftButton" >送货员权限</el-button>
-                        <el-button class="groupSettingLeftButton" >市场经理权限</el-button>
-                        <el-button class="groupSettingLeftButton" >客户专员权限</el-button>
-                        <el-button class="groupSettingLeftButton" >领导权限</el-button>
+                        <el-button class="groupSettingLeftButton" @click="changeRoleID(1)" >班组长权限</el-button>
+                        <el-button class="groupSettingLeftButton" @click="changeRoleID(2)">送货员权限</el-button>
+                        <el-button class="groupSettingLeftButton" @click="changeRoleID(3)">市场经理权限</el-button>
+                        <el-button class="groupSettingLeftButton" @click="changeRoleID(4)">客户专员权限</el-button>
+                        <el-button class="groupSettingLeftButton" @click="changeRoleID(5)">领导权限</el-button>
                     </div>
                     <div class="groupSettingRight">
                         <el-transfer class="groupSettingTransfer" 
@@ -21,8 +21,8 @@
                         :titles="['权限点', '该角色权限点']"
                         />
                         <div class="groupSettingRightBtn">
-                            <el-button class="groupSettingRighCancel" >取消</el-button>
-                            <el-button class="groupSettingRighConfirm">确认</el-button>
+                            <el-button class="groupSettingRightCancel" @click="closeGroupSetting()">取消</el-button>
+                            <el-button class="groupSettingRightConfirm" @click="groupSettingConfirm(userAuthorityData)">确认</el-button>
                         </div>
                     </div>
                 </div>
@@ -31,6 +31,9 @@
 </template>
 <script lang="ts" setup>
 import { ref } from 'vue'
+import { userAuthorityDataType } from "@/types/group";
+import { useGroupStore } from "@/store/group";
+const groupStore = useGroupStore();
 interface Option {
     key: number
     label: string
@@ -46,16 +49,42 @@ for (let i = 1; i <= 15; i++) {
     return data
 }
 const data = ref<Option[]>(generateData())
-const value = ref([])
+const value = ref([1])
 
 
 const groupSettingOpen =ref(false)
 const closeGroupSetting = () =>{
     groupSettingOpen.value = false
+    value.value=[]
+
 }
 defineExpose({
     groupSettingOpen
 })
+
+
+const changeRoleID= (e:number)=>{
+    userAuthorityData.role_id = e
+    console.log(userAuthorityData.role_id);
+    
+}
+const userAuthorityData =reactive({
+    idList:'',
+    role_id:1,
+})
+const groupSettingConfirm = ( authority :userAuthorityDataType ) =>{
+    const arr =Array.from(value.value);
+    userAuthorityData.idList=arr.toString();
+    console.log({...authority});
+    groupStore
+    .setUserAuthorityAction(authority)
+    .then(()=>{
+        closeGroupSetting()
+    });
+    
+}
+
+
 </script>
 <style lang="scss" scoped>
 .groupSettingTopText{
@@ -87,7 +116,7 @@ defineExpose({
             margin-top: 30px;
             display: flex;
             justify-content: center;
-            .groupSettingRighCancel,.groupSettingRighConfirm{
+            .groupSettingRightCancel,.groupSettingRightConfirm{
                 font-size: 20px;
                 width: 100px;
                 height: 35px;

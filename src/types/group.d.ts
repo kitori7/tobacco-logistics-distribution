@@ -9,3 +9,7 @@ export interface addUserForm {
     signTime:string;
     avatarPath?:string;
 }
+export interface userAuthorityDataType {
+    idList:string,
+    role_id:Number,
+}
