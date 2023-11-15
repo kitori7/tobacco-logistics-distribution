@@ -59,7 +59,6 @@ export const useBoardStore = defineStore("board", () => {
   const detail = ref<InfoDetail[]>();
   async function getDetailData(id: number) {
     const res = await getInfoDetail(id);
-    console.log(id);
     detail.value = res.data;
   }
   // 处理信息添加

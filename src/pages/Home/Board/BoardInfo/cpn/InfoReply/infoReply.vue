@@ -67,7 +67,6 @@
 
   const boardStore = useBoardStore();
   const stateBtn = [
-    { index: "0", stateText: "未处理" },
     { index: "1", stateText: "处理中" },
     { index: "2", stateText: "已处理" },
     { index: "3", stateText: "无需处理" },
