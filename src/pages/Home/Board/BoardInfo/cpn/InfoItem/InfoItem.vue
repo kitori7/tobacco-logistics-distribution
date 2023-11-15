@@ -4,10 +4,10 @@
       <template #header>
         <div class="my-header">
           <div class="el-dialog-div-top">
-            <div class="round" :class="stateColor(Item?.feedbackStatus)"></div>
+            <div class="round" :class="stateColor(replyStatus)"></div>
             <p>
               {{ Item?.feedbackInformation }}&nbsp;&nbsp;({{
-                stateText(Item?.feedbackStatus)
+                stateText(replyStatus)
               }})
             </p>
           </div>
@@ -121,9 +121,11 @@
   const replyData = ref<InfoDetail[]>([]);
   // 获取数据和图片
   const feedbackImg = ref<string[]>([]);
+  const replyStatus = ref<string>();
   function handleOpen(item: IBoardItem) {
     isOpen.value = true;
     id.value = item.feedbackId;
+    replyStatus.value = item.feedbackStatus;
     Item.value = item;
     boardStore.getDetailData(id.value);
     watch(
@@ -131,14 +133,22 @@
       (n) => {
         replyData.value = n as InfoDetail[];
         let key: keyof ItemInfo;
-    for (key in itemInfo.value) {
-      itemInfo.value[key] = item[key];
-    }
-    feedbackImg.value = mapPath(item.feedbackFileList);
+        for (key in itemInfo.value) {
+          itemInfo.value[key] = item[key];
+        }
+        feedbackImg.value = mapPath(item.feedbackFileList);
       }
     );
   }
-  function getReplyData(id: number) {
+  function getReplyData(id: number, feedbackStatus: string) {
+    replyStatus.value = feedbackStatus;
+    watch(
+      () => boardStore.detail,
+      (n) => {
+        replyData.value = n as InfoDetail[];
+      }
+    );
+
     boardStore.getDetailData(id);
     watch(
       () => boardStore.detail,
