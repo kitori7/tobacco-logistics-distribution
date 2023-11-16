@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import type{ 
-    addUserForm,
+    addUserRuleForm,
     userAuthorityDataType,
 } from "@/types/group";
 import {
@@ -11,7 +11,7 @@ import {
 export const useGroupStore = defineStore("group", () => {
 
     //添加用户
-    async function postAddUserAction(userData: addUserForm) {
+    async function postAddUserAction(userData: addUserRuleForm) {
         const res = await postAddUser(userData);
         if (res.code === 200) {
             ElMessage.success(res.msg);

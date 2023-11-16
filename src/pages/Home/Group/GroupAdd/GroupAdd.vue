@@ -3,7 +3,7 @@
         <el-dialog
             v-model="groupAddOpen"
             width="70%"
-            @close="closeGroupAdd"
+            @close="closeGroupAdd(ruleFormRef)"
             >
             <div class="groupAddInfo">
                 <div class="groupAddOne">
@@ -19,7 +19,7 @@
                     ref="ruleFormRef"
                     :model="addUserData"
                     >
-                            <el-form-item label="姓名" prop="userName">
+                            <el-form-item label="姓名" prop="user_name" >
                                 <el-input
                                 v-model="addUserData.user_name"
                                 ></el-input>
@@ -39,44 +39,42 @@
                                 v-model="addUserData.department"
                                 >
                                     <el-option
-                                    v-for="item in linshiList"
+                                    v-for="item in GroupList"
                                     :key="item"
                                     :label="item"
                                     :value="item"
                                     ></el-option>
                                 </el-select>
                             </el-form-item>
-                            <el-form-item label="入职" prop="signTime">
+                            <el-form-item label="入职" prop="sign_time">
                                 <el-date-picker
                                 v-model="addUserData.sign_time"
                                 value-format="YYYY-MM-DD hh:mm:ss"
                                 type="datetime"
                                 ></el-date-picker>
                             </el-form-item>
-                            <el-form-item label="工号"  prop="workNumber">
+                            <el-form-item label="工号"  prop="work_number">
                                 <el-input
                                 v-model="addUserData.work_number"
                                 ></el-input>
                             </el-form-item>
+                            <el-form-item label="角色："  prop="role_id" style="margin-left: 20px;">
+                                <el-radio-group v-model="addUserData.role_id" >
+                                    <el-radio label=1 size="large">班组长</el-radio>
+                                    <el-radio label=2 size="large">送货员</el-radio>
+                                    <el-radio label=3 size="large">市场经理</el-radio>
+                                    <el-radio label=4 size="large">客户专员</el-radio>
+                                    <el-radio label=5 size="large">领导</el-radio>
+                                </el-radio-group>
+                            </el-form-item>
                         <div class="groupAddMessage">
-                            <span>工号：1232131321</span>
-                            <span style="margin-left: 7vw;">默认密码：2231213aa</span>
-                        </div>
-                        <div class="groupAddRadio">
-                            <span>角色：</span>
-                            <el-radio-group v-model="addRadio" class="groupAddRadioGroup" >
-                                <el-radio label=1 size="large">班组长</el-radio>
-                                <el-radio label=2 size="large">送货员</el-radio>
-                                <el-radio label=3 size="large">市场经理</el-radio>
-                                <el-radio label=4 size="large">客户专员</el-radio>
-                                <el-radio label=5 size="large">领导</el-radio>
-                            </el-radio-group>
+                            <span >默认密码：ycwl123456</span>
                         </div>
                     </el-form>
                 </div>
                 <div class="groupAddSetting">
                     <el-button class="groupAddCancel" @click="closeGroupAdd(ruleFormRef)" >取消</el-button>
-                    <el-button class="groupAddConfirm" @click="groupAddConfirm(addUserData)">确认</el-button>
+                    <el-button class="groupAddConfirm" @click="groupAddConfirm(ruleFormRef,addUserData)">确认</el-button>
                 </div>
             </div>
         </el-dialog>
@@ -84,11 +82,10 @@
 </template>
 <script lang="ts" setup>
 import { useGroupStore } from "@/store/group";
-import { addUserForm } from "@/types/group";
+import { addUserRuleForm } from "@/types/group";
 import type { FormInstance, FormRules } from "element-plus";
 const groupStore = useGroupStore();
 
-const addRadio = ref(1)
 const groupAddOpen =ref(false)
 const closeGroupAdd = (formEl : FormInstance | undefined) =>{
     groupAddOpen.value =false;
@@ -98,39 +95,47 @@ const closeGroupAdd = (formEl : FormInstance | undefined) =>{
 defineExpose({
     groupAddOpen
 })
+
 const ruleFormRef = ref<FormInstance>();
-const rules = reactive<FormRules<addUserForm>>({
+const rules = reactive<FormRules<addUserRuleForm>>({
     user_name:[{required: true,trigger: 'blur',}],
     phone:[{required: true,trigger: 'blur',}],
     email:[{required: true,trigger: 'blur',}],
     department:[{required: true,trigger: 'blur',}],
     sign_time:[{required: true,trigger: 'blur',}],
     work_number:[{required: true,trigger: 'blur',}],
+    role_id:[{required: true,trigger: 'blur',}],
 })
-const addUserData = ref<addUserForm>({
+const addUserData = reactive<addUserRuleForm>({
     user_name: '',
-    password: '',
     phone: '',
     email: '',
     department: '',
-    role_id: addRadio.value,
-    work_number: '1232131321',
+    role_id: 0,
+    work_number: '',
     sign_time:'',
     avatarPath:'',
 });
-//临时
-const linshiList = ['a部门','b部门','c部门']
+
+//部门信息（固定）
+const GroupList = ['班组一','班组二','班组三','班组四','班组五','班组六','营销部']
 
 
-const groupAddConfirm =  ( data : addUserForm) => {
-    console.log(data);
-    groupStore
-    .postAddUserAction(data)
-    .then((res)=>{
-        console.log(res);
-    });
-    
+const groupAddConfirm =  async ( formEl: FormInstance | undefined, data:addUserRuleForm) => {
+    if (!formEl ) return;
+    await formEl.validate((valid, fields) => {
+        if (valid) {
+            formEl.resetFields();
+            console.log(formEl);
+            groupStore
+            .postAddUserAction(data)
+        } else {
+            console.log('error submit!', fields)
+        }
+    })
 }
+
+    
 
 </script>
 <style lang="scss" scoped>
@@ -164,15 +169,9 @@ const groupAddConfirm =  ( data : addUserForm) => {
         flex-direction: row;
         justify-content: center;
         margin: 50px 0;
-        .groupAddMessage,.groupAddRadio{
-            margin: 15px 0;
-            color: $processed;
-            padding-left: 50px;
-        }
-        .groupAddRadio{
-            .groupAddRadioGroup{
-                margin-left: 2vw;
-            }
+        .groupAddMessage{
+            margin-left: 40px;
+            color: rgb(204, 255, 255);
         }
     }
     

@@ -70,23 +70,35 @@ const changeRoleID= (e:number)=>{
 }
 const userAuthorityData =reactive({
     idList:'',
-    role_id:1,
+    role_id:0,
 })
 const groupSettingConfirm = ( authority :userAuthorityDataType ) =>{
     const arr =Array.from(value.value);
     userAuthorityData.idList=arr.toString();
-    console.log(authority);
-    groupStore
-    .setUserAuthorityAction(authority)
-    .then(()=>{
-        closeGroupSetting();
-    })
-    
+    if(userAuthorityData.role_id == 0){
+        ElMessage({
+        type: 'warning',
+        message: '请选择要设置的角色',
+        })
+    }else if(userAuthorityData.idList == ''){
+        ElMessage({
+        type: 'warning',
+        message: '该角色权限点不能为空',
+        })
+    }else{
+        console.log(authority);
+        groupStore
+        .setUserAuthorityAction(authority)
+        .then(()=>{
+            closeGroupSetting();
+        })
+    }
 }
 
 
 </script>
 <style lang="scss" scoped>
+
 .groupSettingTopText{
     margin-left: 4.5vw;
     font-size: 25px;
@@ -95,13 +107,14 @@ const groupSettingConfirm = ( authority :userAuthorityDataType ) =>{
     display: flex;
     justify-content: center;
     margin-top: 20px;
+    margin-bottom: 50px;
     .groupSettingLeft{
     display: flex;
     flex-direction: column;
         .groupSettingLeftButton{
             margin: 10px;
-            width: 8vw;
-            height: 6vh;
+            width: 140px;
+            height: 55px;
             font-size: 20px;
         }
     }

@@ -1,6 +1,5 @@
-export interface addUserForm {
+export interface addUserRuleForm {
     user_name: string;
-    password: string;
     phone: string;
     email: string;
     department: string;
