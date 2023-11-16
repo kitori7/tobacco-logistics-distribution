@@ -32,7 +32,7 @@
         <el-form-item label="客户名称">
           <el-input v-model="searchForm.contactName"></el-input>
         </el-form-item>
-        <el-form-item label="大区名称">
+        <el-form-item label="大区">
           <el-select v-model="searchForm.areaName">
             <el-option
               v-for="item in boardStore.cond?.areaList"
