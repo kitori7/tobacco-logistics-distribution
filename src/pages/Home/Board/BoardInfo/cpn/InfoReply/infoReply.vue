@@ -142,8 +142,6 @@
             fileList.value.forEach((it: UploadFile) => {
               dataForm.append("fileList", it.raw as any);
             });
-            console.log(fileList.value);
-
             boardStore
               .postInfoAddAction(dataForm)
               .then((res) => {
@@ -155,18 +153,16 @@
                     type: "success",
                     message: "提交成功",
                   });
+                } else {
+                  ElMessage({
+                    message: "提交失败",
+                    type: "warning",
+                  });
                 }
               })
-              .catch(() => {
-                ElMessage({
-                  message: "提交失败",
-                  type: "warning",
-                });
-              });
+              .catch(() => {});
           })
-          .catch(() => {
-            // catch error
-          });
+          .catch(() => {});
       } else {
         console.log("error", fields);
       }

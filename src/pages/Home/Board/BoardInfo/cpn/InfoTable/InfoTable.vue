@@ -25,7 +25,7 @@
         label="异常信息反馈"
         width="200"
       />
-      <el-table-column prop="orderDate" label="信息生成时间" width="180" />
+      <el-table-column prop="orderDate" label="订单时间" width="180" />
       <el-table-column label="操作" width="60" fixed="right">
         <template #default="scope">
           <el-button link size="small" @click="handleEdit(scope.row)"
