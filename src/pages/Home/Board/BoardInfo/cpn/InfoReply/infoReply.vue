@@ -38,7 +38,7 @@
               list-type="picture-card"
               :auto-upload="false"
               :on-change="handleChange"
-              ref="uploadrefss"
+              ref="uploadref"
             >
               <el-icon><Plus /></el-icon>
             </el-upload>
@@ -114,7 +114,7 @@
   });
   // 上传图片
   const fileList = ref<UploadFiles>([]);
-  const uploadrefss = ref();
+  const uploadref = ref();
   const handleChange = (file: UploadFile, files: UploadFiles) => {
     fileList.value = files;
     console.log(file);
@@ -143,8 +143,6 @@
             fileList.value.forEach((it: UploadFile) => {
               dataForm.append("fileList", it.raw as any);
             });
-            console.log(fileList.value);
-
             boardStore
               .postInfoAddAction(dataForm)
               .then((res) => {
@@ -176,7 +174,7 @@
 
   const Replyclose = (formEl?: FormInstance) => {
     if (!formEl) return;
-    uploadrefss.value.clearFiles();
+    uploadref.value.clearFiles();
     formEl.resetFields();
   };
 </script>
