@@ -162,6 +162,9 @@ const openGroupSetting = () => {
             .groupSearch{
                 flex: 12;
                 border: 2px solid  #73e1ff;
+                .el-form-item {
+                    width: 30%;
+                }
             }
             .groupSearchButton{
                 height: 100%;

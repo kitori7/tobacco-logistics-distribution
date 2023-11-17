@@ -38,18 +38,24 @@ interface Option {
     key: number
     label: string
 }
-const generateData = () => {
-const data: Option[] = []
-for (let i = 1; i <= 15; i++) {
-    data.push({
-        key: i,
-        label: `Option ${i}`,
-    })
-}
-    return data
-}
-const data = ref<Option[]>(generateData())
-const value = ref([1])
+const value = ref([])
+const AllAuthorityList = ref()
+const data = ref<Option[]>()//这个是放权限数据的
+
+groupStore.getAllAuthorityAction()
+    .then(()=>{
+        AllAuthorityList.value = groupStore.AllAuthority
+        const list = toRaw(AllAuthorityList.value)
+        const qwe: Option[] = []
+        for (let i = 0; i < list.length; i++) {
+            qwe.push({
+                key: list[i].operation_id,
+                label: list[i].operation_name,
+            })
+        }  
+        console.log(qwe);//qwe是需要传到data里面的
+        
+})
 
 
 const groupSettingOpen =ref(false)
