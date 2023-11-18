@@ -1,5 +1,5 @@
 import requests from "../index";
-import { addUserForm, userAuthorityDataType} from "@/types/group";
+import { IUserSearch, addUserForm, userAuthorityDataType} from "@/types/group";
 import { IRequest } from "../request/type";
 
 // 添加用户接口
@@ -36,5 +36,13 @@ export function userAvatar(data: any) {
   return requests.post<IRequest<string>>({
     url: "/userservice/user/avatar",
     data,
+  });
+}
+// 查询用户
+
+export function getAllUser(data:IUserSearch) {
+  return requests.get<IRequest<any>>({
+    url: "/userservice/user/get/operations",
+    data
   });
 }

@@ -12,3 +12,8 @@ export interface userAuthorityDataType {
   idList: string;
   role_id: Number;
 }
+export interface IUserSearch {
+  position?: string;
+  user_name?: string;
+  work_number?: string;
+}

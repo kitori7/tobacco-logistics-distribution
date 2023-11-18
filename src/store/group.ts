@@ -1,10 +1,15 @@
 import { defineStore } from "pinia";
-import type { addUserForm, userAuthorityDataType } from "@/types/group";
+import type {
+  IUserSearch,
+  addUserForm,
+  userAuthorityDataType,
+} from "@/types/group";
 import {
   postAddUser,
   setUserAuthority,
   getAllAuthority,
   userAvatar,
+  getAllUser,
 } from "@/service/modules/group";
 
 export const useGroupStore = defineStore("group", () => {
@@ -14,7 +19,7 @@ export const useGroupStore = defineStore("group", () => {
     if (res.code === 200) {
       ElMessage.success(res.msg);
     }
-    return res
+    return res;
   }
   //获取权限
   const AllAuthority = ref<any[]>();
@@ -35,7 +40,14 @@ export const useGroupStore = defineStore("group", () => {
     const res = await userAvatar(avatar);
     if (res.code === 200) {
       ElMessage.success(res.msg);
-    } 
+    }
+    return res;
+  }
+  async function getAllUserAction(searchData: IUserSearch) {
+    const res = await getAllUser(searchData);
+    if (res.code === 200) {
+      ElMessage.success(res.msg);
+    }
     return res;
   }
   return {
@@ -44,5 +56,6 @@ export const useGroupStore = defineStore("group", () => {
     getAllAuthorityAction,
     AllAuthority,
     userAvatarAction,
+    getAllUserAction,
   };
 });
