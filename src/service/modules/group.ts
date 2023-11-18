@@ -31,8 +31,9 @@ export function setUserAuthority(authority: userAuthorityDataType) {
     data: authority,
   });
 }
+// 上传头像
 export function userAvatar(data: any) {
-  return requests.post<IRequest<any>>({
+  return requests.post<IRequest<string>>({
     url: "/userservice/user/avatar",
     data,
   });

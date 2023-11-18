@@ -1,9 +1,13 @@
 <template>
   <div class="groupAddDialog">
-    <el-dialog v-model="groupAddOpen" width="70%" @close="closeGroupAdd(userFormRef)">
+    <el-dialog
+      v-model="groupAddOpen"
+      width="70%"
+      @close="closeGroupAdd(userFormRef)"
+    >
       <div class="groupAddInfo">
         <div class="groupAddOne">
-          <div class="groupAvatarBorder"><img src="" alt="" /></div>
+          <div class="groupAvatarBorder"><img :src="photo" alt="" /></div>
           <el-upload
             accept="image/*"
             multiple
@@ -11,12 +15,9 @@
             :show-file-list="false"
             :auto-upload="false"
             :on-change="handleChange"
-            ref="uploadrefss"
+            ref="uploadref"
           >
-            <el-button
-              type="primary"
-              class="groupAvatarUploadButton"
-              @click="uploadImg"
+            <el-button type="primary" class="groupAvatarUploadButton"
               >上传头像</el-button
             >
           </el-upload>
@@ -29,7 +30,6 @@
             :rules="rules"
             ref="userFormRef"
             :model="addUserData"
-            
           >
             <el-form-item label="姓名" prop="user_name">
               <el-input v-model="addUserData.user_name"></el-input>
@@ -60,8 +60,12 @@
             <el-form-item label="工号" prop="work_number">
               <el-input v-model="addUserData.work_number"></el-input>
             </el-form-item>
-            <el-form-item label="角色：" prop="role_id" class="groupAddRadioGroup">
-              <el-radio-group v-model="addUserData.role_id" >
+            <el-form-item
+              label="角色："
+              prop="role_id"
+              class="groupAddRadioGroup"
+            >
+              <el-radio-group v-model="addUserData.role_id">
                 <el-radio label="1" size="large">班组长</el-radio>
                 <el-radio label="2" size="large">送货员</el-radio>
                 <el-radio label="3" size="large">市场经理</el-radio>
@@ -69,9 +73,7 @@
                 <el-radio label="5" size="large">领导</el-radio>
               </el-radio-group>
             </el-form-item>
-            <div class="groupAddMessage">
-              默认密码 :  ycwl1234
-            </div>
+            <div class="groupAddMessage">默认密码 : ycwl1234</div>
           </el-form>
         </div>
         <div class="groupAddSetting">
@@ -99,13 +101,14 @@
   });
   const userFormRef = ref<FormInstance>();
   const rules = reactive<FormRules<addUserForm>>({
-    user_name: [{ required: true, trigger: "blur" }],
-    phone: [{ required: true, trigger: "blur" }],
-    email: [{ required: true, trigger: "blur" }],
-    department: [{ required: true, trigger: "blur" }],
-    sign_time: [{ required: true, trigger: "blur" }],
-    work_number: [{ required: true, trigger: "blur" }],
+    user_name: [{ required: true, message: "请输入姓名", trigger: "blur" }],
+    phone: [{ required: true, message: "请输入电话", trigger: "blur" }],
+    email: [{ required: true, message: "请输入邮箱", trigger: "blur" }],
+    department: [{ required: true, message: "请选择部门", trigger: "blur" }],
+    sign_time: [{ required: true, message: "请选择入职时间", trigger: "blur" }],
+    work_number: [{ required: true, message: "请输入工号", trigger: "blur" }],
   });
+  const photo = ref<string>("");
   const addUserData = ref<addUserForm>({
     user_name: "",
     phone: "",
@@ -116,49 +119,61 @@
     sign_time: "",
     avatarPath: "",
   });
+
   const closeGroupAdd = (formEl: FormInstance | undefined) => {
     if (!formEl) return;
     groupAddOpen.value = false;
-    formEl.resetFields(); 
+    photo.value = "";
+    formEl.resetFields();
   };
   //固定班组信息
-  const groupList = ["班组一", "班组二", "班组三", "班组四", "班组五", "班组六", "营销部"];
+  const groupList = [
+    "班组一",
+    "班组二",
+    "班组三",
+    "班组四",
+    "班组五",
+    "班组六",
+    "营销部",
+  ];
   const groupAddConfirm = async (formEl: FormInstance | undefined) => {
-    if(addUserData.value.role_id == 0){
-      ElMessage({
-        type: 'warning',
-        message: '请选择角色',
-        })
-    }else{
-      if (!formEl) return;
-      groupStore.postAddUserAction(addUserData.value).then(() => {
-        closeGroupAdd(userFormRef.value)
-      });
-    }
+    if (!formEl) return;
+    await formEl.validate((valid, fields) => {
+      if (valid) {
+        if (addUserData.value.role_id != 0) {
+          addUserData.value.avatarPath = photo.value;
+          console.log(addUserData.value);
+          groupStore.postAddUserAction(addUserData.value).then((res) => {
+            if (res.code == 200) {
+              closeGroupAdd(userFormRef.value);
+            }
+          });
+        } else {
+          ElMessage.error("请选择角色");
+        }
+      } else {
+        console.log("error submit!", fields);
+      }
+    });
   };
   //   上传图片
   import type { UploadFile } from "element-plus";
   const fileList = ref<UploadFile>();
-  const uploadrefss = ref();
   const handleChange = (file: UploadFile) => {
     fileList.value = file;
-    console.log(file);
-  };
-  function uploadImg() {
     let dataForm = new FormData();
-    dataForm.append("fileList", fileList.value?.raw as any);
+    dataForm.append("photo", fileList.value?.raw as any);
     groupStore.userAvatarAction(dataForm).then((res) => {
-      console.log(res);
+      photo.value = "http://172.16.0.166:8080/file" + res.data;
+      console.log(photo.value);
     });
-  }
-
- 
+  };
 </script>
 <style lang="scss" scoped>
   .groupAddInfo {
     position: relative;
     width: 60vw;
-    margin: 5vh auto;
+    margin: 0 auto;
     color: #73e1ff;
     font-size: 20px;
     .groupAddOne {
@@ -169,8 +184,13 @@
       margin-left: 130px;
       .groupAvatarBorder {
         width: 170px;
-        height: 200px;
+        height: 230px;
         border: 1px solid #73e1ff;
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
       }
       .groupAvatarUploadButton {
         margin-left: 10px;
@@ -191,10 +211,10 @@
         color: $processed;
         padding-left: 60px;
       }
-        .groupAddRadioGroup {
-          margin-left: 20px;
-          width: 100%;
-        }
+      .groupAddRadioGroup {
+        margin-left: 20px;
+        width: 100%;
+      }
     }
 
     .groupAddSetting {
