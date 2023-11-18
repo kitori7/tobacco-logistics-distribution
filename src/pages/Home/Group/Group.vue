@@ -8,12 +8,18 @@
           v-model="searchCond"
         >
           <el-form-item label="姓名" label-width="60">
-            <el-input v-model="searchCond.user_name"></el-input>
+            <el-input
+              v-model="searchCond.user_name"
+              placeholder="点击输入"
+            ></el-input>
           </el-form-item>
-          <el-form-item label="工号">
-            <el-input v-model="searchCond.work_number"></el-input>
+          <el-form-item label="工号" label-width="70">
+            <el-input
+              v-model="searchCond.work_number"
+              placeholder="点击输入"
+            ></el-input>
           </el-form-item>
-          <el-form-item label="部门">
+          <el-form-item label="部门" label-width="70">
             <el-select v-model="searchCond.position"></el-select>
           </el-form-item>
         </el-form>
@@ -176,21 +182,18 @@
 </script>
 <style lang="scss" scoped>
   .Group {
+    box-sizing: border-box;
     height: 76vh;
-    padding: 0 10px;
+    margin: 0 2vw;
+    padding: 0 2vw;
     display: flex;
     .groupControl {
       position: fixed;
-      margin-left: 30px;
       display: flex;
       height: 50px;
-
+      width: 100%;
       .groupSearch {
-        flex: 12;
         border: 2px solid #73e1ff;
-        .el-form-item {
-          width: 25%;
-        }
       }
       .groupSearchButton {
         height: 100%;
@@ -199,15 +202,10 @@
       }
       .groupSet,
       .groupAdd {
-        margin: 0 20px 0 50px;
-        flex: 1;
+        margin: 0 0 0 5vw;
         height: 100%;
         text-align: center;
         border: 2px solid #73e1ff;
-      }
-      .groupAdd {
-        margin: 0 50px;
-        flex: 1;
       }
     }
     .useInfo::-webkit-scrollbar {
@@ -215,11 +213,9 @@
     }
     .useInfo {
       position: relative;
-      border: 1px solid #73e1ff;
       top: 12%;
+      border: 1px solid #73e1ff;
       display: flex;
-      justify-content: space-between;
-      flex-direction: row;
       flex-wrap: wrap;
       overflow-x: hidden;
       overflow-y: auto;
