@@ -65,14 +65,14 @@
   groupStore.getAllAuthorityAction().then(() => {
     AllAuthorityList.value = groupStore.AllAuthority;
     const list = toRaw(AllAuthorityList.value);
-    const operation: Option[] = [];
+ 
     for (let i = 0; i < list.length; i++) {
-      operation.push({
+      data.value.push({
         key: list[i].operation_id,
         label: list[i].operation_name,
       });
     }
-    data.value = operation;
+   
   });
 
   const groupSettingOpen = ref(false);

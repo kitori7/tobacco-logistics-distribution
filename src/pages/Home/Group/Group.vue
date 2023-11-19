@@ -120,8 +120,8 @@
   .Group {
     box-sizing: border-box;
     height: 76vh;
-    margin: 0 2vw;
-    padding: 0 2vw;
+    margin: 0 3vw;
+    padding: 0 3vw;
     display: flex;
     .groupControl {
       position: fixed;
@@ -157,7 +157,7 @@
       overflow-x: hidden;
       overflow-y: auto;
       .useInfoItem {
-        margin: 2vh 1vw;
+        margin: 2vh 2vw;
         width: 190px;
         text-align: center;
         line-height: 23px;
