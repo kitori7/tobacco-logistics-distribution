@@ -136,15 +136,15 @@
     "班组六",
     "营销部",
   ];
+  const emit = defineEmits(["renewUser"]);
   const groupAddConfirm = async (formEl: FormInstance | undefined) => {
     if (!formEl) return;
     await formEl.validate((valid, fields) => {
       if (valid) {
         if (addUserData.value.role_id != 0) {
-          addUserData.value.avatarPath = photo.value;
-          console.log(addUserData.value);
           groupStore.postAddUserAction(addUserData.value).then((res) => {
             if (res.code == 200) {
+              emit("renewUser");
               closeGroupAdd(userFormRef.value);
             }
           });
@@ -164,8 +164,8 @@
     let dataForm = new FormData();
     dataForm.append("photo", fileList.value?.raw as any);
     groupStore.userAvatarAction(dataForm).then((res) => {
+      addUserData.value.avatarPath = res.data;
       photo.value = "http://172.16.0.166:8080/file" + res.data;
-      console.log(photo.value);
     });
   };
 </script>

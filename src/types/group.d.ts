@@ -13,7 +13,13 @@ export interface userAuthorityDataType {
   role_id: Number;
 }
 export interface IUserSearch {
-  position?: string;
-  user_name?: string;
-  work_number?: string;
+  department?: string;
+  userName?: string;
+  workNumber?: string;
+}
+export interface IuserInfo {
+  user_name: string;
+  position: string;
+  work_number: string;
+  avatar_path: string;
 }

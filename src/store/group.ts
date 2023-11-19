@@ -12,6 +12,7 @@ import {
   getAllUser,
 } from "@/service/modules/group";
 
+
 export const useGroupStore = defineStore("group", () => {
   //添加用户
   async function postAddUserAction(userData: addUserForm) {
@@ -45,9 +46,6 @@ export const useGroupStore = defineStore("group", () => {
   }
   async function getAllUserAction(searchData: IUserSearch) {
     const res = await getAllUser(searchData);
-    if (res.code === 200) {
-      ElMessage.success(res.msg);
-    }
     return res;
   }
   return {

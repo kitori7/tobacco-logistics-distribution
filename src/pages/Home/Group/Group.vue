@@ -9,18 +9,26 @@
         >
           <el-form-item label="姓名" label-width="60">
             <el-input
-              v-model="searchCond.user_name"
+              v-model="searchCond.userName"
               placeholder="点击输入"
             ></el-input>
           </el-form-item>
           <el-form-item label="工号" label-width="70">
             <el-input
-              v-model="searchCond.work_number"
+              v-model="searchCond.workNumber"
               placeholder="点击输入"
             ></el-input>
           </el-form-item>
           <el-form-item label="部门" label-width="70">
-            <el-select v-model="searchCond.position"></el-select>
+            <el-select v-model="searchCond.department">
+              <el-option label="全部" value=""></el-option>
+              <el-option
+                v-for="item in groupList"
+                :key="item"
+                :label="item"
+                :value="item"
+              ></el-option
+            ></el-select>
           </el-form-item>
         </el-form>
       </div>
@@ -37,13 +45,14 @@
       >
     </div>
     <div class="useInfo">
-      <div class="useInfoItem" v-for="item in info">
+      <div class="useInfoItem" v-for="item in userInfo">
         <div class="usePhoto">
+          <img :src="item.avatar_path" alt="" />
           <el-button class="groupInfoItemButton" :icon="EditPen"></el-button>
         </div>
-        <div>{{ item.name }}</div>
+        <div>{{ item.user_name }}</div>
         <div>{{ item.position }}</div>
-        <div>工号：{{ item.jobNumber }}</div>
+        <div>工号：{{ item.work_number }}</div>
       </div>
     </div>
     <div class="groupDialog">
@@ -51,7 +60,11 @@
         :groupSetting="groupSettingOpenf"
         ref="groupSettingOpenf"
       ></GroupSetting>
-      <GroupAdd :groupAdd="groupAddf" ref="groupAddf"></GroupAdd>
+      <GroupAdd
+        :groupAdd="groupAddf"
+        ref="groupAddf"
+        @renew-user="searchUser"
+      ></GroupAdd>
     </div>
   </div>
 </template>
@@ -60,111 +73,31 @@
   import GroupAdd from "./GroupAdd/GroupAdd.vue";
   import { Plus, Search, Tools, EditPen } from "@element-plus/icons-vue";
   import { useGroupStore } from "@/store/group";
+  import type { IuserInfo } from "@/types/group";
   const groupStore = useGroupStore();
   const searchCond = reactive({
-    position: "",
-    user_name: "",
-    work_number: "",
+    department: "",
+    userName: "",
+    workNumber: "",
   });
-  console.log(groupStore.getAllUserAction);
-
-  interface useInfo {
-    name: string;
-    position: string;
-    jobNumber: number;
-  }
-  const info: useInfo[] = [
-    {
-      name: "张三",
-      position: "职位一",
-      jobNumber: 12399,
-    },
-    {
-      name: "张四",
-      position: "职位二",
-      jobNumber: 45699,
-    },
-    {
-      name: "张四",
-      position: "职位二",
-      jobNumber: 45699,
-    },
-    {
-      name: "张四",
-      position: "职位二",
-      jobNumber: 45699,
-    },
-    {
-      name: "张四",
-      position: "职位二",
-      jobNumber: 45699,
-    },
-    {
-      name: "张四",
-      position: "职位二",
-      jobNumber: 45699,
-    },
-    {
-      name: "张四",
-      position: "职位二",
-      jobNumber: 45699,
-    },
-    {
-      name: "张四",
-      position: "职位二",
-      jobNumber: 45699,
-    },
-    {
-      name: "张四",
-      position: "职位二",
-      jobNumber: 45699,
-    },
-    {
-      name: "张四",
-      position: "职位二",
-      jobNumber: 45699,
-    },
-    {
-      name: "张四",
-      position: "职位二",
-      jobNumber: 45699,
-    },
-    {
-      name: "张四",
-      position: "职位二",
-      jobNumber: 45699,
-    },
-    {
-      name: "张四",
-      position: "职位二",
-      jobNumber: 45699,
-    },
-    {
-      name: "张四",
-      position: "职位二",
-      jobNumber: 45699,
-    },
-    {
-      name: "张四",
-      position: "职位二",
-      jobNumber: 45699,
-    },
-    {
-      name: "张四",
-      position: "职位二",
-      jobNumber: 45699,
-    },
-    {
-      name: "张四",
-      position: "职位二",
-      jobNumber: 45699,
-    },
-    {
-      name: "张四",
-      position: "职位二",
-      jobNumber: 45699,
-    },
+  const groupList = [
+    "班组一",
+    "班组二",
+    "班组三",
+    "班组四",
+    "班组五",
+    "班组六",
+    "营销部",
   ];
+
+  const userInfo = ref<IuserInfo[]>();
+  groupStore.getAllUserAction({}).then((res) => {
+    userInfo.value = res.data.map((i: IuserInfo) => {
+      i.avatar_path = "http://172.16.0.166:8080/file" + i.avatar_path;
+      return i;
+    });
+  });
+
   const groupSettingOpenf = ref();
   const groupAddf = ref();
 
@@ -175,9 +108,12 @@
     groupSettingOpenf.value.groupSettingOpen = true;
   };
   function searchUser() {
-    console.log(searchCond);
-
-    groupStore.getAllUserAction(searchCond);
+    groupStore.getAllUserAction({ ...searchCond }).then((res) => {
+      userInfo.value = res.data.map((i: IuserInfo) => {
+        i.avatar_path = "http://172.16.0.166:8080/file" + i.avatar_path;
+        return i;
+      });
+    });
   }
 </script>
 <style lang="scss" scoped>
@@ -212,6 +148,7 @@
       display: none;
     }
     .useInfo {
+      width: 100%;
       position: relative;
       top: 12%;
       border: 1px solid #73e1ff;
@@ -229,6 +166,11 @@
           height: 250px;
           border: 2px solid #73e1ff;
           position: relative;
+          img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+          }
           .groupInfoItemButton {
             position: absolute;
             bottom: -2px;
