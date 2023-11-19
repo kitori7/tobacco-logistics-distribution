@@ -7,21 +7,27 @@
       :header-cell-style="{ 'text-align': 'center' }"
       :row-style="{ height: '50px' }"
       :row-class-name="tableRowClassName"
-      :cell-style="(tableCellStyle as any)"
-      style="font-size: 14px"
+      :cell-style="tableCellStyle as any"
+      style="font-size: 14px;"
       @selection-change="toggleSelection"
     >
-      <el-table-column type="selection" />
+      <el-table-column type="selection" fixed />
       <el-table-column type="index" label="序号" />
-      <el-table-column prop="areaName" label="配送域" width="160" />
+      <el-table-column prop="areaName" label="大区" width="160" />
       <el-table-column prop="storeName" label="线路名称" width="180" />
       <el-table-column prop="deliveryName" label="送货员" width="80" />
       <el-table-column prop="customerManagerName" label="客户专员" width="80" />
-      <el-table-column prop="customerCode" label="客户编码" width="75" />
-      <el-table-column prop="contactName" label="客户名称" width="75" />
-      <el-table-column prop="storeAddress" label="客户地址" />
-      <el-table-column prop="feedbackInformation" label="异常信息反馈" />
-      <el-table-column label="操作" width="60">
+      <el-table-column prop="customerCode" label="客户编码" width="90" />
+      <el-table-column prop="contactName" label="客户名称" width="90" />
+      <el-table-column prop="storeAddress" label="客户地址" width="280" />
+      <el-table-column
+        prop="feedbackInformation"
+        label="异常信息反馈"
+        width="300"
+      />
+      <el-table-column prop="orderDate" label="订单时间" width="180" />
+      <el-table-column prop="orderDate" label="订单最新回复时间" width="180" />
+      <el-table-column label="操作" width="60" fixed="right">
         <template #default="scope">
           <el-button link size="small" @click="handleEdit(scope.row)"
             ><el-icon color="rgb(204,255,255)" size="15"><Edit /></el-icon
@@ -88,9 +94,10 @@
     deleteData.value = items
       .map((item) => {
         return item.feedbackId.toString();
-      }).join()
+      })
+      .join();
   }
-  defineExpose({deleteData});
+  defineExpose({ deleteData });
 </script>
 <style lang="scss" scoped>
   .InfoTable {

@@ -91,13 +91,21 @@
     }
   }
   // 回复点击
-
   function propReplyClick(id: number) {
     InfoReplyRef.value?.handleReply(id);
   }
   // 提交回复点击
+  const feedbackStatus = ref<string>("");
   function submitReplyClick(id: number) {
-    InfoItemRef.value?.getReplyData(id);
+    getDate();
+    watch(
+      () => boardStore.boardData.dataCurrentPage,
+      (newValue) => {
+        const row = newValue.filter((i) => i.feedbackId == id);
+        feedbackStatus.value = row[0]?.feedbackStatus;
+        InfoItemRef.value?.getReplyData(id, feedbackStatus.value);
+      }
+    );
   }
   // 添加点击
   const InfoAddRef = ref<InstanceType<typeof InfoAdd>>();

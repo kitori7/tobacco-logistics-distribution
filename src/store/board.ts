@@ -30,6 +30,7 @@ export const useBoardStore = defineStore("board", () => {
     loading.value = true;
     const res = await getList(data);
     boardData.value = res.data;
+    
     loading.value = false;
   }
   //下拉框数据
@@ -59,7 +60,6 @@ export const useBoardStore = defineStore("board", () => {
   const detail = ref<InfoDetail[]>();
   async function getDetailData(id: number) {
     const res = await getInfoDetail(id);
-    console.log(id);
     detail.value = res.data;
   }
   // 处理信息添加
