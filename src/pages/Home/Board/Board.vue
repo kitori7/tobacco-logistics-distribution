@@ -24,7 +24,7 @@
 <script lang="ts" setup>
   import TbSideDecoration from "@/components/TbSideDecoration/TbSideDecoration.vue";
   import { BorderBox9 } from "@dataview/datav-vue3";
-  import { useRouter ,useRoute} from "vue-router";
+  import { useRouter, useRoute } from "vue-router";
 
   const router = useRouter();
   const route = useRoute();
@@ -47,8 +47,8 @@
       .dv-border-box-9 {
         width: 85vw;
         box-sizing: border-box;
-        padding: 15px 25px 0px 25px;
-        margin-left: 50px;
+        padding: 1.5vh 2.5vw 0px 2.5vw;
+        margin-left: 2.5vw;
       }
     }
     .btn-content {
