@@ -7,8 +7,8 @@
       :header-cell-style="{ 'text-align': 'center' }"
       :row-style="{ height: '50px' }"
       :row-class-name="tableRowClassName"
-      :cell-style="tableCellStyle as any"
-      style="font-size: 14px; width: 100%;"
+      :cell-style="(tableCellStyle as any)"
+      style="font-size: 14px"
       @selection-change="toggleSelection"
     >
       <el-table-column type="selection" fixed />
