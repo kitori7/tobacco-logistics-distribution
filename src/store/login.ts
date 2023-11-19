@@ -7,8 +7,8 @@ import { useRouter } from "vue-router";
 export const useLoginStore = defineStore("login", () => {
   // 二维码模块
   const router = useRouter();
-  const captcha = ref<string>();
-  const captchaText = ref<string>();
+  const captcha = ref<string>("");
+  const captchaText = ref<string>("");
   async function getCaptchaAction() {
     getCaptcha().then((res) => {
       const headers = res.headers;
@@ -21,8 +21,7 @@ export const useLoginStore = defineStore("login", () => {
   const userInfo = ref<ILoginData>();
   const token = ref<string>();
   async function loginAction(data: ILoginForm) {
-    const res = await postLogin(data);
-    if (res.code === 200) {
+    const res = await postLogin(data, captchaText.value);
       token.value = res.data.token;
       localStorage.setItem("token", token.value);
       userInfo.value = res.data;
@@ -33,9 +32,6 @@ export const useLoginStore = defineStore("login", () => {
       );
       ElMessage.success("登录成功");
       router.push("/home");
-    } else {
-      ElMessage.error(res.msg);
-    }
   }
 
   return {

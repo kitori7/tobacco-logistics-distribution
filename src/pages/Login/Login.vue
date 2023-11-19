@@ -30,9 +30,7 @@
             />
           </el-form-item>
         </el-form>
-        <div class="button" @click="handleLogin">
-          GO
-        </div>
+        <div class="button" @click="handleLogin">GO</div>
       </div>
     </div>
   </div>
@@ -49,12 +47,7 @@
   // 获取二维码
   loginStore.getCaptchaAction();
   function handleLogin() {
-    if (loginForm.value.captcha === loginStore.captchaText) {
-      loginStore.loginAction({ ...loginForm.value });
-    } else {
-      ElMessage.warning("验证码错误");
-      loginStore.getCaptchaAction();
-    }
+    loginStore.loginAction({ ...loginForm.value });
   }
 </script>
 <style lang="scss" scoped>
