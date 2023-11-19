@@ -63,7 +63,7 @@ export interface IBoardItem {
   areaName: string;
   orderDate: string;
   feedbackFileList: Array;
-  feedbackStatus: string;
+  feedbackStatus: number;
 }
 // 处理消息展示数据
 export interface ItemInfo {

@@ -16,7 +16,7 @@
       <div class="el-dialog-div">
         <el-scrollbar class="scroll">
           <div class="el-dialog-div-info">
-            <template v-for="(value,,index) in itemInfo" :key="index"
+            <template v-for="(value,, index) in itemInfo" :key="index"
               ><div class="el-dialog-div-info-item">
                 {{ InfoArray[index] }}:&nbsp;&nbsp;{{ value }}
               </div></template
@@ -45,11 +45,11 @@
             </div>
             <div class="reply-img">
               <template
-                v-for="imglist in mapPath(item.replyFilePathList as string[])"
-                :key="index"
+                v-for="imgList in mapPath(item.replyFilePathList as string[])"
+                :key="imgList"
               >
                 <div class="reply-img-item">
-                  <img :src="imglist" alt="" />
+                  <img :src="imgList" alt="" />
                 </div>
               </template>
             </div>
@@ -86,27 +86,27 @@
   });
   // 反馈消息类型
   const Item = ref<IBoardItem>();
-  function stateColor(state?: string) {
+  function stateColor(state?: number) {
     switch (state) {
-      case "0":
+      case 0:
         return "notProcessed";
-      case "1":
+      case 1:
         return "dispose";
-      case "2":
+      case 2:
         return "processed";
-      case "3":
+      case 3:
         return "notDispose";
     }
   }
-  function stateText(state?: string) {
+  function stateText(state?: number) {
     switch (state) {
-      case "0":
+      case 0:
         return "未处理";
-      case "1":
+      case 1:
         return "处理中";
-      case "2":
+      case 2:
         return "已处理";
-      case "3":
+      case 3:
         return "无需处理";
     }
   }
@@ -121,7 +121,7 @@
   const replyData = ref<InfoDetail[]>([]);
   // 获取数据和图片
   const feedbackImg = ref<string[]>([]);
-  const replyStatus = ref<string>();
+  const replyStatus = ref<number>(0);
   function handleOpen(item: IBoardItem) {
     isOpen.value = true;
     id.value = item.feedbackId;
@@ -140,7 +140,7 @@
       }
     );
   }
-  function getReplyData(id: number, feedbackStatus: string) {
+  function getReplyData(id: number, feedbackStatus: number) {
     replyStatus.value = feedbackStatus;
     watch(
       () => boardStore.detail,

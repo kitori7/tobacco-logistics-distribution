@@ -14,6 +14,19 @@
             :rules="rules"
             ref="ruleFormRef"
           >
+          <el-form-item label="客户编码" prop="customerCode">
+              <el-select
+                v-model="addForm.customerCode"
+                placeholder="请选择客户编码"
+              >
+                <el-option
+                  v-for="item in boardStore.cond?.storeList"
+                  :key="item.customerCode"
+                  :label="item.contactName"
+                  :value="item.customerCode"
+                ></el-option>
+              </el-select>
+            </el-form-item>
             <el-form-item label="客户名称" prop="customerCode">
               <el-select
                 v-model="addForm.customerCode"
@@ -27,7 +40,7 @@
                 ></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="配送域" prop="areaName">
+            <!-- <el-form-item label="配送域" prop="areaName">
               <el-select v-model="addForm.areaName" placeholder="请选择配送域">
                 <el-option
                   v-for="item in boardStore.cond?.areaList"
@@ -35,11 +48,11 @@
                   :value="item.areaName"
                 ></el-option>
               </el-select>
-            </el-form-item>
-            <el-form-item label="路径名称" prop="routeName">
+            </el-form-item> -->
+            <el-form-item label="路线名称" prop="routeName">
               <el-select
                 v-model="addForm.routeName"
-                placeholder="请选择路径名称"
+                placeholder="请选择路线名称"
                 @change="
                   (e) => {
                     selectChange(e, false);
