@@ -45,7 +45,7 @@
     width: 100vw;
     background: url("@/assets/images/background.png") center no-repeat;
     background-size: cover;
-    padding: 5px 30px;
+    padding: 0.5vh 3vw;
     display: flex;
     flex-direction: column;
     .main {

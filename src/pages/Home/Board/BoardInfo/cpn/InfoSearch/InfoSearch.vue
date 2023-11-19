@@ -161,8 +161,8 @@
     }
     .search-content {
       display: flex;
-      margin-top: 20px;
-      padding: 10px 40px 0px 40px;
+      margin-top: 1vh;
+      padding: 2vh 3vw 0 3vw;
       border: 2px solid $processed;
       .el-form-item {
         width: 30%;
@@ -179,7 +179,7 @@
       }
     }
     .btn-content {
-      margin: 5px 0;
+      margin: 0.8vh 0;
     }
   }
 </style>
