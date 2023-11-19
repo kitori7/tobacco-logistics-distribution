@@ -7,7 +7,6 @@ import BoardInfo from "@/pages/Home/Board/BoardInfo/BoardInfo.vue";
 import BoardAnalyze from "@/pages/Home/Board/BoardAnalyze/BoardAnalyze.vue";
 import Group from "@/pages/Home/Group/Group.vue";
 
-
 // 静态路由
 const constantRoutes: RouteRecordRaw[] = [
   { path: "/", redirect: "/login" },
@@ -40,8 +39,8 @@ const constantRoutes: RouteRecordRaw[] = [
       },
       {
         path: "/home/group",
-        component: Group,
         name: "group",
+        component: Group,
       },
     ],
   },
