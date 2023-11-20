@@ -6,6 +6,7 @@ import type {
   ICond,
   InfoDetail,
   IAddData,
+  ISingleCondData,
 } from "@/types/board";
 import { IRequest } from "../request/type";
 
@@ -34,9 +35,9 @@ export function addFeedback(data: IAddData) {
 export function removeFeedback(ids: string) {
   return requests.delete({
     url: `/guestbook/feedback/delete/${ids}`,
-    headers:{
-      "Content-Type":"application/x-www-form-urlencoded"
-    }
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
   });
 }
 // 处理信息详情
@@ -50,5 +51,11 @@ export function postInfoAdd(addReply: any) {
   return requests.post<IRequest<string>>({
     url: "/guestbook/feedback/addReply",
     data: addReply,
+  });
+}
+// 添加下拉框联动数据
+export function getSingleConditions(customerCode: string) {
+  return requests.get<IRequest<ISingleCondData>>({
+    url: `/guestbook/feedback/getSingleConditionsData/${customerCode}`,
   });
 }

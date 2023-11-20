@@ -5,6 +5,7 @@ import type {
   IAddData,
   InfoDetail,
   ICond,
+  ISingleCondData,
 } from "@/types/board";
 import {
   addFeedback,
@@ -13,6 +14,7 @@ import {
   getInfoDetail,
   postInfoAdd,
   removeFeedback,
+  getSingleConditions,
 } from "@/service/modules/board";
 
 export const useBoardStore = defineStore("board", () => {
@@ -30,7 +32,7 @@ export const useBoardStore = defineStore("board", () => {
     loading.value = true;
     const res = await getList(data);
     boardData.value = res.data;
-    
+
     loading.value = false;
   }
   //下拉框数据
@@ -67,6 +69,20 @@ export const useBoardStore = defineStore("board", () => {
     const res = await postInfoAdd(addReply);
     return res;
   }
+  // 添加下拉框联动数据
+  const singleCondData = ref<ISingleCondData>({
+    contactName: "",
+    customerManagerId: "",
+    customerManagerName: "",
+    areaId: "",
+    areaName: "",
+    routeId: "",
+    routeName: "",
+  });
+  async function singleCondDataAction(customerCode: string) {
+    const res = await getSingleConditions(customerCode);
+    singleCondData.value = res.data
+  }
   return {
     // 加载中
     loading,
@@ -84,5 +100,8 @@ export const useBoardStore = defineStore("board", () => {
     detail,
     getDetailData,
     postInfoAddAction,
+    // 添加下拉框联动数据
+    singleCondData,
+    singleCondDataAction,
   };
 });

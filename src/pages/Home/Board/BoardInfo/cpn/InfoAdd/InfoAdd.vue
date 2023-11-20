@@ -14,42 +14,29 @@
             :rules="rules"
             ref="ruleFormRef"
           >
-            <el-form-item label="客户名称" prop="customerCode">
+            <el-form-item label="客户编码" prop="customerCode">
               <el-select
                 v-model="addForm.customerCode"
-                placeholder="请选择客户名称"
+                placeholder="请选择客户编码"
+                @change="selectChange"
               >
                 <el-option
                   v-for="item in boardStore.cond?.storeList"
                   :key="item.customerCode"
-                  :label="item.contactName"
+                  :label="item.customerCode"
                   :value="item.customerCode"
                 ></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="配送域" prop="areaName">
-              <el-select v-model="addForm.areaName" placeholder="请选择配送域">
-                <el-option
-                  v-for="item in boardStore.cond?.areaList"
-                  :key="item.areaId"
-                  :value="item.areaName"
-                ></el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="路径名称" prop="routeName">
+            <el-form-item label="送货员" prop="deliveryName">
               <el-select
-                v-model="addForm.routeName"
-                placeholder="请选择路径名称"
-                @change="
-                  (e) => {
-                    selectChange(e, false);
-                  }
-                "
+                v-model="addForm.deliveryName"
+                placeholder="请选择送货员名称"
               >
                 <el-option
-                  v-for="item in boardStore.cond?.routeList"
-                  :key="item.routeId"
-                  :value="item.routeName"
+                  v-for="item in boardStore.cond?.deliveryUserList"
+                  :key="item.workNumber"
+                  :value="item.userName"
                 ></el-option>
               </el-select>
             </el-form-item>
@@ -62,25 +49,36 @@
               >
               </el-date-picker>
             </el-form-item>
-            <el-form-item label="送货员" prop="deliveryName">
+            <el-form-item label="客户名称" prop="customerCode">
               <el-select
-                v-model="addForm.deliveryName"
-                placeholder="请选择送货员名称"
-                @change="
-                  (e) => {
-                    selectChange(e, true);
-                  }
-                "
+                disabled
+                v-model="addForm.customerCode"
+                placeholder="请选择客户名称"
               >
                 <el-option
-                  v-for="item in boardStore.cond?.deliveryUserList"
-                  :key="item.workNumber"
-                  :value="item.userName"
+                  v-for="item in boardStore.cond?.storeList"
+                  :key="item.customerCode"
+                  :label="item.contactName"
+                  :value="item.customerCode"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="路线名称" prop="routeName">
+              <el-select
+                disabled
+                v-model="addForm.routeName"
+                placeholder="请选择路线名称"
+              >
+                <el-option
+                  v-for="item in boardStore.cond?.routeList"
+                  :key="item.routeId"
+                  :value="item.routeName"
                 ></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="客户专员" prop="customerManagerName">
               <el-select
+                disabled
                 v-model="addForm.customerManagerName"
                 placeholder="请选择客户专员名称"
               >
@@ -136,10 +134,12 @@
 </template>
 <script lang="ts" setup>
   import { useBoardStore } from "@/store/board";
+  import { storeToRefs } from "pinia";
   import { IAddData } from "@/types/board";
   import { Plus } from "@element-plus/icons-vue";
   import type { FormInstance, FormRules } from "element-plus";
   const boardStore = useBoardStore();
+  const { singleCondData } = storeToRefs(boardStore);
   // 打开
   const isOpen = ref<boolean>(false);
   function handleOpen(feedbackType: "1" | "2") {
@@ -149,7 +149,7 @@
   defineExpose({
     handleOpen,
   });
-  const emit = defineEmits(["addSuccess"])
+  const emit = defineEmits(["addSuccess"]);
   const ruleFormRef = ref<FormInstance>();
   const ruleFormRef2 = ref<FormInstance>();
   //校验
@@ -186,19 +186,14 @@
     fileList: [],
   });
   // 选项修改
-  function selectChange(value: string, isDeli: boolean) {
-    console.log(value, isDeli);
-    if (isDeli) {
-      const current = boardStore.cond?.deliveryUserList.find((item) => {
-        return item.userName === value;
-      });
-      addForm.value.deliveryWorkNumber = current?.workNumber as string;
-    } else {
-      const current = boardStore.cond?.routeList.find((item) => {
-        return item.routeName === value;
-      });
-      addForm.value.routeId = Number(current?.routeId);
-    }
+  async function selectChange(e: string) {
+    boardStore.singleCondDataAction(e).then(() => {
+      addForm.value.areaName = singleCondData.value.areaName;
+      addForm.value.customerManagerName =
+        singleCondData.value.customerManagerName;
+      addForm.value.routeId = Number(singleCondData.value.routeId);
+      addForm.value.routeName = singleCondData.value.routeName;
+    });
   }
   // 提交
   const submitForm = async (
@@ -212,8 +207,6 @@
         formEl2.validate((valid, fields) => {
           if (valid) {
             if (res) {
-              // 处理图片
-
               // 发请求
               const formData = new FormData();
               formData.append("areaName", addForm.value.areaName);
@@ -248,7 +241,7 @@
                 .addFeedbackAction(formData as unknown as IAddData)
                 .then(() => {
                   isOpen.value = false;
-                  emit("addSuccess")
+                  emit("addSuccess");
                 });
             }
           } else {

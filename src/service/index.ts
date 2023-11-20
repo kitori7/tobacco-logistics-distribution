@@ -12,8 +12,6 @@ const requests = new request({
       return config;
     },
     responseSuccessFn: (response: any) => {
-      console.log(response);
-      
       if (response.code === 500) {
         ElMessage.error(response.msg);
       }

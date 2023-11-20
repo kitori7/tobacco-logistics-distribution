@@ -11,12 +11,12 @@ export function getCaptcha() {
   );
 }
 // 登录接口
-export function postLogin(data: ILoginForm) {
+export function postLogin(data: ILoginForm, captchaText: string) {
   return requests.post<IRequest<ILoginData>>({
     url: "/userservice/user/login",
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
-      captcha: data.captcha,
+      captcha: captchaText,
     },
     data,
   });
