@@ -19,7 +19,7 @@
     </div>
     <div class="search-content">
       <el-form :inline="true" label-width="100px" :model="searchForm">
-        <el-form-item label="订单日期">
+        <el-form-item label="订单时间">
           <el-date-picker
             v-model="time"
             value-format="YYYY-MM-DD hh:mm:ss"
@@ -41,7 +41,7 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="送货路径">
+        <el-form-item label="路线名称">
           <el-select v-model="searchForm.routeId">
             <el-option
               v-for="item in boardStore.cond?.routeList"
@@ -51,8 +51,15 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="送货部">
-          <el-select></el-select>
+        <el-form-item label="客户专员">
+          <el-select>
+            <el-option
+              v-for="item in boardStore.cond?.customerManagerList"
+              :key="item.workNumber"
+              :label="item.userName"
+              :value="item.workNumber"
+            ></el-option>
+          </el-select>
         </el-form-item>
       </el-form>
       <div class="search-btn">

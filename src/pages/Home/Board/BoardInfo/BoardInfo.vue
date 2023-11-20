@@ -52,7 +52,6 @@
   }
   const feedbackType = ref<"1" | "2">("1");
   function getDate(searchData: ISearch = {}) {
-    console.log(pageData.value);
     boardStore
       .getBoardData({
         feedbackType: feedbackType.value,
@@ -95,7 +94,7 @@
     InfoReplyRef.value?.handleReply(id);
   }
   // 提交回复点击
-  const feedbackStatus = ref<string>("");
+  const feedbackStatus = ref<number>();
   function submitReplyClick(id: number) {
     getDate();
     watch(

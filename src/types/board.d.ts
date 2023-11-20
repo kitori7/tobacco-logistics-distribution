@@ -63,7 +63,7 @@ export interface IBoardItem {
   areaName: string;
   orderDate: string;
   feedbackFileList: Array;
-  feedbackStatus: string;
+  feedbackStatus: number;
 }
 // 处理消息展示数据
 export interface ItemInfo {
@@ -83,7 +83,6 @@ export interface InfoDetail {
   replyType?: string;
   replyFilePathList?: string[];
 }
-
 
 export interface ISearch {
   /**
@@ -193,4 +192,14 @@ export interface IAddData {
    */
   routeName: string;
   [property: string]: any;
+}
+
+export interface ISingleCondData {
+  contactName: string;
+  customerManagerId: string;
+  customerManagerName: string;
+  areaId: string;
+  areaName: string;
+  routeId: string;
+  routeName: string;
 }

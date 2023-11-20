@@ -13,7 +13,7 @@
       <el-table-column type="selection" fixed />
       <el-table-column type="index" label="序号" width="60" />
       <el-table-column prop="areaName" label="大区" width="160" />
-      <el-table-column prop="storeName" label="线路名称" width="180" />
+      <el-table-column prop="routeName" label="线路名称" width="180" />
       <el-table-column prop="deliveryName" label="送货员" width="80" />
       <el-table-column
         prop="customerManagerName"
@@ -69,12 +69,12 @@
     }
   };
   const tableCellStyle = ({ row }: { row: IBoardItem }) => {
-    if (row.feedbackStatus == "0") {
+    if (row.feedbackStatus === 0) {
       return {
         color: "rgb(255, 51, 204)",
         textAlign: "center",
       };
-    } else if (row.feedbackStatus == "1") {
+    } else if (row.feedbackStatus === 1) {
       return {
         color: "rgb(255,255,102)",
         textAlign: "center",
