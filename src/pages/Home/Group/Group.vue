@@ -118,10 +118,9 @@
 </script>
 <style lang="scss" scoped>
   .Group {
-    box-sizing: border-box;
     height: 76vh;
     margin: 0 3vw;
-    padding: 0 3vw;
+    padding: 0 2vw;
     display: flex;
     .groupControl {
       position: fixed;
@@ -138,7 +137,7 @@
       }
       .groupSet,
       .groupAdd {
-        margin: 0 0 0 5vw;
+        margin: 0 0 0 40px;
         height: 100%;
         text-align: center;
         border: 2px solid #73e1ff;
@@ -149,6 +148,7 @@
     }
     .useInfo {
       width: 100%;
+      padding: 1vw;
       position: relative;
       top: 12%;
       border: 1px solid #73e1ff;
@@ -157,7 +157,7 @@
       overflow-x: hidden;
       overflow-y: auto;
       .useInfoItem {
-        margin: 2vh 2vw;
+        margin: 20px 30px;
         width: 190px;
         text-align: center;
         line-height: 23px;
