@@ -3,7 +3,10 @@
     <el-table
       v-loading="loading"
       :data="props.tableData"
-      :header-cell-style="{ 'text-align': 'center' }"
+      :header-cell-style="{
+        'text-align': 'center',
+        padding: '0.3vh',
+      }"
       :row-style="{ height: '7vh' }"
       :row-class-name="tableRowClassName"
       :cell-style="tableCellStyle as any"
@@ -11,7 +14,7 @@
       @selection-change="toggleSelection"
     >
       <el-table-column type="selection" fixed />
-      <el-table-column type="index" label="序号" width="60" />
+      <el-table-column type="index" label="序号" width="65" />
       <el-table-column prop="areaName" label="大区" width="160" />
       <el-table-column prop="storeName" label="线路名称" width="180" />
       <el-table-column prop="deliveryName" label="送货员" width="80" />
@@ -28,8 +31,8 @@
         label="异常信息反馈"
         width="250"
       />
-      <el-table-column prop="orderDate" label="订单时间" width="190" />
-      <el-table-column prop="updateTime" label="最新回复时间" width="190" />
+      <el-table-column prop="orderDate" label="订单时间" width="180" />
+      <el-table-column prop="updateTime" label="最新回复时间" width="180" />
       <el-table-column label="操作" width="60" fixed="right">
         <template #default="scope">
           <el-button link size="small" @click="handleEdit(scope.row)"
@@ -46,7 +49,6 @@
   import { Edit } from "@element-plus/icons-vue";
   const emit = defineEmits(["itemClick"]);
   import { useBoardStore } from "@/store/board";
-
   const boardStore = useBoardStore();
   const { loading } = storeToRefs(boardStore);
   interface IProps {
