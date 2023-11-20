@@ -24,8 +24,10 @@
   const router = useRouter();
   const activeMenu = ref<number>(0);
   function handleMenu(activeRouter: string, index: number) {
-    activeMenu.value = index;
-    router.push(activeRouter);
+    nextTick(() => {
+      activeMenu.value = index;
+      router.push(activeRouter);
+    });
   }
   function loginOut() {
     ElMessageBox.confirm("确认退出登录？").then((res) => {

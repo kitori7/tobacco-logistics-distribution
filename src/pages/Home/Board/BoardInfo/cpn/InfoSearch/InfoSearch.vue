@@ -19,7 +19,7 @@
     </div>
     <div class="search-content">
       <el-form :inline="true" label-width="100px" :model="searchForm">
-        <el-form-item label="订单日期">
+        <el-form-item label="订单时间">
           <el-date-picker
             v-model="time"
             value-format="YYYY-MM-DD hh:mm:ss"

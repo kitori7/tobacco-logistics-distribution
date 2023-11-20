@@ -84,7 +84,6 @@ export interface InfoDetail {
   replyFilePathList?: string[];
 }
 
-
 export interface ISearch {
   /**
    * 大区名称
@@ -193,4 +192,14 @@ export interface IAddData {
    */
   routeName: string;
   [property: string]: any;
+}
+
+export interface ISingleCondData {
+  contactName: string;
+  customerManagerId: string;
+  customerManagerName: string;
+  areaId: string;
+  areaName: string;
+  routeId: string;
+  routeName: string;
 }
