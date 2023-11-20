@@ -16,9 +16,9 @@
       <div class="el-dialog-div">
         <el-scrollbar class="scroll">
           <div class="el-dialog-div-info">
-            <template v-for="(value,, index) in itemInfo" :key="index"
+            <template v-for="(value, key) in itemInfo" :key="key"
               ><div class="el-dialog-div-info-item">
-                {{ InfoArray[index] }}:&nbsp;&nbsp;{{ value }}
+                {{ InfoText[key] }}:&nbsp;&nbsp;{{ value }}
               </div></template
             >
           </div>
@@ -66,15 +66,15 @@
   const emit = defineEmits(["replyClick"]);
   const isOpen = ref<boolean>(false);
   const id = ref<number>(0);
-  const InfoArray: string[] = [
-    "客户名称",
-    "送货员",
-    "订单日期",
-    "客户编号",
-    "客户专员",
-    "送货路线",
-    "客户地址",
-  ];
+  const InfoText: ItemInfo = {
+    contactName: "客户名称",
+    deliveryName: "送货员",
+    orderDate: "订单日期",
+    customerCode: "客户编号",
+    customerManagerName: "客户专员",
+    routeName: "送货路线",
+    storeAddress: "客户地址",
+  };
   const itemInfo = ref<ItemInfo>({
     contactName: "",
     deliveryName: "",
@@ -142,13 +142,6 @@
   }
   function getReplyData(id: number, feedbackStatus: number) {
     replyStatus.value = feedbackStatus;
-    watch(
-      () => boardStore.detail,
-      (n) => {
-        replyData.value = n as InfoDetail[];
-      }
-    );
-
     boardStore.getDetailData(id);
     watch(
       () => boardStore.detail,
