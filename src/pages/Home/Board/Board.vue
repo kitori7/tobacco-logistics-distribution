@@ -55,6 +55,23 @@
       width: 20px;
       display: flex;
       flex-direction: column;
+
+      .el-button {
+        --el-color-primary: #73e1ff;
+        --el-button-bg-color: #73e1ff;
+        --el-button-border-color: #46899c;
+        --el-button-text-color: rgb(0, 0, 51);
+        --el-button-hover-bg-color: #041c3f;
+        --el-button-hover-border-color: #1f3d45;
+      }
+
+      .el-button.active {
+        color: var(--el-button-hover-text-color);
+        border-color: var(--el-button-hover-border-color);
+        background-color: var(--el-button-hover-bg-color);
+        outline: none;
+      }
+
       .el-button + .el-button {
         margin-left: 0;
       }

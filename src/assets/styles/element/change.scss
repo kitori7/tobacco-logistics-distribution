@@ -28,7 +28,7 @@
 }
 
 // 去除表格边框
-.el-table--enable-row-hover .el-table__body tr:hover>td {
+.el-table--enable-row-hover .el-table__body tr:hover > td {
   background-color: rgba(0, 0, 0, 0) !important;
 }
 
@@ -106,21 +106,33 @@
 
 //el-button
 .el-button,
-.el-button--primary {
+.el-button:focus:not(.el-button:hover) {
   --el-color-primary: #73e1ff;
   --el-button-bg-color: #73e1ff;
   --el-button-border-color: #46899c;
   --el-button-text-color: rgb(0, 0, 51);
-  --el-button-hover-bg-color: #041c3f;
-  --el-button-hover-border-color: #1f3d45;
-  height: 4vh;
+}
+.el-button {
+  height: 4.5vh;
   font-size: 1vw;
 }
-
-.el-button.active {
+/*鼠标悬浮，没有按下；鼠标按下后抬起，没有移开*/
+.el-button:focus {
+  background: #73e1ff;
+  color: rgb(0, 0, 51);
+  border: 1px solid #46899c !important;
+}
+.el-button:hover {
+  color: var(--el-button-hover-text-color);
+  background: #041c3f;
+  border: 1px solid #1f3d45 !important;
+}
+/*鼠标按下，没有抬起*/
+.el-button:active,
+.el-button--primary:active {
   color: var(--el-button-hover-text-color);
   border-color: var(--el-button-hover-border-color);
-  background-color: var(--el-button-hover-bg-color);
+  background-color: #041c3f;
   outline: none;
 }
 
@@ -147,14 +159,13 @@
 
 // dataPicker
 .el-date-editor {
-  // width: 200px !important;
   --el-input-border-color: rgb(204, 255, 255);
   --el-input-bg-color: rgba(0, 0, 0, 0);
   --el-input-text-color: rgb(204, 255, 255);
   --el-text-color-regular: rgb(204, 255, 255);
-  --el-font-size-base: 10px;
+  --el-font-size-base: 12px;
+  height: 4vh !important;
 }
-
 .el-picker__popper.el-popper {
   --el-bg-color-overlay: rgb(0, 0, 51);
 }
@@ -173,7 +184,7 @@
   width: 875px;
 }
 
-.el-date-range-picker__editor+.el-input {
+.el-date-range-picker__editor + .el-input {
   width: auto !important;
 }
 
@@ -188,7 +199,7 @@
     --el-radio-text-color: rgb(216, 242, 242);
   }
 
-  .el-radio__input.is-checked+.el-radio__label {
+  .el-radio__input.is-checked + .el-radio__label {
     color: #73e1ff !important;
   }
 
@@ -212,11 +223,6 @@
 
 .el-message-box__content {
   color: #73e1ff !important;
-}
-
-.el-button--primary {
-  background: #73e1ff !important;
-  color: black !important;
 }
 
 //transfer

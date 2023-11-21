@@ -17,7 +17,7 @@
           status-icon
         >
           <el-form-item
-            :label="props.replyType == '1' ? '物流部反馈 :' : '营销部反馈 :'"
+            :label="replyType() == '1' ? '物流部反馈 :' : '营销部反馈 :'"
             prop="replyContent"
           >
             <el-input
@@ -43,7 +43,13 @@
               <el-icon><Plus /></el-icon>
             </el-upload>
           </el-form-item>
-          <el-form-item label="状态修改为 :" prop="feedbackStatus">
+          <el-form-item
+            label="状态修改为 :"
+            prop="feedbackStatus"
+            v-show="
+              replyType() == '0' ? 'false' : props.replyTypeProps != replyType()
+            "
+          >
             <el-radio-group v-model="replyForm.feedbackStatus">
               <template v-for="item in stateBtn" :key="item.index">
                 <el-radio :label="item.index">{{ item.stateText }}</el-radio>
@@ -51,7 +57,6 @@
             </el-radio-group>
           </el-form-item>
           <el-button
-            type="primary"
             class="btn"
             @click="submitForm(replyFormRef)"
             >回复</el-button
@@ -63,13 +68,17 @@
 </template>
 <script lang="ts" setup>
   import { useBoardStore } from "@/store/board";
-  import type { UploadUserFile, UploadFile, UploadFiles } from "element-plus";
+  import {
+    type UploadUserFile,
+    type UploadFile,
+    type UploadFiles,
+  } from "element-plus";
 
   const boardStore = useBoardStore();
   const stateBtn = [
-    { index: "1", stateText: "处理中" },
-    { index: "2", stateText: "已处理" },
-    { index: "3", stateText: "无需处理" },
+    { index: 1, stateText: "处理中" },
+    { index: 2, stateText: "已处理" },
+    { index: 3, stateText: "无需处理" },
   ];
   // 表单信息
   interface ReplyForm {
@@ -83,10 +92,22 @@
     UploadFile: [],
   });
   const isReply = ref<boolean>(false);
-  interface IProps {
-    replyType?: "1" | "2";
+  // 获取token
+  const userInfo: any = localStorage.getItem("userInfo");
+  const position = JSON.parse(userInfo).position;
+  function replyType() {
+    if (position == "客户专员") {
+      return "2";
+    } else if (position == "送货员") {
+      return "1";
+    } else {
+      return "0";
+    }
   }
-  const props = defineProps<IProps>();
+  interface Iprops {
+    replyTypeProps?: "1" | "2";
+  }
+  const props = defineProps<Iprops>();
   const feedbackId = ref<number>(13);
   function handleReply(id: number) {
     isReply.value = true;
@@ -137,7 +158,7 @@
             let dataForm = new FormData();
             dataForm.append("feedbackId", feedbackId.value as any);
             dataForm.append("replyContent", replyForm.replyContent);
-            dataForm.append("replyType", props.replyType as string);
+            dataForm.append("replyType", replyType() as string);
             dataForm.append("feedbackStatus", replyForm.feedbackStatus);
             fileList.value.forEach((it: UploadFile) => {
               dataForm.append("fileList", it.raw as any);
@@ -190,7 +211,8 @@
       }
       .btn {
         width: 100px;
-        position: relative;
+        position: absolute;
+        bottom: 10%;
         left: 50%;
         transform: translate(-50%, 0);
       }

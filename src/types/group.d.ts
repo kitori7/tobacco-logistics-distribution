@@ -22,4 +22,5 @@ export interface IuserInfo {
   position: string;
   work_number: string;
   avatar_path: string;
+  department: string
 }

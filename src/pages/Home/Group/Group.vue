@@ -7,19 +7,19 @@
           style="height: 100%; margin-top: 7px"
           v-model="searchCond"
         >
-          <el-form-item label="姓名" label-width="60">
+          <el-form-item label="姓名" label-width="70">
             <el-input
               v-model="searchCond.userName"
               placeholder="点击输入"
             ></el-input>
           </el-form-item>
-          <el-form-item label="工号" label-width="70">
+          <el-form-item label="工号" label-width="100">
             <el-input
               v-model="searchCond.workNumber"
               placeholder="点击输入"
             ></el-input>
           </el-form-item>
-          <el-form-item label="部门" label-width="70">
+          <el-form-item label="部门" label-width="100">
             <el-select v-model="searchCond.department">
               <el-option label="全部" value=""></el-option>
               <el-option
@@ -51,7 +51,7 @@
           <el-button class="groupInfoItemButton" :icon="EditPen"></el-button>
         </div>
         <div>{{ item.user_name }}</div>
-        <div>{{ item.position }}</div>
+        <div>{{item.department}}&nbsp;&nbsp;{{ item.position }}</div>
         <div>工号：{{ item.work_number }}</div>
       </div>
     </div>
@@ -125,10 +125,15 @@
     .groupControl {
       position: fixed;
       display: flex;
-      height: 50px;
+      height: 6.3vh;
+      padding: 1vh 0;
       width: 100%;
       .groupSearch {
+        .el-form-item {
+          width: 28%;
+        }
         border: 2px solid #73e1ff;
+        width: 60vw;
       }
       .groupSearchButton {
         height: 100%;
@@ -140,7 +145,6 @@
         margin: 0 0 0 40px;
         height: 100%;
         text-align: center;
-        border: 2px solid #73e1ff;
       }
     }
     .useInfo::-webkit-scrollbar {
@@ -176,6 +180,7 @@
             bottom: -2px;
             right: -2px;
             border-radius: 0%;
+            height: 15%;
           }
         }
       }

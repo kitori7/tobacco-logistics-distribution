@@ -8,19 +8,34 @@
       <div class="groupSettingTopText">设置角色权限点：</div>
       <div class="groupSettingcontent">
         <div class="groupSettingLeft">
-          <el-button class="groupSettingLeftButton" @click="changeRoleID(1)"
+          <el-button
+            class="groupSettingLeftButton"
+            @click="changeRoleID(1)"
+            :class="{ active: currentIndex === 1 }"
             >班组长权限</el-button
           >
-          <el-button class="groupSettingLeftButton" @click="changeRoleID(2)"
+          <el-button
+            class="groupSettingLeftButton"
+            @click="changeRoleID(2)"
+            :class="{ active: currentIndex === 2 }"
             >送货员权限</el-button
           >
-          <el-button class="groupSettingLeftButton" @click="changeRoleID(3)"
+          <el-button
+            class="groupSettingLeftButton"
+            @click="changeRoleID(3)"
+            :class="{ active: currentIndex === 3 }"
             >市场经理权限</el-button
           >
-          <el-button class="groupSettingLeftButton" @click="changeRoleID(4)"
+          <el-button
+            class="groupSettingLeftButton"
+            @click="changeRoleID(4)"
+            :class="{ active: currentIndex === 4 }"
             >客户专员权限</el-button
           >
-          <el-button class="groupSettingLeftButton" @click="changeRoleID(5)"
+          <el-button
+            class="groupSettingLeftButton"
+            @click="changeRoleID(5)"
+            :class="{ active: currentIndex === 5 }"
             >领导权限</el-button
           >
         </div>
@@ -61,18 +76,18 @@
   const value = ref([]);
   const AllAuthorityList = ref();
   const data = ref<Option[]>([]); //这个是放权限数据的
+  const currentIndex = ref<number>();
 
   groupStore.getAllAuthorityAction().then(() => {
     AllAuthorityList.value = groupStore.AllAuthority;
     const list = toRaw(AllAuthorityList.value);
- 
+
     for (let i = 0; i < list.length; i++) {
       data.value.push({
         key: list[i].operation_id,
         label: list[i].operation_name,
       });
     }
-   
   });
 
   const groupSettingOpen = ref(false);
@@ -87,6 +102,7 @@
   const changeRoleID = (e: number) => {
     userAuthorityData.role_id = e;
     console.log(userAuthorityData.role_id);
+    currentIndex.value = e;
   };
   const userAuthorityData = reactive({
     idList: "",
@@ -123,9 +139,24 @@
     justify-content: center;
     margin-top: 20px;
     margin-bottom: 50px;
+
     .groupSettingLeft {
       display: flex;
       flex-direction: column;
+      .el-button {
+        --el-color-primary: #73e1ff;
+        --el-button-bg-color: #73e1ff;
+        --el-button-border-color: #46899c;
+        --el-button-text-color: rgb(0, 0, 51);
+        --el-button-hover-bg-color: #041c3f;
+        --el-button-hover-border-color: #1f3d45;
+      }
+      .el-button.active {
+        color: var(--el-button-hover-text-color);
+        border-color: var(--el-button-hover-border-color);
+        background-color: var(--el-button-hover-bg-color);
+        outline: none;
+      }
       .groupSettingLeftButton {
         margin: 10px;
         width: 140px;

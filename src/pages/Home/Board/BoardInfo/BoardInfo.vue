@@ -17,7 +17,7 @@
     <info-item ref="InfoItemRef" @reply-click="propReplyClick"></info-item>
     <info-reply
       ref="InfoReplyRef"
-      :replyType="feedbackType"
+      :reply-type-props="feedbackType"
       @renew-click="submitReplyClick"
     ></info-reply>
     <el-pagination
