@@ -19,6 +19,7 @@ const constantRoutes: RouteRecordRaw[] = [
     path: "/home",
     name: "home",
     component: Home,
+    redirect: "/home/board",
     children: [
       {
         path: "/home/board",
