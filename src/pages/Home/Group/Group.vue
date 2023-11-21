@@ -1,7 +1,7 @@
 <template>
   <div class="Group">
     <div class="groupControl">
-      <div class="groupSearch">
+      <div class="groupSearch" v-op="'user-service:view'">
         <el-form
           :inline="true"
           style="height: 100%; margin-top: 7px"
@@ -21,14 +21,9 @@
           </el-form-item>
           <el-form-item label="部门" label-width="100">
             <el-select v-model="searchCond.department">
-              <el-option label="全部" value=""></el-option>
-              <el-option
-                v-for="item in groupList"
-                :key="item"
-                :label="item"
-                :value="item"
-              ></el-option
-            ></el-select>
+              <el-option v-for="item in groupList" :key="item" :value="item">
+              </el-option>
+            </el-select>
           </el-form-item>
         </el-form>
       </div>
@@ -37,32 +32,40 @@
         :icon="Search"
         @click="searchUser"
       ></el-button>
-      <el-button class="groupSet" :icon="Tools" @click="openGroupSetting"
+      <el-button
+        class="groupSet"
+        :icon="Tools"
+        @click="openGroupSetting"
+        v-op="'user-service:set'"
         >设置权限</el-button
       >
-      <el-button class="groupAdd" :icon="Plus" @click="openGroupAdd"
+      <el-button
+        class="groupAdd"
+        :icon="Plus"
+        @click="openGroupAdd"
+        v-op="'user-service:add'"
         >添加用户</el-button
       >
     </div>
     <div class="useInfo">
-      <div class="useInfoItem" v-for="item in userInfo">
+      <div class="useInfoItem" :key="item.avatar_path" v-for="item in userInfo">
         <div class="usePhoto">
           <img :src="item.avatar_path" alt="" />
           <el-button class="groupInfoItemButton" :icon="EditPen"></el-button>
         </div>
         <div>{{ item.user_name }}</div>
-        <div>{{item.department}}&nbsp;&nbsp;{{ item.position }}</div>
+        <div>{{ item.department }}&nbsp;&nbsp;{{ item.position }}</div>
         <div>工号：{{ item.work_number }}</div>
       </div>
     </div>
     <div class="groupDialog">
       <GroupSetting
-        :groupSetting="groupSettingOpenf"
-        ref="groupSettingOpenf"
+        :groupSetting="groupSettingOpenRef"
+        ref="groupSettingOpenRef"
       ></GroupSetting>
       <GroupAdd
-        :groupAdd="groupAddf"
-        ref="groupAddf"
+        :groupAdd="groupAddRef"
+        ref="groupAddRef"
         @renew-user="searchUser"
       ></GroupAdd>
     </div>
@@ -73,7 +76,8 @@
   import GroupAdd from "./GroupAdd/GroupAdd.vue";
   import { Plus, Search, Tools, EditPen } from "@element-plus/icons-vue";
   import { useGroupStore } from "@/store/group";
-  import type { IuserInfo } from "@/types/group";
+  import type { IUserInfo } from "@/types/group";
+  import { BASE_URL } from "@/service/config";
   const groupStore = useGroupStore();
   const searchCond = reactive({
     department: "",
@@ -90,29 +94,33 @@
     "营销部",
   ];
 
-  const userInfo = ref<IuserInfo[]>();
+  const userInfo = ref<IUserInfo[]>([]);
   groupStore.getAllUserAction({}).then((res) => {
-    userInfo.value = res.data.map((i: IuserInfo) => {
-      i.avatar_path = "http://172.16.0.166:8080/file" + i.avatar_path;
-      return i;
-    });
+    userInfo.value = mapAvatarPath(res.data);
   });
 
-  const groupSettingOpenf = ref();
-  const groupAddf = ref();
+  const groupSettingOpenRef = ref<InstanceType<typeof GroupSetting>>();
+  const groupAddRef = ref<InstanceType<typeof GroupAdd>>();
 
-  const openGroupAdd = () => {
-    groupAddf.value.groupAddOpen = true;
-  };
-  const openGroupSetting = () => {
-    groupSettingOpenf.value.groupSettingOpen = true;
-  };
+  function openGroupAdd() {
+    typeof groupAddRef.value?.groupAddOpen === "boolean"
+      ? (groupAddRef.value.groupAddOpen = true)
+      : false;
+  }
+  function openGroupSetting() {
+    typeof groupSettingOpenRef.value?.groupSettingOpen === "boolean"
+      ? (groupSettingOpenRef.value.groupSettingOpen = true)
+      : false;
+  }
   function searchUser() {
     groupStore.getAllUserAction({ ...searchCond }).then((res) => {
-      userInfo.value = res.data.map((i: IuserInfo) => {
-        i.avatar_path = "http://172.16.0.166:8080/file" + i.avatar_path;
-        return i;
-      });
+      userInfo.value = mapAvatarPath(res.data);
+    });
+  }
+
+  function mapAvatarPath(arr: IUserInfo[]) {
+    return arr.map((item: IUserInfo) => {
+      return { ...item, avatar_path: `${BASE_URL}file${item.avatar_path}` };
     });
   }
 </script>

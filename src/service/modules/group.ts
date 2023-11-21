@@ -1,5 +1,13 @@
 import requests from "../index";
-import { IUserSearch, IuserInfo, addUserForm, userAuthorityDataType } from "@/types/group";
+import {
+  IUserSearch,
+  IUserInfo,
+  addUserForm,
+  IUserAuthorityDataType,
+  IAllOperations,
+  IOperations,
+  IRole,
+} from "@/types/group";
 import { IRequest } from "../request/type";
 
 // 添加用户接口
@@ -14,15 +22,19 @@ export function postAddUser(userData: addUserForm) {
 }
 //获取权限点列表接口
 export function getAllAuthority() {
-  return requests.get<IRequest<any>>({
+  return requests.get<IRequest<IAllOperations[]>>({
     url: "/userservice/user/get/operations",
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded",
-    },
+  });
+}
+
+// 获取角色列表
+export function getRoles() {
+  return requests.get<IRequest<IRole[]>>({
+    url: "/userservice/user/get/roles",
   });
 }
 //设置权限接口
-export function setUserAuthority(authority: userAuthorityDataType) {
+export function setUserAuthority(authority: IUserAuthorityDataType) {
   return requests.post<IRequest<any>>({
     url: "/userservice/user/set",
     headers: {
@@ -41,8 +53,15 @@ export function userAvatar(data: any) {
 // 查询用户
 
 export function getAllUser(searchData: IUserSearch) {
-  return requests.get<IRequest<IuserInfo[]>>({
+  return requests.get<IRequest<IUserInfo[]>>({
     url: "/userservice/user/search",
     params: searchData,
+  });
+}
+
+// 获取角色已有权限接口
+export function getRoleOperations(role_id: number) {
+  return requests.get<IRequest<IOperations[]>>({
+    url: `/userservice/user/get/role/operations?role_id=${role_id}`,
   });
 }

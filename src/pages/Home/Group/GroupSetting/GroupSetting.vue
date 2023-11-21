@@ -9,34 +9,12 @@
       <div class="groupSettingcontent">
         <div class="groupSettingLeft">
           <el-button
+            v-for="item in roles"
+            :key="item.role_id"
             class="groupSettingLeftButton"
-            @click="changeRoleID(1)"
-            :class="{ active: currentIndex === 1 }"
-            >班组长权限</el-button
-          >
-          <el-button
-            class="groupSettingLeftButton"
-            @click="changeRoleID(2)"
-            :class="{ active: currentIndex === 2 }"
-            >送货员权限</el-button
-          >
-          <el-button
-            class="groupSettingLeftButton"
-            @click="changeRoleID(3)"
-            :class="{ active: currentIndex === 3 }"
-            >市场经理权限</el-button
-          >
-          <el-button
-            class="groupSettingLeftButton"
-            @click="changeRoleID(4)"
-            :class="{ active: currentIndex === 4 }"
-            >客户专员权限</el-button
-          >
-          <el-button
-            class="groupSettingLeftButton"
-            @click="changeRoleID(5)"
-            :class="{ active: currentIndex === 5 }"
-            >领导权限</el-button
+            @click="changeRoleID(item.role_id)"
+            :class="{ active: currentIndex === item.role_id }"
+            >{{ item.role_name }}</el-button
           >
         </div>
         <div class="groupSettingRight">
@@ -55,7 +33,7 @@
             >
             <el-button
               class="groupSettingRightConfirm"
-              @click="groupSettingConfirm(userAuthorityData)"
+              @click="groupSettingConfirm()"
               >确认</el-button
             >
           </div>
@@ -66,34 +44,46 @@
 </template>
 <script lang="ts" setup>
   import { ref } from "vue";
-  import { userAuthorityDataType } from "@/types/group";
+  import { IUserAuthorityDataType, IRole } from "@/types/group";
   import { useGroupStore } from "@/store/group";
   const groupStore = useGroupStore();
   interface Option {
     key: number;
     label: string;
+    value: string;
   }
-  const value = ref([]);
+  const value = ref<number[]>([]);
   const AllAuthorityList = ref();
   const data = ref<Option[]>([]); //这个是放权限数据的
-  const currentIndex = ref<number>();
-
-  groupStore.getAllAuthorityAction().then(() => {
-    AllAuthorityList.value = groupStore.AllAuthority;
-    const list = toRaw(AllAuthorityList.value);
-
-    for (let i = 0; i < list.length; i++) {
-      data.value.push({
-        key: list[i].operation_id,
-        label: list[i].operation_name,
+  const currentIndex = ref<number>(1);
+  const roles = ref<IRole[]>([]);
+  const groupSettingOpen = ref<boolean>(false);
+  watch(groupSettingOpen, (newValue) => {
+    if (newValue) {
+      // 将选中置为1
+      currentIndex.value = 1;
+      // 获取所有权限
+      groupStore.getAllAuthorityAction().then(() => {
+        AllAuthorityList.value = groupStore.AllAuthority;
+        data.value = groupStore.AllAuthority.map((item) => {
+          return {
+            key: item.operation_id,
+            label: item.operation_state,
+            value: item.operation_name,
+          };
+        });
       });
+      // 获取角色权限
+      groupStore.getRoleAction().then(() => {
+        roles.value = groupStore.roles;
+      });
+      // 获取当前选中权限
+      getRoleOperations(currentIndex.value);
     }
   });
-
-  const groupSettingOpen = ref(false);
   const closeGroupSetting = () => {
     groupSettingOpen.value = false;
-    value.value = [];
+    currentIndex.value = 1;
   };
   defineExpose({
     groupSettingOpen,
@@ -101,31 +91,33 @@
 
   const changeRoleID = (e: number) => {
     userAuthorityData.role_id = e;
-    console.log(userAuthorityData.role_id);
     currentIndex.value = e;
+    getRoleOperations(e);
   };
-  const userAuthorityData = reactive({
+  function getRoleOperations(role_id: number) {
+    groupStore.getRoleOperationsAction(role_id).then(() => {
+      value.value = groupStore.roleAuthority.map((item) => {
+        return item.operationId;
+      });
+    });
+  }
+  const userAuthorityData: IUserAuthorityDataType = reactive({
     idList: "",
     role_id: 0,
   });
-  const groupSettingConfirm = (authority: userAuthorityDataType) => {
+  const groupSettingConfirm = () => {
     const arr = Array.from(value.value);
     userAuthorityData.idList = arr.toString();
-    if (userAuthorityData.role_id == 0) {
-      ElMessage({
-        type: "warning",
-        message: "请选择要设置的角色",
-      });
-    } else if (userAuthorityData.idList == "") {
+    if (userAuthorityData.idList == "") {
       ElMessage({
         type: "warning",
         message: "该角色权限点不能为空",
       });
     } else {
-      console.log(authority);
-      groupStore.setUserAuthorityAction(authority).then(() => {
+      groupStore.setUserAuthorityAction({ ...userAuthorityData }).then(() => {
         closeGroupSetting();
       });
+      console.log({ ...userAuthorityData });
     }
   };
 </script>

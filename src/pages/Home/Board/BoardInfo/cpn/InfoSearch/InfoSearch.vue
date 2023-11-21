@@ -63,7 +63,10 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="客户专员">
+        <el-form-item
+          label="客户专员"
+          v-op="'user-service:view:acountspecialist'"
+        >
           <el-select filterable v-model="searchForm.managerWorkNumber">
             <el-option
               v-for="item in boardStore.cond?.customerManagerList"
@@ -73,7 +76,10 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="送货员">
+        <el-form-item
+          label="送货员"
+          v-op="'user-service:view:deliveryman'"
+        >
           <el-select filterable v-model="searchForm.deliveryWorkNumber">
             <el-option
               v-for="item in boardStore.cond?.deliveryUserList"

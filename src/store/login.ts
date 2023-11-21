@@ -22,16 +22,13 @@ export const useLoginStore = defineStore("login", () => {
   const token = ref<string>();
   async function loginAction(data: ILoginForm) {
     const res = await postLogin(data, captchaText.value);
-      token.value = res.data.token;
-      localStorage.setItem("token", token.value);
-      userInfo.value = res.data;
-      localStorage.setItem("userInfo", JSON.stringify(userInfo.value?.user));
-      localStorage.setItem(
-        "operation",
-        JSON.stringify(userInfo.value?.operation)
-      );
-      ElMessage.success("登录成功");
-      router.push("/home");
+    token.value = res.data.token;
+    localStorage.setItem("token", token.value);
+    userInfo.value = res.data;
+    localStorage.setItem("userInfo", JSON.stringify(userInfo.value?.user));
+    localStorage.setItem("operation", JSON.stringify(userInfo.value?.operations));
+    ElMessage.success("登录成功");
+    router.push("/home");
   }
 
   return {

@@ -2,7 +2,10 @@ import { defineStore } from "pinia";
 import type {
   IUserSearch,
   addUserForm,
-  userAuthorityDataType,
+  IUserAuthorityDataType,
+  IAllOperations,
+  IOperations,
+  IRole,
 } from "@/types/group";
 import {
   postAddUser,
@@ -10,8 +13,9 @@ import {
   getAllAuthority,
   userAvatar,
   getAllUser,
+  getRoles,
+  getRoleOperations,
 } from "@/service/modules/group";
-
 
 export const useGroupStore = defineStore("group", () => {
   //添加用户
@@ -23,14 +27,19 @@ export const useGroupStore = defineStore("group", () => {
     return res;
   }
   //获取权限
-  const AllAuthority = ref<any[]>();
+  const AllAuthority = ref<IAllOperations[]>([]);
   async function getAllAuthorityAction() {
     const res = await getAllAuthority();
     AllAuthority.value = res.data;
-    console.log(AllAuthority.value);
+  }
+  // 获取角色列表
+  const roles = ref<IRole[]>([]);
+  async function getRoleAction() {
+    const res = await getRoles();
+    roles.value = res.data;
   }
   //设置权限
-  async function setUserAuthorityAction(authority: userAuthorityDataType) {
+  async function setUserAuthorityAction(authority: IUserAuthorityDataType) {
     const res = await setUserAuthority(authority);
     if (res.code === 200) {
       ElMessage.success(res.msg);
@@ -48,12 +57,23 @@ export const useGroupStore = defineStore("group", () => {
     const res = await getAllUser(searchData);
     return res;
   }
+
+  // 获取角色已有权限
+  const roleAuthority = ref<IOperations[]>([]);
+  async function getRoleOperationsAction(role_id: number) {
+    const res = await getRoleOperations(role_id);
+    roleAuthority.value = res.data;
+  }
   return {
     postAddUserAction,
     setUserAuthorityAction,
+    roles,
     getAllAuthorityAction,
+    getRoleAction,
     AllAuthority,
     userAvatarAction,
     getAllUserAction,
+    roleAuthority,
+    getRoleOperationsAction,
   };
 });

@@ -1,5 +1,5 @@
 export interface ILoginData {
-  operation: IOperation[];
+  operations: string[];
   token: string;
   user: IUser;
 }
@@ -22,9 +22,4 @@ export interface IUser {
   updateTime: string;
   signTime: string;
   roleId: number;
-}
-export interface IOperation {
-  roleId: number;
-  operationId: number;
-  status: string;
 }

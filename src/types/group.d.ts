@@ -8,19 +8,36 @@ export interface addUserForm {
   sign_time: string;
   avatarPath?: string;
 }
-export interface userAuthorityDataType {
+export interface IUserAuthorityDataType {
   idList: string;
-  role_id: Number;
+  role_id: number;
 }
 export interface IUserSearch {
   department?: string;
   userName?: string;
   workNumber?: string;
 }
-export interface IuserInfo {
+export interface IUserInfo {
   user_name: string;
   position: string;
   work_number: string;
   avatar_path: string;
-  department: string
+  department: string;
+}
+
+export interface IAllOperations {
+  operation_name: string;
+  operation_state: string;
+  operation_id: number;
+}
+
+export interface IOperations {
+  operationName: string;
+  operationState: string;
+  operationId: number;
+}
+
+export interface IRole {
+  role_name: string;
+  role_id: number;
 }
