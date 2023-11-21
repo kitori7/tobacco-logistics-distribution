@@ -179,10 +179,13 @@
         display: flex;
         flex-direction: column;
         align-items: start;
+
+        height: 100%;
       }
       .el-button + .el-button {
         margin-top: 10%;
         margin-left: 0;
+
       }
     }
     .btn-content {
