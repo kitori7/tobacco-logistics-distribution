@@ -27,13 +27,25 @@
           ></el-date-picker>
         </el-form-item>
         <el-form-item label="客户编码">
-          <el-input v-model="searchForm.customerCode"></el-input>
+          <el-select filterable v-model="searchForm.customerCode">
+            <el-option
+              v-for="item in boardStore.cond?.storeList"
+              :key="item.customerCode"
+              :value="item.customerCode"
+            ></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="客户名称">
-          <el-input v-model="searchForm.contactName"></el-input>
+          <el-select filterable v-model="searchForm.contactName">
+            <el-option
+              v-for="item in boardStore.cond?.storeList"
+              :key="item.contactName"
+              :value="item.contactName"
+            ></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="大区">
-          <el-select v-model="searchForm.areaName">
+          <el-select filterable v-model="searchForm.areaName">
             <el-option
               v-for="item in boardStore.cond?.areaList"
               :key="item.areaId"
@@ -42,7 +54,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="路线名称">
-          <el-select v-model="searchForm.routeId">
+          <el-select filterable v-model="searchForm.routeId">
             <el-option
               v-for="item in boardStore.cond?.routeList"
               :key="item.routeId"
@@ -52,9 +64,19 @@
           </el-select>
         </el-form-item>
         <el-form-item label="客户专员">
-          <el-select>
+          <el-select filterable v-model="searchForm.managerWorkNumber">
             <el-option
               v-for="item in boardStore.cond?.customerManagerList"
+              :key="item.workNumber"
+              :label="item.userName"
+              :value="item.workNumber"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="送货员">
+          <el-select filterable v-model="searchForm.deliveryWorkNumber">
+            <el-option
+              v-for="item in boardStore.cond?.deliveryUserList"
               :key="item.workNumber"
               :label="item.userName"
               :value="item.workNumber"
@@ -125,6 +147,8 @@
     areaName: "",
     customerCodeL: "",
     feedbackStatus: "",
+    deliveryWorkNumber: "",
+    managerWorkNumber: "",
     orderEndDate: "",
     orderStartDate: "",
   });
@@ -143,6 +167,8 @@
       areaName: "",
       customerCodeL: "",
       feedbackStatus: "",
+      deliveryWorkNumber: "",
+      managerWorkNumber: "",
       orderEndDate: "",
       orderStartDate: "",
     };
@@ -185,7 +211,6 @@
       .el-button + .el-button {
         margin-top: 10%;
         margin-left: 0;
-
       }
     }
     .btn-content {
