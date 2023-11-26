@@ -101,9 +101,8 @@
   });
   const userFormRef = ref<FormInstance>();
   const rules = reactive<FormRules<addUserForm>>({
-    user_name: [{ required: true, message: "请输入姓名", trigger: "blur" }],
+    user_name: [{ required: true, message: "请输入用户名", trigger: "blur" }],
     phone: [{ required: true, message: "请输入电话", trigger: "blur" }],
-    email: [{ required: true, message: "请输入邮箱", trigger: "blur" }],
     department: [{ required: true, message: "请选择部门", trigger: "blur" }],
     sign_time: [{ required: true, message: "请选择入职时间", trigger: "blur" }],
     work_number: [{ required: true, message: "请输入工号", trigger: "blur" }],

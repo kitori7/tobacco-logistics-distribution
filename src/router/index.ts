@@ -1,11 +1,5 @@
 // src/router/index.ts
 import { createRouter, createWebHashHistory, RouteRecordRaw } from "vue-router";
-import Login from "@/pages/Login/Login.vue";
-import Home from "@/pages/Home/Home.vue";
-import Board from "@/pages/Home/Board/Board.vue";
-import BoardInfo from "@/pages/Home/Board/BoardInfo/BoardInfo.vue";
-import BoardAnalyze from "@/pages/Home/Board/BoardAnalyze/BoardAnalyze.vue";
-import Group from "@/pages/Home/Group/Group.vue";
 
 // 静态路由
 const constantRoutes: RouteRecordRaw[] = [
@@ -13,35 +7,37 @@ const constantRoutes: RouteRecordRaw[] = [
   {
     path: "/login",
     name: "login",
-    component: Login,
+    component: ()=>import("@/pages/Login/Login.vue"),
   },
   {
     path: "/home",
     name: "home",
-    component: Home,
+    component: ()=>import("@/pages/Home/Home.vue"),
+    meta: {order: 0}, 
     redirect: "/home/board",
     children: [
       {
         path: "/home/board",
-        component: Board,
+        component: ()=>import("@/pages/Home/Board/Board.vue"),
         redirect: "/home/board/info?feedbackType=1",
         children: [
           {
             path: "/home/board/info",
             name: "boardInfo",
-            component: BoardInfo,
+            component: ()=>import("@/pages/Home/Board/BoardInfo/BoardInfo.vue"),
           },
           {
             path: "/home/board/analyze",
             name: "analyze",
-            component: BoardAnalyze,
+            component: ()=>import("@/pages/Home/Board/BoardAnalyze/BoardAnalyze.vue"),
           },
         ],
       },
       {
         path: "/home/group",
         name: "group",
-        component: Group,
+        meta: {order: 1}, 
+        component: ()=>import("@/pages/Home/Group/Group.vue"),
       },
     ],
   },
@@ -70,4 +66,10 @@ router.beforeEach((to) => {
     return "/login";
   }
 });
+// 声明meta属性类型
+declare module 'vue-router' {
+  interface RouteMeta {
+    order : number
+   }
+ }
 export default router;

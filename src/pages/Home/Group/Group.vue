@@ -48,6 +48,8 @@
       >
     </div>
     <div class="useInfo">
+      <div style="font-size: 24px;" v-show="isShow">查无此人
+      </div>
       <div class="useInfoItem" :key="item.avatar_path" v-for="item in userInfo">
         <div class="usePhoto">
           <img :src="item.avatar_path" alt="" />
@@ -112,9 +114,15 @@
       ? (groupSettingOpenRef.value.groupSettingOpen = true)
       : false;
   }
+  const isShow = ref<boolean>(false)
   function searchUser() {
     groupStore.getAllUserAction({ ...searchCond }).then((res) => {
       userInfo.value = mapAvatarPath(res.data);
+      if(userInfo.value.length == 0){
+       isShow.value = true
+      }else{
+        isShow.value= false
+      }
     });
   }
 

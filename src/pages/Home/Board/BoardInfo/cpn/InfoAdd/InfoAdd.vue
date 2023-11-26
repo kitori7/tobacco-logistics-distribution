@@ -242,6 +242,7 @@
                 .then(() => {
                   isOpen.value = false;
                   emit("addSuccess");
+                  boardStore.UnhandledAmountAction()
                 });
             }
           } else {
