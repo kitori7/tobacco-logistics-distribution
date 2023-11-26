@@ -101,6 +101,7 @@
         return item.feedbackId.toString();
       })
       .join();
+      boardStore.UnhandledAmountAction()
   }
   defineExpose({ deleteData });
 </script>

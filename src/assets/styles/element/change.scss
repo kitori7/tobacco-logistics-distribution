@@ -116,6 +116,10 @@
   height: 4.5vh;
   font-size: 1vw;
 }
+// 按钮提示
+.el-badge__content--danger{
+  background-color: rgb(255, 51, 204) !important;
+}
 /*鼠标悬浮，没有按下；鼠标按下后抬起，没有移开*/
 .el-button:focus {
   background: #73e1ff;

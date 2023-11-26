@@ -7,6 +7,7 @@ import type {
   InfoDetail,
   IAddData,
   ISingleCondData,
+  IUnhandledAmount,
 } from "@/types/board";
 import { IRequest } from "../request/type";
 
@@ -57,5 +58,11 @@ export function postInfoAdd(addReply: any) {
 export function getSingleConditions(customerCode: string) {
   return requests.get<IRequest<ISingleCondData>>({
     url: `/guestbook/feedback/getSingleConditionsData/${customerCode}`,
+  });
+}
+// 获取未处理数目
+export function getUnhandledAmount(){
+  return requests.get<IRequest<IUnhandledAmount>>({
+    url: '/guestbook/feedback/getUnhandledAmount',
   });
 }

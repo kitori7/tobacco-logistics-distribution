@@ -170,6 +170,7 @@
                 if (res.code == 200) {
                   isReply.value = false;
                   emit("renewClick", feedbackId.value);
+                  boardStore.UnhandledAmountAction()
                   ElMessage({
                     type: "success",
                     message: "提交成功",

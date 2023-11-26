@@ -6,6 +6,7 @@ import type {
   InfoDetail,
   ICond,
   ISingleCondData,
+  IUnhandledAmount,
 } from "@/types/board";
 import {
   addFeedback,
@@ -15,6 +16,7 @@ import {
   postInfoAdd,
   removeFeedback,
   getSingleConditions,
+  getUnhandledAmount,
 } from "@/service/modules/board";
 
 export const useBoardStore = defineStore("board", () => {
@@ -32,7 +34,6 @@ export const useBoardStore = defineStore("board", () => {
     loading.value = true;
     const res = await getList(data);
     boardData.value = res.data;
-
     loading.value = false;
   }
   //下拉框数据
@@ -83,6 +84,12 @@ export const useBoardStore = defineStore("board", () => {
     const res = await getSingleConditions(customerCode);
     singleCondData.value = res.data
   }
+  // 获取未处理数目
+  const UnhandledAmountData = ref<IUnhandledAmount>()
+  async function UnhandledAmountAction(){
+    const res = await getUnhandledAmount()
+    UnhandledAmountData.value = res.data   
+  }
   return {
     // 加载中
     loading,
@@ -103,5 +110,8 @@ export const useBoardStore = defineStore("board", () => {
     // 添加下拉框联动数据
     singleCondData,
     singleCondDataAction,
+    // 获取未处理数目
+    UnhandledAmountAction,
+    UnhandledAmountData
   };
 });

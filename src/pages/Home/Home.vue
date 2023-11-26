@@ -20,14 +20,13 @@
 </template>
 <script lang="ts" setup>
   import { MenuList } from "./config";
-  import { useRouter } from "vue-router";
+  import { useRouter,useRoute } from "vue-router";
   const router = useRouter();
-  const activeMenu = ref<number>(0);
+  const route = useRoute();
+  const activeMenu = ref<number>(route.meta.order);
   function handleMenu(activeRouter: string, index: number) {
-    nextTick(() => {
       activeMenu.value = index;
       router.push(activeRouter);
-    });
   }
   function loginOut() {
     ElMessageBox.confirm("确认退出登录？").then((res) => {

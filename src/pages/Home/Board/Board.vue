@@ -8,73 +8,84 @@
       </BorderBox9>
     </div>
     <div class="btn-content">
-      <el-button
-        :class="{ vertical: true, active: currentIndex === 1 }"
-        @click="routerChange('1')"
-        >物流反馈</el-button
-      >
-      <el-button
-        :class="{ vertical: true, active: currentIndex === 2 }"
-        @click="routerChange('2')"
-        >营销反馈</el-button
-      >
+      <el-badge :value="logisticsMount" class="item" :hidden="!logisticsMount">
+        <el-button :class="{ vertical: true, active: currentIndex === 1 }" @click="routerChange('1')">物流反馈</el-button>
+      </el-badge>
+      <el-badge :value="marketingMount" class="item" :hidden="!marketingMount">
+        <el-button :class="{ vertical: true, active: currentIndex === 2 }" @click="routerChange('2')">营销反馈</el-button>
+      </el-badge>
     </div>
   </div>
 </template>
 <script lang="ts" setup>
-  import TbSideDecoration from "@/components/TbSideDecoration/TbSideDecoration.vue";
-  import { BorderBox9 } from "@dataview/datav-vue3";
-  import { useRouter, useRoute } from "vue-router";
-
-  const router = useRouter();
-  const route = useRoute();
-  // 切换
-  const currentIndex = ref<number>(Number(route.query.feedbackType));
-  function routerChange(query: string) {
-    router.push({ path: "/home/board/info", query: { feedbackType: query } });
-    currentIndex.value = Number(query);
-  }
+import TbSideDecoration from "@/components/TbSideDecoration/TbSideDecoration.vue";
+import { BorderBox9 } from "@dataview/datav-vue3";
+import { useRouter, useRoute } from "vue-router";
+import { useBoardStore } from "@/store/board";
+const boardStore = useBoardStore();
+const router = useRouter();
+const route = useRoute();
+// 切换
+const currentIndex = ref<number>(Number(route.query.feedbackType));
+function routerChange(query: string) {
+  router.push({ path: "/home/board/info", query: { feedbackType: query } });
+  currentIndex.value = Number(query);
+}
+// 获取未处理数目
+const logisticsMount = ref<number>(0)
+const marketingMount = ref<number>(0)
+boardStore.UnhandledAmountAction()
+watch(() => boardStore.UnhandledAmountData, (newValue) => {
+  logisticsMount.value = newValue?.logisticsMount as number
+  marketingMount.value = newValue?.marketingMount as number
+})
 </script>
 <style lang="scss" scoped>
-  .Board {
-    box-sizing: border-box;
-    display: flex;
-    color: $processed;
-    .tb-side-decoration-components {
-      margin-left: 5px;
-    }
-    .board-right {
-      .dv-border-box-9 {
-        width: 85vw;
-        box-sizing: border-box;
-        padding: 1.5vh 2.5vw 0px 2.5vw;
-        margin-left: 2.5vw;
-      }
-    }
-    .btn-content {
-      width: 20px;
-      display: flex;
-      flex-direction: column;
+.Board {
+  box-sizing: border-box;
+  display: flex;
+  color: $processed;
 
-      .el-button {
-        --el-color-primary: #73e1ff;
-        --el-button-bg-color: #73e1ff;
-        --el-button-border-color: #46899c;
-        --el-button-text-color: rgb(0, 0, 51);
-        --el-button-hover-bg-color: #041c3f;
-        --el-button-hover-border-color: #1f3d45;
-      }
+  .tb-side-decoration-components {
+    margin-left: 5px;
+  }
 
-      .el-button.active {
-        color: var(--el-button-hover-text-color);
-        border-color: var(--el-button-hover-border-color);
-        background-color: var(--el-button-hover-bg-color);
-        outline: none;
-      }
-
-      .el-button + .el-button {
-        margin-left: 0;
-      }
+  .board-right {
+    .dv-border-box-9 {
+      width: 85vw;
+      box-sizing: border-box;
+      padding: 1.5vh 2.5vw 0px 2.5vw;
+      margin-left: 2.5vw;
     }
   }
+
+  .btn-content {
+    width: 20px;
+    display: flex;
+    flex-direction: column;
+
+    .el-button {
+      --el-color-primary: #73e1ff;
+      --el-button-bg-color: #73e1ff;
+      --el-button-border-color: #46899c;
+      --el-button-text-color: rgb(0, 0, 51);
+      --el-button-hover-bg-color: #041c3f;
+      --el-button-hover-border-color: #1f3d45;
+      height: 15vh !important;
+      width: 2.2vw;
+      font-size: 1.2vw !important;
+    }
+
+    .el-button.active {
+      color: var(--el-button-hover-text-color);
+      border-color: var(--el-button-hover-border-color);
+      background-color: var(--el-button-hover-bg-color);
+      outline: none;
+    }
+
+    .el-button+.el-button {
+      margin-left: 0;
+    }
+  }
+}
 </style>

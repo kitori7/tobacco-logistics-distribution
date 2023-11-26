@@ -211,3 +211,7 @@ export interface ISingleCondData {
   routeId: string;
   routeName: string;
 }
+export interface IUnhandledAmount{
+  logisticsMount: number,
+  marketingMount: number
+}
