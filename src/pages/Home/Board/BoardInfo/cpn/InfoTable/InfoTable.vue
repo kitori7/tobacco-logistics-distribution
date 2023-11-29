@@ -1,115 +1,93 @@
 <template>
   <div class="InfoTable">
-    <el-table
-      v-loading="loading"
-      :data="props.tableData"
-      :header-cell-style="{
-        'text-align': 'center',
-        padding: '0.3vh',
-      }"
-      :row-style="{ height: '7vh' }"
-      :row-class-name="tableRowClassName"
-      :cell-style="tableCellStyle as any"
-      style="font-size: 0.8vw"
-      @selection-change="toggleSelection"
-    >
+    <el-table v-loading="loading" :data="props.tableData" :header-cell-style="{
+      'text-align': 'center',
+      padding: '0.3vh',
+    }" :row-style="{ height: '7vh' }" :cell-style="tableCellStyle as any"
+      style="font-size: 0.8vw" @selection-change="toggleSelection">
       <el-table-column type="selection" fixed />
       <el-table-column type="index" label="序号" width="65" />
       <el-table-column prop="areaName" label="大区" width="160" />
       <el-table-column prop="routeName" label="线路名称" width="180" />
       <el-table-column prop="deliveryName" label="送货员" width="80" />
-      <el-table-column
-        prop="customerManagerName"
-        label="客户专员"
-        width="100"
-      />
+      <el-table-column prop="customerManagerName" label="客户专员" width="100" />
       <el-table-column prop="customerCode" label="客户编码" width="100" />
       <el-table-column prop="contactName" label="客户名称" width="100" />
       <el-table-column prop="storeAddress" label="客户地址" width="280" />
-      <el-table-column
-        prop="feedbackInformation"
-        label="异常信息反馈"
-        width="250"
-      />
+      <el-table-column prop="feedbackInformation" label="异常信息反馈" width="250" />
       <el-table-column prop="orderDate" label="订单时间" width="180" />
       <el-table-column prop="updateTime" label="最新回复时间" width="180" />
       <el-table-column label="操作" width="60" fixed="right">
         <template #default="scope">
-          <el-button link size="small" @click="handleEdit(scope.row)"
-            ><el-icon color="rgb(204,255,255)" size="15"><Edit /></el-icon
-          ></el-button>
+          <el-button link size="small" @click="handleEdit(scope.row)"><el-icon color="rgb(204,255,255)" size="15">
+              <Edit />
+            </el-icon></el-button>
         </template>
       </el-table-column>
     </el-table>
   </div>
 </template>
 <script lang="ts" setup>
-  import type { IBoardItem } from "@/types/board";
-  import { storeToRefs } from "pinia";
-  import { Edit } from "@element-plus/icons-vue";
-  const emit = defineEmits(["itemClick"]);
-  import { useBoardStore } from "@/store/board";
-  const boardStore = useBoardStore();
-  const { loading } = storeToRefs(boardStore);
-  interface IProps {
-    tableData?: IBoardItem[];
-  }
-  const props = withDefaults(defineProps<IProps>(), {
-    tableData: () => {
-      return [];
-    },
-  });
+import type { IBoardItem } from "@/types/board";
+import { storeToRefs } from "pinia";
+import { Edit } from "@element-plus/icons-vue";
+const emit = defineEmits(["itemClick"]);
+import { useBoardStore } from "@/store/board";
+const boardStore = useBoardStore();
+const { loading } = storeToRefs(boardStore);
+interface IProps {
+  tableData?: IBoardItem[];
+}
+const props = withDefaults(defineProps<IProps>(), {
+  tableData: () => {
+    return [];
+  },
+});
 
-  // 修改表格每一行颜色
-  const tableRowClassName = ({ rowIndex }: { rowIndex: number }) => {
-    if (rowIndex % 2 == 1) {
-      return "odd";
-    } else if (rowIndex % 2 == 0) {
-      return "even";
-    } else {
-      return "";
-    }
-  };
-  const tableCellStyle = ({ row }: { row: IBoardItem }) => {
-    if (row.feedbackStatus === 0) {
-      return {
-        color: "rgb(255, 51, 204)",
-        textAlign: "center",
-      };
-    } else if (row.feedbackStatus === 1) {
-      return {
-        color: "rgb(255,255,102)",
-        textAlign: "center",
-      };
-    } else if (row) {
-      return {
-        textAlign: "center",
-      };
-    } else {
-      return "";
-    }
-  };
-  // 点击编辑
-  function handleEdit(item: IBoardItem) {
-    emit("itemClick", item);
+// 修改表格每一行颜色
+const tableCellStyle = ({ row }: { row: IBoardItem }) => {
+  if (row.feedbackStatus === 0) {
+    return {
+      background: "rgb(161, 86, 192)",
+      textAlign: "center",
+    };
+  } else if (row.feedbackStatus === 1) {
+    return {
+      background: "rgb(190,174,58)",
+      textAlign: "center",
+    };
+  } else if (row.feedbackStatus === 3) {
+    return {
+      background: "rgb(124,135,148)",
+      textAlign: "center",
+    };
+  } else if (row) {
+    return {
+      textAlign: "center",
+    };
   }
-  // 多选
-  const deleteData = ref<string>();
-  function toggleSelection(items: IBoardItem[]) {
-    deleteData.value = items
-      .map((item) => {
-        return item.feedbackId.toString();
-      })
-      .join();
-      boardStore.UnhandledAmountAction()
-  }
-  defineExpose({ deleteData });
+};
+// 点击编辑
+function handleEdit(item: IBoardItem) {
+  emit("itemClick", item);
+}
+// 多选
+const deleteData = ref<string>();
+function toggleSelection(items: IBoardItem[]) {
+  deleteData.value = items
+    .map((item) => {
+      return item.feedbackId.toString();
+    })
+    .join();
+  boardStore.UnhandledAmountAction()
+}
+defineExpose({ deleteData });
 </script>
 <style lang="scss" scoped>
-  .InfoTable {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
+.InfoTable {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 </style>
