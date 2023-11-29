@@ -1,6 +1,7 @@
 <template>
   <div class="groupSettingDialog">
     <el-dialog
+      title="设置权限"
       v-model="groupSettingOpen"
       width="69%"
       @close="closeGroupSetting"

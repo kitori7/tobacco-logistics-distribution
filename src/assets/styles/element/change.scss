@@ -153,6 +153,9 @@
   .el-dialog__body {
     color: #73e1ff;
   }
+  .el-dialog__title{
+    color: #73e1ff;
+  }
 }
 
 // upload
@@ -205,6 +208,9 @@
 
   .el-radio__input.is-checked + .el-radio__label {
     color: #73e1ff !important;
+  }
+  .el-radio__label{
+    font-size: 22px !important;
   }
 
   .el-radio__input.is-checked .el-radio__inner {
