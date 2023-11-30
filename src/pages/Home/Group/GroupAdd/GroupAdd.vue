@@ -1,12 +1,13 @@
 <template>
   <div class="groupAddDialog">
     <el-dialog
+      title="添加用户"
       v-model="groupAddOpen"
-      width="70%"
+      width="80%"
       @close="closeGroupAdd(userFormRef)"
     >
       <div class="groupAddInfo">
-        <div class="groupAddOne">
+        <!-- <div class="groupAddOne">
           <div class="groupAvatarBorder"><img :src="photo" alt="" /></div>
           <el-upload
             accept="image/*"
@@ -21,7 +22,7 @@
               >上传头像</el-button
             >
           </el-upload>
-        </div>
+        </div> -->
         <div class="groupAddTwo">
           <el-form
             :inline="true"
@@ -31,6 +32,9 @@
             ref="userFormRef"
             :model="addUserData"
           >
+            <el-form-item label="工号" prop="work_number">
+              <el-input v-model="addUserData.work_number"></el-input>
+            </el-form-item>
             <el-form-item label="姓名" prop="user_name">
               <el-input v-model="addUserData.user_name"></el-input>
             </el-form-item>
@@ -57,23 +61,27 @@
                 type="datetime"
               ></el-date-picker>
             </el-form-item>
-            <el-form-item label="工号" prop="work_number">
-              <el-input v-model="addUserData.work_number"></el-input>
-            </el-form-item>
+
             <el-form-item
               label="角色："
               prop="role_id"
               class="groupAddRadioGroup"
             >
               <el-radio-group v-model="addUserData.role_id">
-                <el-radio label="1" size="large">班组长</el-radio>
-                <el-radio label="2" size="large">送货员</el-radio>
-                <el-radio label="3" size="large">市场经理</el-radio>
+                <el-radio label="1" size="large">送货员</el-radio>
+                <el-radio label="2" size="large">班组长</el-radio>
+                <el-radio label="3" size="large">送货部负责人</el-radio>
                 <el-radio label="4" size="large">客户专员</el-radio>
-                <el-radio label="5" size="large">领导</el-radio>
+                <el-radio label="5" size="large">市场经理</el-radio>
+                <el-radio label="6" size="large">营销部负责人</el-radio>
+                <el-radio label="7" size="large">稽查员</el-radio>
+                <el-radio label="8" size="large">中队长</el-radio>
+                <el-radio label="9" size="large">专卖部负责人</el-radio>
+                <el-radio label="10" size="large">系统管理员</el-radio>
+                <el-radio label="11" size="large">领导</el-radio>
               </el-radio-group>
             </el-form-item>
-            <div class="groupAddMessage">默认密码 : ycwl1234</div>
+            <!-- <div class="groupAddMessage">默认密码 : ycwl1234</div> -->
           </el-form>
         </div>
         <div class="groupAddSetting">
@@ -156,63 +164,64 @@
     });
   };
   //   上传图片
-  import type { UploadFile } from "element-plus";
-  const fileList = ref<UploadFile>();
-  const handleChange = (file: UploadFile) => {
-    fileList.value = file;
-    let dataForm = new FormData();
-    dataForm.append("photo", fileList.value?.raw as any);
-    groupStore.userAvatarAction(dataForm).then((res) => {
-      addUserData.value.avatarPath = res.data;
-      photo.value = "http://172.16.0.166:8080/file" + res.data;
-    });
-  };
+  // import type { UploadFile } from "element-plus";
+  // const fileList = ref<UploadFile>();
+  // const handleChange = (file: UploadFile) => {
+  //   fileList.value = file;
+  //   let dataForm = new FormData();
+  //   dataForm.append("photo", fileList.value?.raw as any);
+  //   groupStore.userAvatarAction(dataForm).then((res) => {
+  //     addUserData.value.avatarPath = res.data;
+  //     photo.value = "http://172.16.0.166:8080/file" + res.data;
+  //   });
+  // };
 </script>
 <style lang="scss" scoped>
   .groupAddInfo {
-    position: relative;
-    width: 60vw;
-    margin: 0 auto;
+    margin: auto;
+    width:50vw;
     color: #73e1ff;
     font-size: 20px;
-    .groupAddOne {
-      display: flex;
-      flex-direction: row;
-      justify-content: center;
-      align-items: flex-end;
-      margin-left: 130px;
-      .groupAvatarBorder {
-        width: 170px;
-        height: 230px;
-        border: 1px solid #73e1ff;
-        img {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-        }
-      }
-      .groupAvatarUploadButton {
-        margin-left: 10px;
-        width: 90px;
-        height: 42px;
-      }
-    }
+    // .groupAddOne {
+    //   display: flex;
+    //   flex-direction: row;
+    //   justify-content: center;
+    //   align-items: flex-end;
+    //   margin-left: 130px;
+    //   .groupAvatarBorder {
+    //     width: 170px;
+    //     height: 230px;
+    //     border: 1px solid #73e1ff;
+    //     img {
+    //       width: 100%;
+    //       height: 100%;
+    //       object-fit: cover;
+    //     }
+    //   }
+    //   .groupAvatarUploadButton {
+    //     margin-left: 10px;
+    //     width: 90px;
+    //     height: 42px;
+    //   }
+    // }
     .groupAddTwo {
-      display: flex;
-      flex-direction: row;
-      justify-content: center;
-      margin: 50px 0;
       .el-form-item {
-        width: 30%;
-        margin-bottom: 30px;
+        width: 40%;
+        margin:35px;
       }
-      .groupAddMessage {
-        color: $processed;
-        padding-left: 60px;
-      }
+
+      // .groupAddMessage {
+      //   color: $processed;
+      //   padding-left: 55px;
+      // }
       .groupAddRadioGroup {
-        margin-left: 20px;
-        width: 100%;
+        width: 80%;
+        .el-form-item__label{
+          margin:20px 25px;
+        }
+        .el-radio--large{
+        margin:0 25px 25px 25px;
+      }
       }
     }
 

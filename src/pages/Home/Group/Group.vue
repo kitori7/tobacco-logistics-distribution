@@ -33,6 +33,11 @@
         @click="searchUser"
       ></el-button>
       <el-button
+        class="groupSearchButton"
+        :icon="RefreshRight"
+        @click="refreashUser"
+      ></el-button>
+      <el-button
         class="groupSet"
         :icon="Tools"
         @click="openGroupSetting"
@@ -76,12 +81,12 @@
 <script lang="ts" setup>
   import GroupSetting from "./GroupSetting/GroupSetting.vue";
   import GroupAdd from "./GroupAdd/GroupAdd.vue";
-  import { Plus, Search, Tools, EditPen } from "@element-plus/icons-vue";
+  import { Plus, Search, Tools, EditPen, RefreshRight  } from "@element-plus/icons-vue";
   import { useGroupStore } from "@/store/group";
   import type { IUserInfo } from "@/types/group";
   import { BASE_URL } from "@/service/config";
   const groupStore = useGroupStore();
-  const searchCond = reactive({
+  const searchCond = ref({
     department: "",
     userName: "",
     workNumber: "",
@@ -116,7 +121,7 @@
   }
   const isShow = ref<boolean>(false)
   function searchUser() {
-    groupStore.getAllUserAction({ ...searchCond }).then((res) => {
+    groupStore.getAllUserAction({ ...searchCond.value }).then((res) => {
       userInfo.value = mapAvatarPath(res.data);
       if(userInfo.value.length == 0){
        isShow.value = true
@@ -131,6 +136,14 @@
       return { ...item, avatar_path: `${BASE_URL}file${item.avatar_path}` };
     });
   }
+
+  function refreashUser(){
+    searchCond.value = {
+    department: "",
+    userName: "",
+    workNumber: "",
+  };
+  }
 </script>
 <style lang="scss" scoped>
   .Group {
@@ -143,7 +156,7 @@
       display: flex;
       height: 6.3vh;
       padding: 1vh 0;
-      width: 100%;
+      width: 84%;
       .groupSearch {
         .el-form-item {
           width: 28%;
