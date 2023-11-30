@@ -33,16 +33,16 @@
             :model="addUserData"
           >
             <el-form-item label="工号" prop="work_number">
-              <el-input v-model="addUserData.work_number"></el-input>
+              <el-input v-model="addUserData.work_number" placeholder="点击输入"></el-input>
             </el-form-item>
             <el-form-item label="姓名" prop="user_name">
-              <el-input v-model="addUserData.user_name"></el-input>
+              <el-input v-model="addUserData.user_name" placeholder="点击输入"></el-input>
             </el-form-item>
             <el-form-item label="电话" prop="phone">
-              <el-input v-model="addUserData.phone"></el-input>
+              <el-input v-model="addUserData.phone" placeholder="点击输入"></el-input>
             </el-form-item>
             <el-form-item label="邮箱" prop="email">
-              <el-input v-model="addUserData.email"></el-input>
+              <el-input v-model="addUserData.email" placeholder="点击输入"></el-input>
             </el-form-item>
             <el-form-item label="部门" prop="department">
               <el-select v-model="addUserData.department">
@@ -59,11 +59,12 @@
                 v-model="addUserData.sign_time"
                 value-format="YYYY-MM-DD hh:mm:ss"
                 type="datetime"
+                placeholder="点击输入"
               ></el-date-picker>
             </el-form-item>
 
             <el-form-item
-              label="角色："
+              label="角色"
               prop="role_id"
               class="groupAddRadioGroup"
             >
@@ -114,8 +115,9 @@
     department: [{ required: true, message: "请选择部门", trigger: "blur" }],
     sign_time: [{ required: true, message: "请选择入职时间", trigger: "blur" }],
     work_number: [{ required: true, message: "请输入工号", trigger: "blur" }],
+    role_id: [{ required: true, trigger: "blur" }],
   });
-  const photo = ref<string>("");
+  // const photo = ref<string>("");
   const addUserData = ref<addUserForm>({
     user_name: "",
     phone: "",
@@ -130,7 +132,7 @@
   const closeGroupAdd = (formEl: FormInstance | undefined) => {
     if (!formEl) return;
     groupAddOpen.value = false;
-    photo.value = "";
+    // photo.value = "";
     formEl.resetFields();
   };
   //固定班组信息
@@ -178,8 +180,8 @@
 </script>
 <style lang="scss" scoped>
   .groupAddInfo {
-    margin: auto;
-    width:50vw;
+    margin: 5px auto;
+    width:48vw;
     color: #73e1ff;
     font-size: 20px;
     // .groupAddOne {
@@ -220,7 +222,10 @@
           margin:20px 25px;
         }
         .el-radio--large{
-        margin:0 25px 25px 25px;
+        margin:0 0 5px 5px;
+        display: flex;
+        flex-wrap: wrap;
+        flex: 30%;
       }
       }
     }
