@@ -35,12 +35,12 @@
       <el-button
         class="groupSearchButton"
         :icon="RefreshRight"
-        @click="refreashUser"
+        @click="refreshUser"
       ></el-button>
       <el-button
         class="groupSet"
         :icon="Tools"
-        @click="openGroupUserEdit"
+        @click="openGroupSetting"
         v-op="'user-service:set'"
         >设置权限</el-button
       >
@@ -53,29 +53,32 @@
       >
     </div>
     <div class="useInfo">
-      <div style="font-size: 24px;" v-show="isShow">查无此人
-      </div>
-      <div class="useInfoItem" :key="item.avatar_path" v-for="item in userInfo">
-        <div class="usePhoto">
-          <img :src="item.avatar_path" alt="" />
-          <el-button class="groupInfoItemButton" :icon="EditPen"></el-button>
+      <el-empty class="empty" v-if="isShow" description="查无此人" />
+      <template v-else>
+        <div
+          class="useInfoItem"
+          :key="item.avatar_path"
+          v-for="item in userInfo"
+        >
+          <div class="usePhoto">
+            <img :src="item.avatar_path" alt="" />
+            <el-button
+              class="groupInfoItemButton"
+              :icon="EditPen"
+              @click="openGroupUserEdit"
+              v-op="'user-service:update'"
+            ></el-button>
+          </div>
+          <div>{{ item.user_name }}</div>
+          <div>{{ item.department }}&nbsp;&nbsp;{{ item.position }}</div>
+          <div>工号：{{ item.work_number }}</div>
         </div>
-        <div>{{ item.user_name }}</div>
-        <div>{{ item.department }}&nbsp;&nbsp;{{ item.position }}</div>
-        <div>工号：{{ item.work_number }}</div>
-      </div>
+      </template>
     </div>
     <div class="groupDialog">
-      <GroupSetting
-        ref="groupSettingOpenRef"
-      ></GroupSetting>
-      <GroupAdd
-        ref="groupAddRef"
-        @renew-user="searchUser"
-      ></GroupAdd>
-      <GroupUserEdit
-      ref="groupUserEditRef"
-      ></GroupUserEdit>
+      <GroupSetting ref="groupSettingOpenRef"></GroupSetting>
+      <GroupAdd ref="groupAddRef" @renew-user="searchUser"></GroupAdd>
+      <GroupUserEdit ref="groupUserEditRef"></GroupUserEdit>
     </div>
   </div>
 </template>
@@ -83,7 +86,13 @@
   import GroupSetting from "./GroupSetting/GroupSetting.vue";
   import GroupAdd from "./GroupAdd/GroupAdd.vue";
   import GroupUserEdit from "./GroupUserEdit/GroupUserEdit.vue";
-  import { Plus, Search, Tools, EditPen, RefreshRight  } from "@element-plus/icons-vue";
+  import {
+    Plus,
+    Search,
+    Tools,
+    EditPen,
+    RefreshRight,
+  } from "@element-plus/icons-vue";
   import { useGroupStore } from "@/store/group";
   import type { IUserInfo } from "@/types/group";
   import { BASE_URL } from "@/service/config";
@@ -127,14 +136,14 @@
       ? (groupUserEditRef.value.groupUserEditIsOpen = true)
       : false;
   }
-  const isShow = ref<boolean>(false)
+  const isShow = ref<boolean>(false);
   function searchUser() {
     groupStore.getAllUserAction({ ...searchCond.value }).then((res) => {
       userInfo.value = mapAvatarPath(res.data);
-      if(userInfo.value.length == 0){
-       isShow.value = true
-      }else{
-        isShow.value= false
+      if (userInfo.value.length == 0) {
+        isShow.value = true;
+      } else {
+        isShow.value = false;
       }
     });
   }
@@ -145,12 +154,15 @@
     });
   }
 
-  function refreashUser(){
+  function refreshUser() {
     searchCond.value = {
-    department: "",
-    userName: "",
-    workNumber: "",
-  };
+      department: "",
+      userName: "",
+      workNumber: "",
+    };
+    groupStore.getAllUserAction({}).then((res) => {
+      userInfo.value = mapAvatarPath(res.data);
+    });
   }
 </script>
 <style lang="scss" scoped>
@@ -197,6 +209,9 @@
       flex-wrap: wrap;
       overflow-x: hidden;
       overflow-y: auto;
+      .empty {
+        margin: 0 auto;
+      }
       .useInfoItem {
         margin: 20px 30px;
         width: 190px;

@@ -14,10 +14,14 @@
       @item-click="propItemClick"
       ref="InfoTableRef"
     ></info-table>
-    <info-item ref="InfoItemRef" @reply-click="propReplyClick"></info-item>
+    <info-item
+      ref="InfoItemRef"
+      @reply-click="propReplyClick"
+      :feedbackType="feedbackType"
+    ></info-item>
     <info-reply
       ref="InfoReplyRef"
-      :reply-type-props="feedbackType"
+      :feedbackType="feedbackType"
       @renew-click="submitReplyClick"
     ></info-reply>
     <el-pagination
@@ -38,7 +42,6 @@
   import InfoItem from "./cpn/InfoItem/InfoItem.vue";
   import InfoAdd from "./cpn/InfoAdd/InfoAdd.vue";
   import infoReply from "./cpn/InfoReply/infoReply.vue";
-
   const boardStore = useBoardStore();
   const route = useRoute();
   const pageData = ref<IBoardSearchData>({
@@ -66,6 +69,7 @@
     () => route.query.feedbackType,
     (newValue) => {
       feedbackType.value = newValue as "1" | "2";
+      pageData.value.pageNum = 1;
       getDate();
     },
     { immediate: true }
@@ -113,14 +117,17 @@
   }
   // 下拉框选择
   function propItemStateChange(searchData: ISearch) {
+    pageData.value.pageNum = 1;
     getDate(searchData);
   }
   // 搜索点击
   function propItemSearch(searchData: ISearch) {
+    pageData.value.pageNum = 1;
     getDate(searchData);
   }
   // 重置点击
   function propItemReset() {
+    pageData.value.pageNum = 1;
     getDate();
   }
 </script>

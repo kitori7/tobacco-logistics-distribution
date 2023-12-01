@@ -82,14 +82,15 @@ export const useBoardStore = defineStore("board", () => {
   });
   async function singleCondDataAction(customerCode: string) {
     const res = await getSingleConditions(customerCode);
-    singleCondData.value = res.data
+    singleCondData.value = res.data;
   }
   // 获取未处理数目
-  const UnhandledAmountData = ref<IUnhandledAmount>()
-  async function UnhandledAmountAction(){
-    const res = await getUnhandledAmount()
-    UnhandledAmountData.value = res.data   
+  const UnhandledAmountData = ref<IUnhandledAmount>();
+  async function UnhandledAmountAction() {
+    const res = await getUnhandledAmount();
+    UnhandledAmountData.value = res.data;
   }
+
   return {
     // 加载中
     loading,
@@ -112,6 +113,6 @@ export const useBoardStore = defineStore("board", () => {
     singleCondDataAction,
     // 获取未处理数目
     UnhandledAmountAction,
-    UnhandledAmountData
+    UnhandledAmountData,
   };
 });

@@ -5,7 +5,7 @@
       width="70%"
       center
       top="4%"
-      @close="Replyclose(replyFormRef)"
+      @close="ReplyClose(replyFormRef)"
     >
       <div class="el-dialog-div">
         <el-form
@@ -33,12 +33,12 @@
               v-model:file-list="replyForm.UploadFile"
               accept="image/*"
               multiple
-              action="fakeaction"
+              action="fakeAction"
               :show-file-list="true"
               list-type="picture-card"
               :auto-upload="false"
               :on-change="handleChange"
-              ref="uploadref"
+              ref="uploadRef"
             >
               <el-icon><Plus /></el-icon>
             </el-upload>
@@ -47,7 +47,10 @@
             label="状态修改为 :"
             prop="feedbackStatus"
             v-show="
-              replyType() == '0' ? 'false' : props.replyTypeProps != replyType()
+              (hasOp('guest-book:logistics:exception:modify') &&
+                props.feedbackType === '1') ||
+              (hasOp('guest-book:marketing:exception:modify') &&
+                props.feedbackType === '2')
             "
           >
             <el-radio-group v-model="replyForm.feedbackStatus">
@@ -56,9 +59,7 @@
               </template>
             </el-radio-group>
           </el-form-item>
-          <el-button
-            class="btn"
-            @click="submitForm(replyFormRef)"
+          <el-button class="btn" @click="submitForm(replyFormRef)"
             >回复</el-button
           >
         </el-form>
@@ -67,6 +68,8 @@
   </div>
 </template>
 <script lang="ts" setup>
+  import { Plus } from "@element-plus/icons-vue";
+  import { hasOp } from "@/op";
   import { useBoardStore } from "@/store/board";
   import {
     type UploadUserFile,
@@ -104,10 +107,10 @@
       return "0";
     }
   }
-  interface Iprops {
-    replyTypeProps?: "1" | "2";
+  interface IProps {
+    feedbackType?: "1" | "2";
   }
-  const props = defineProps<Iprops>();
+  const props = defineProps<IProps>();
   const feedbackId = ref<number>(13);
   function handleReply(id: number) {
     isReply.value = true;
@@ -134,12 +137,11 @@
   });
   // 上传图片
   const fileList = ref<UploadFiles>([]);
-  const uploadref = ref();
+  const uploadRef = ref();
   const handleChange = (file: UploadFile, files: UploadFiles) => {
     fileList.value = files;
     console.log(file);
   };
-  import { Plus } from "@element-plus/icons-vue";
   // 提交
   const emit = defineEmits(["renewClick"]);
 
@@ -170,7 +172,7 @@
                 if (res.code == 200) {
                   isReply.value = false;
                   emit("renewClick", feedbackId.value);
-                  boardStore.UnhandledAmountAction()
+                  boardStore.UnhandledAmountAction();
                   ElMessage({
                     type: "success",
                     message: "提交成功",
@@ -191,9 +193,9 @@
     });
   };
 
-  const Replyclose = (formEl?: FormInstance) => {
+  const ReplyClose = (formEl?: FormInstance) => {
     if (!formEl) return;
-    uploadref.value.clearFiles();
+    uploadRef.value.clearFiles();
     formEl.resetFields();
   };
 </script>
