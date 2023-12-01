@@ -43,7 +43,7 @@
   const route = useRoute();
   const pageData = ref<IBoardSearchData>({
     pageNum: 1,
-    pageSize: 5,
+    pageSize: 6,
   });
   // 页码改变
   function currentChange(value: number) {

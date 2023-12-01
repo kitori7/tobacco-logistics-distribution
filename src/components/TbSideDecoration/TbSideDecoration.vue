@@ -12,10 +12,8 @@
 .TbSideDecoration{
     position:relative;
     width: 30px;
-    
-
     .vertical-bar{
-    height: 80vh;
+    height: 86vh;
     width: 10px;
     background-color: #73e5ff;
     }

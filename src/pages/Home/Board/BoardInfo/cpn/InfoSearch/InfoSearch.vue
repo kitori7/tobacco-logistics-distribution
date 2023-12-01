@@ -211,7 +211,6 @@
         display: flex;
         flex-direction: column;
         align-items: start;
-
         height: 100%;
       }
       .el-button + .el-button {

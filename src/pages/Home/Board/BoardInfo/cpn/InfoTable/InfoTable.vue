@@ -1,9 +1,10 @@
 <template>
   <div class="InfoTable">
     <el-table v-loading="loading" :data="props.tableData" :header-cell-style="{
+      height: '5vh',
       'text-align': 'center',
-      padding: '0.3vh',}" 
-    :row-style="{ height: '7vh' }" :cell-style="tableCellStyle as any" style="font-size: 0.8vw"
+      padding: '0.3vh',
+    }" size="small" :row-style="{ height: '6vh' }" :cell-style="tableCellStyle as any" style="font-size: 0.8vw"
       @selection-change="toggleSelection">
       <el-table-column type="selection" fixed />
       <el-table-column type="index" label="序号" width="65" />
