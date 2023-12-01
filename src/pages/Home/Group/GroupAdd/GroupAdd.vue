@@ -82,10 +82,10 @@
             >
               <el-select v-model="addUserData.role_id">
                 <el-option
+                  v-for="item in rolesList"
                   :key="item.role_id"
-                  v-for="item in groupStore.roles"
                   :label="item.role_name"
-                  :value="item.role_name"
+                  :value="item.role_id"
                 ></el-option>
               </el-select>
             </el-form-item>
@@ -108,7 +108,7 @@
 </template>
 <script lang="ts" setup>
   import { useGroupStore } from "@/store/group";
-  import { addUserForm } from "@/types/group";
+  import { addUserForm , IRole } from "@/types/group";
   import type { FormInstance, FormRules } from "element-plus";
   const groupStore = useGroupStore();
   const groupAddOpen = ref(false);
@@ -152,6 +152,10 @@
     "班组六",
     "营销部",
   ];
+  const rolesList = ref<Array<IRole>>()
+  groupStore.getRoleAction().then(()=>{
+    rolesList.value=groupStore.roles
+  })
   const emit = defineEmits(["renewUser"]);
   const groupAddConfirm = async (formEl: FormInstance | undefined) => {
     if (!formEl) return;
@@ -172,6 +176,7 @@
       }
     });
   };
+
   //   上传图片
   // import type { UploadFile } from "element-plus";
   // const fileList = ref<UploadFile>();
@@ -187,7 +192,7 @@
 </script>
 <style lang="scss" scoped>
   .groupAddInfo {
-    margin: 5px auto;
+    margin: 10px auto;
     width: 48vw;
     color: #73e1ff;
     font-size: 20px;
@@ -243,7 +248,7 @@
       .groupAddCancel,
       .groupAddConfirm {
         width: 85px;
-        margin: 0 5vw;
+        margin: 30px 5vw;
       }
     }
   }

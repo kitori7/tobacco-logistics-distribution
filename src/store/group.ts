@@ -6,6 +6,7 @@ import type {
   IAllOperations,
   IOperations,
   IRole,
+  IUserInfo,
 } from "@/types/group";
 import {
   postAddUser,
@@ -15,6 +16,8 @@ import {
   getAllUser,
   getRoles,
   getRoleOperations,
+  getEditUserInfo,
+  updateUserInfo,
 } from "@/service/modules/group";
 
 export const useGroupStore = defineStore("group", () => {
@@ -64,6 +67,22 @@ export const useGroupStore = defineStore("group", () => {
     const res = await getRoleOperations(role_id);
     roleAuthority.value = res.data;
   }
+
+  //获取编辑用户信息
+  const editUserInfo= ref<IUserInfo[]>([]);
+  async function getEditUserInfoAction(work_number: string) {
+    const res = await getEditUserInfo(work_number);
+    editUserInfo.value = res.data;
+  }
+  //修改用户信息
+  async function updateUserInfoAction(data: IUserInfo) {
+    const res = await updateUserInfo(data);
+    if (res.code === 200) {
+      ElMessage.success(res.msg);
+    }
+    return res;
+  }
+  
   return {
     postAddUserAction,
     setUserAuthorityAction,
@@ -75,5 +94,8 @@ export const useGroupStore = defineStore("group", () => {
     getAllUserAction,
     roleAuthority,
     getRoleOperationsAction,
+    editUserInfo,
+    getEditUserInfoAction,
+    updateUserInfoAction,
   };
 });

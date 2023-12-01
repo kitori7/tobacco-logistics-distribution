@@ -19,10 +19,14 @@ export interface IUserSearch {
 }
 export interface IUserInfo {
   user_name: string;
-  position: string;
+  position?: string;
   work_number: string;
-  avatar_path: string;
+  avatar_path?: string;
   department: string;
+  phone:string;
+  role_id:number;
+  sign_time:string;
+  email:string;
 }
 
 export interface IAllOperations {

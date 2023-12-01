@@ -271,3 +271,17 @@
 .el-table {
   --el-table-row-hover-bg-color: none !important;
 }
+
+//菜单
+.el-dropdown__popper.el-popper{
+  --el-bg-color-overlay: #73e1ff;
+  border:1px solid #73e1ff;
+
+}
+.el-dropdown__popper {
+  --el-color-primary-light-9: #006a94;
+  --el-color-primary: #ffffff;
+}
+.el-dropdown-menu__item{
+  color: #000000;
+}

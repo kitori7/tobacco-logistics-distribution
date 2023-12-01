@@ -65,3 +65,16 @@ export function getRoleOperations(role_id: number) {
     url: `/userservice/user/get/role/operations?role_id=${role_id}`,
   });
 }
+// 获取编辑的用户信息接口
+export function getEditUserInfo(work_number: string) {
+  return requests.get<IRequest<IUserInfo[]>>({
+    url: `/userservice/user/get?workNumber=${work_number}`,
+  });
+}
+//修改用户信息
+export function updateUserInfo(data: IUserInfo) {
+  return requests.post<IRequest<string>>({
+    url: "/userservice/user/update",
+    data,
+  });
+}
