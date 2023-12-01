@@ -28,7 +28,6 @@ declare module 'vue' {
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     TbSideDecoration: typeof import('./../components/TbSideDecoration/TbSideDecoration.vue')['default']
-    Tip: typeof import('./../components/tip/Tip.vue')['default']
   }
   export interface ComponentCustomProperties {
     vLoading: typeof import('element-plus/es')['ElLoadingDirective']

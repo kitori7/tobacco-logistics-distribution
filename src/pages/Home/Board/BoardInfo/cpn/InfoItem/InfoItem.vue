@@ -29,7 +29,7 @@
               </div>
             </template>
           </div>
-          <div class="el-dialog-div-recover" :v-show="isShow">
+          <div class="el-dialog-div-recover" v-show="isShow">
             <span class="line"></span>
             <el-button @click="replyItemClick(id)">点击回复</el-button>
             <span class="line"></span>

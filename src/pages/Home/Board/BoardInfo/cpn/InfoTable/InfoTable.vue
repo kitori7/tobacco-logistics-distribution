@@ -2,9 +2,9 @@
   <div class="InfoTable">
     <el-table v-loading="loading" :data="props.tableData" :header-cell-style="{
       'text-align': 'center',
-      padding: '0.3vh',
-    }" :row-style="{ height: '7vh' }" :cell-style="tableCellStyle as any"
-      style="font-size: 0.8vw" @selection-change="toggleSelection">
+      padding: '0.3vh',}" 
+    :row-style="{ height: '7vh' }" :cell-style="tableCellStyle as any" style="font-size: 0.8vw"
+      @selection-change="toggleSelection">
       <el-table-column type="selection" fixed />
       <el-table-column type="index" label="序号" width="65" />
       <el-table-column prop="areaName" label="大区" width="160" />
@@ -48,17 +48,17 @@ const props = withDefaults(defineProps<IProps>(), {
 const tableCellStyle = ({ row }: { row: IBoardItem }) => {
   if (row.feedbackStatus === 0) {
     return {
-      background: "rgb(161, 86, 192)",
+      background: "rgba(161, 86, 192,0.8)",
       textAlign: "center",
     };
   } else if (row.feedbackStatus === 1) {
     return {
-      background: "rgb(190,174,58)",
+      background: "rgba(190,174,58,0.8)",
       textAlign: "center",
     };
   } else if (row.feedbackStatus === 3) {
     return {
-      background: "rgb(124,135,148)",
+      background: "rgba(124,135,148,0.8)",
       textAlign: "center",
     };
   } else if (row) {
