@@ -6,7 +6,7 @@
         size="small"
         max-height="400"
         :cell-style="{ textAlign: 'center' }"
-        :header-cell-style="{ 'text-align': 'center' }"
+        :header-cell-style="{ 'text-align': 'center' }"     
       >
         <el-table-column type="selection" />
         <el-table-column type="index" label="序号" />

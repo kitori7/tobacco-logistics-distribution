@@ -251,7 +251,6 @@
         });
       });
   };
-
   const resetForm = (
     formEl: FormInstance | undefined,
     formEl2: FormInstance | undefined
