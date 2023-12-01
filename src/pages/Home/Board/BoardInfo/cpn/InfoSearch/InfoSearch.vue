@@ -63,10 +63,7 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item
-          label="客户专员"
-          v-op="'user-service:view:acountspecialist'"
-        >
+        <el-form-item label="客户专员">
           <el-select filterable v-model="searchForm.managerWorkNumber">
             <el-option
               v-for="item in boardStore.cond?.customerManagerList"
@@ -76,10 +73,7 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item
-          label="送货员"
-          v-op="'user-service:view:deliveryman'"
-        >
+        <el-form-item label="送货员">
           <el-select filterable v-model="searchForm.deliveryWorkNumber">
             <el-option
               v-for="item in boardStore.cond?.deliveryUserList"
@@ -96,8 +90,27 @@
       </div>
     </div>
     <div class="btn-content">
-      <el-button :icon="Plus" @click="handleAdd">添加异常信息</el-button>
-      <el-button :icon="Delete" @click="handleDelete">批量删除</el-button>
+      <el-button
+        :icon="Plus"
+        @click="handleAdd"
+        v-show="
+          (hasOp('guest-book:logistics:exception:add') &&
+            feedbackType === '1') ||
+          (hasOp('guest-book:marketing:exception:add') && feedbackType === '2')
+        "
+        >添加异常信息</el-button
+      >
+      <el-button
+        :icon="Delete"
+        v-show="
+          (hasOp('guest-book:logistics:exception:delete') &&
+            feedbackType === '1') ||
+          (hasOp('guest-book:marketing:exception:delete') &&
+            feedbackType === '2')
+        "
+        @click="handleDelete"
+        >批量删除</el-button
+      >
     </div>
   </div>
 </template>
@@ -105,6 +118,7 @@
   import { Search, Refresh, Plus, Delete } from "@element-plus/icons-vue";
   import type { ISearch } from "@/types/board";
   import { useBoardStore } from "@/store/board";
+  import { hasOp } from "@/op";
   const boardStore = useBoardStore();
   const emit = defineEmits([
     "itemAdd",

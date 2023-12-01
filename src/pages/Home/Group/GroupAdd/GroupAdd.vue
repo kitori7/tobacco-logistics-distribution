@@ -33,16 +33,28 @@
             :model="addUserData"
           >
             <el-form-item label="工号" prop="work_number">
-              <el-input v-model="addUserData.work_number" placeholder="点击输入"></el-input>
+              <el-input
+                v-model="addUserData.work_number"
+                placeholder="点击输入"
+              ></el-input>
             </el-form-item>
             <el-form-item label="姓名" prop="user_name">
-              <el-input v-model="addUserData.user_name" placeholder="点击输入"></el-input>
+              <el-input
+                v-model="addUserData.user_name"
+                placeholder="点击输入"
+              ></el-input>
             </el-form-item>
             <el-form-item label="电话" prop="phone">
-              <el-input v-model="addUserData.phone" placeholder="点击输入"></el-input>
+              <el-input
+                v-model="addUserData.phone"
+                placeholder="点击输入"
+              ></el-input>
             </el-form-item>
             <el-form-item label="邮箱" prop="email">
-              <el-input v-model="addUserData.email" placeholder="点击输入"></el-input>
+              <el-input
+                v-model="addUserData.email"
+                placeholder="点击输入"
+              ></el-input>
             </el-form-item>
             <el-form-item label="部门" prop="department">
               <el-select v-model="addUserData.department">
@@ -68,19 +80,14 @@
               prop="role_id"
               class="groupAddRadioGroup"
             >
-              <el-radio-group v-model="addUserData.role_id">
-                <el-radio label="1" size="large">送货员</el-radio>
-                <el-radio label="2" size="large">班组长</el-radio>
-                <el-radio label="3" size="large">送货部负责人</el-radio>
-                <el-radio label="4" size="large">客户专员</el-radio>
-                <el-radio label="5" size="large">市场经理</el-radio>
-                <el-radio label="6" size="large">营销部负责人</el-radio>
-                <el-radio label="7" size="large">稽查员</el-radio>
-                <el-radio label="8" size="large">中队长</el-radio>
-                <el-radio label="9" size="large">专卖部负责人</el-radio>
-                <el-radio label="10" size="large">系统管理员</el-radio>
-                <el-radio label="11" size="large">领导</el-radio>
-              </el-radio-group>
+              <el-select v-model="addUserData.role_id">
+                <el-option
+                  :key="item.role_id"
+                  v-for="item in groupStore.roles"
+                  :label="item.role_name"
+                  :value="item.role_name"
+                ></el-option>
+              </el-select>
             </el-form-item>
             <!-- <div class="groupAddMessage">默认密码 : ycwl1234</div> -->
           </el-form>
@@ -181,7 +188,7 @@
 <style lang="scss" scoped>
   .groupAddInfo {
     margin: 5px auto;
-    width:48vw;
+    width: 48vw;
     color: #73e1ff;
     font-size: 20px;
     // .groupAddOne {
@@ -209,7 +216,7 @@
     .groupAddTwo {
       .el-form-item {
         width: 40%;
-        margin:35px;
+        margin: 35px;
       }
 
       // .groupAddMessage {
@@ -218,15 +225,15 @@
       // }
       .groupAddRadioGroup {
         width: 80%;
-        .el-form-item__label{
-          margin:20px 25px;
+        .el-form-item__label {
+          margin: 20px 25px;
         }
-        .el-radio--large{
-        margin:0 0 5px 5px;
-        display: flex;
-        flex-wrap: wrap;
-        flex: 30%;
-      }
+        .el-radio--large {
+          margin: 0 0 5px 5px;
+          display: flex;
+          flex-wrap: wrap;
+          flex: 30%;
+        }
       }
     }
 

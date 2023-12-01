@@ -8,10 +8,10 @@
       </BorderBox9>
     </div>
     <div class="btn-content">
-      <el-badge :value="logisticsMount" class="item" :hidden="!logisticsMount">
+      <el-badge v-show="hasOp('guest-book:logistics:exception:view')" :value="logisticsMount" class="item" :hidden="!logisticsMount">
         <el-button :class="{ vertical: true, active: currentIndex === 1 }" @click="routerChange('1')">物流反馈</el-button>
       </el-badge>
-      <el-badge :value="marketingMount" class="item" :hidden="!marketingMount">
+      <el-badge v-show="hasOp('guest-book:marketing:exception:view')" :value="marketingMount" class="item" :hidden="!marketingMount">
         <el-button :class="{ vertical: true, active: currentIndex === 2 }" @click="routerChange('2')">营销反馈</el-button>
       </el-badge>
     </div>
@@ -22,6 +22,7 @@ import TbSideDecoration from "@/components/TbSideDecoration/TbSideDecoration.vue
 import { BorderBox9 } from "@dataview/datav-vue3";
 import { useRouter, useRoute } from "vue-router";
 import { useBoardStore } from "@/store/board";
+import { hasOp } from "@/op";
 const boardStore = useBoardStore();
 const router = useRouter();
 const route = useRoute();

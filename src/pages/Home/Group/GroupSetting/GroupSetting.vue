@@ -7,7 +7,7 @@
       @close="closeGroupSetting"
     >
       <div class="groupSettingTopText">设置角色权限点：</div>
-      <div class="groupSettingcontent">
+      <div class="groupSettingContent">
         <div class="groupSettingLeft">
           <el-button
             v-for="item in roles"
@@ -118,7 +118,6 @@
       groupStore.setUserAuthorityAction({ ...userAuthorityData }).then(() => {
         closeGroupSetting();
       });
-      console.log({ ...userAuthorityData });
     }
   };
 </script>
@@ -127,14 +126,16 @@
     margin-left: 4.5vw;
     font-size: 25px;
   }
-  .groupSettingcontent {
+  .groupSettingContent {
     display: flex;
     justify-content: center;
     margin-top: 20px;
     margin-bottom: 50px;
 
     .groupSettingLeft {
+      margin: 6px;
       display: flex;
+      justify-content: space-between;
       flex-direction: column;
       .el-button {
         --el-color-primary: #73e1ff;
@@ -151,10 +152,10 @@
         outline: none;
       }
       .groupSettingLeftButton {
-        margin: 10px;
-        width: 140px;
-        height: 55px;
-        font-size: 20px;
+        margin: 3px;
+        width: 120px;
+        /* height: 20px; */
+        /* font-size: 20px; */
       }
     }
     .groupSettingRight {

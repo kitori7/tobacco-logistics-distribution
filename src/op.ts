@@ -10,7 +10,7 @@ export default (app: App) => {
   });
 };
 
-function hasOp(op: string) {
+export function hasOp(op: string) {
   const operation: string[] = JSON.parse(
     localStorage.getItem("operation") as string
   );
