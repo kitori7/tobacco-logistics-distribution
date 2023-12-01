@@ -33,9 +33,14 @@
         @click="searchUser"
       ></el-button>
       <el-button
+        class="groupSearchButton"
+        :icon="RefreshRight"
+        @click="refreashUser"
+      ></el-button>
+      <el-button
         class="groupSet"
         :icon="Tools"
-        @click="openGroupSetting"
+        @click="openGroupUserEdit"
         v-op="'user-service:set'"
         >设置权限</el-button
       >
@@ -62,26 +67,28 @@
     </div>
     <div class="groupDialog">
       <GroupSetting
-        :groupSetting="groupSettingOpenRef"
         ref="groupSettingOpenRef"
       ></GroupSetting>
       <GroupAdd
-        :groupAdd="groupAddRef"
         ref="groupAddRef"
         @renew-user="searchUser"
       ></GroupAdd>
+      <GroupUserEdit
+      ref="groupUserEditRef"
+      ></GroupUserEdit>
     </div>
   </div>
 </template>
 <script lang="ts" setup>
   import GroupSetting from "./GroupSetting/GroupSetting.vue";
   import GroupAdd from "./GroupAdd/GroupAdd.vue";
-  import { Plus, Search, Tools, EditPen } from "@element-plus/icons-vue";
+  import GroupUserEdit from "./GroupUserEdit/GroupUserEdit.vue";
+  import { Plus, Search, Tools, EditPen, RefreshRight  } from "@element-plus/icons-vue";
   import { useGroupStore } from "@/store/group";
   import type { IUserInfo } from "@/types/group";
   import { BASE_URL } from "@/service/config";
   const groupStore = useGroupStore();
-  const searchCond = reactive({
+  const searchCond = ref({
     department: "",
     userName: "",
     workNumber: "",
@@ -103,7 +110,7 @@
 
   const groupSettingOpenRef = ref<InstanceType<typeof GroupSetting>>();
   const groupAddRef = ref<InstanceType<typeof GroupAdd>>();
-
+  const groupUserEditRef = ref<InstanceType<typeof GroupUserEdit>>();
   function openGroupAdd() {
     typeof groupAddRef.value?.groupAddOpen === "boolean"
       ? (groupAddRef.value.groupAddOpen = true)
@@ -114,9 +121,15 @@
       ? (groupSettingOpenRef.value.groupSettingOpen = true)
       : false;
   }
+  //修改个人信息的入口
+  function openGroupUserEdit() {
+    typeof groupUserEditRef.value?.groupUserEditIsOpen === "boolean"
+      ? (groupUserEditRef.value.groupUserEditIsOpen = true)
+      : false;
+  }
   const isShow = ref<boolean>(false)
   function searchUser() {
-    groupStore.getAllUserAction({ ...searchCond }).then((res) => {
+    groupStore.getAllUserAction({ ...searchCond.value }).then((res) => {
       userInfo.value = mapAvatarPath(res.data);
       if(userInfo.value.length == 0){
        isShow.value = true
@@ -131,6 +144,14 @@
       return { ...item, avatar_path: `${BASE_URL}file${item.avatar_path}` };
     });
   }
+
+  function refreashUser(){
+    searchCond.value = {
+    department: "",
+    userName: "",
+    workNumber: "",
+  };
+  }
 </script>
 <style lang="scss" scoped>
   .Group {
@@ -143,7 +164,7 @@
       display: flex;
       height: 6.3vh;
       padding: 1vh 0;
-      width: 100%;
+      width: 84%;
       .groupSearch {
         .el-form-item {
           width: 28%;

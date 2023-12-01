@@ -41,3 +41,10 @@ export interface IRole {
   role_name: string;
   role_id: number;
 }
+export interface UserEditForm {
+  phone: string;
+  email: string;
+  department: string;
+  role_id: number;
+  sign_time: string;
+}

@@ -12,15 +12,32 @@
           {{ item.name }}
         </div>
       </div>
+      <div class="personal">
+        <el-dropdown>
+            <div class="personalAvatar"></div>
+            <el-icon class="el-icon--right"><arrow-down /></el-icon>
+          <template #dropdown>
+            <el-dropdown-menu>
+              <el-dropdown-item @click="openChangePwd()"><el-icon><Setting /></el-icon>修改密码</el-dropdown-item>
+              <el-dropdown-item><el-icon><SwitchButton /></el-icon>退出系统</el-dropdown-item>
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
+        </div>
     </div>
     <div class="content">
       <router-view></router-view>
     </div>
+    <ChangePwd
+      ref="changePwdRef" 
+    ></ChangePwd>
   </div>
 </template>
 <script lang="ts" setup>
   import { MenuList } from "./config";
   import { useRouter,useRoute } from "vue-router";
+  import { ArrowDown , SwitchButton , Setting } from '@element-plus/icons-vue'
+  import ChangePwd  from "./personal/ChangePwd.vue"
   const router = useRouter();
   const route = useRoute();
   const activeMenu = ref<number>(route.meta.order);
@@ -37,6 +54,13 @@
         router.push("/login");
       }
     });
+  }
+  //打开修改密码对话框
+  const changePwdRef = ref<InstanceType<typeof ChangePwd>>();
+  function openChangePwd() {
+    typeof changePwdRef.value?.changePwdIsOpen === "boolean"
+      ? (changePwdRef.value.changePwdIsOpen = true)
+      : false;
   }
 </script>
 <style lang="scss" scoped>
@@ -79,6 +103,18 @@
               rgba(0, 0, 0, 0.25) 0px 14px 28px,
               rgba(0, 0, 0, 0.22) 0px 10px 10px;
           }
+        }
+      }
+      .personal{
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        height: 100px;
+        .personalAvatar{
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          background: #62c6ff;
         }
       }
     }
