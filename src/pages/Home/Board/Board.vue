@@ -52,7 +52,7 @@ watch(() => boardStore.UnhandledAmountData, (newValue) => {
 
   .board-right {
     .dv-border-box-9 {
-      height: 87vh;
+      height: 86vh;
       width: 85vw;
       box-sizing: border-box;
       padding: 1.5vh 2.5vw 0px 2.5vw;

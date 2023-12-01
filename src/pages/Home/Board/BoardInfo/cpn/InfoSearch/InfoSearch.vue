@@ -205,6 +205,7 @@
       border: 2px solid $processed;
       .el-form-item {
         width: 30%;
+        margin-bottom: 1.8vh;
       }
       .search-btn {
         width: 20%;
