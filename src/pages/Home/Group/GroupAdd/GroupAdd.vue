@@ -69,8 +69,8 @@
             <el-form-item label="入职时间" prop="sign_time">
               <el-date-picker
                 v-model="addUserData.sign_time"
-                value-format="YYYY-MM-DD hh:mm:ss"
-                type="datetime"
+                value-format="YYYY-MM-DD"
+                type="date"
                 placeholder="点击输入"
               ></el-date-picker>
             </el-form-item>

@@ -76,9 +76,9 @@
       </template>
     </div>
     <div class="groupDialog">
-      <GroupSetting ref="groupSettingOpenRef"></GroupSetting>
+      <GroupSetting ref="groupSettingRef"></GroupSetting>
       <GroupAdd ref="groupAddRef" @renew-user="searchUser"></GroupAdd>
-      <GroupUserEdit ref="groupUserEditRef"></GroupUserEdit>
+      <GroupUserEdit ref="groupUserEditRef" @renew-user="searchUser"></GroupUserEdit>
     </div>
   </div>
 </template>
@@ -118,7 +118,7 @@
   });
   groupStore.getRoleAction()
 
-  const groupSettingOpenRef = ref<InstanceType<typeof GroupSetting>>();
+  const groupSettingRef = ref<InstanceType<typeof GroupSetting>>();
   const groupAddRef = ref<InstanceType<typeof GroupAdd>>();
   const groupUserEditRef = ref<InstanceType<typeof GroupUserEdit>>();
   function openGroupAdd() {
@@ -127,8 +127,8 @@
       : false;
   }
   function openGroupSetting() {
-    typeof groupSettingOpenRef.value?.groupSettingOpen === "boolean"
-      ? (groupSettingOpenRef.value.groupSettingOpen = true)
+    typeof groupSettingRef.value?.groupSettingOpen === "boolean"
+      ? (groupSettingRef.value.groupSettingOpen = true)
       : false;
   }
   //修改个人信息的入口

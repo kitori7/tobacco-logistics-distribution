@@ -93,6 +93,7 @@
   import type { FormInstance, FormRules } from "element-plus";
   const groupStore = useGroupStore();
   const groupUserEditIsOpen = ref<boolean>(false);
+  const emit = defineEmits(["renewUser"]);
   const EditData = ref<IParamUserInfo>({
     user_name: "",
     work_number: "",
@@ -148,18 +149,18 @@
     formData.append("signTime", EditData.signTime);
     if (EditData.newPassword) {
       formData.append("newPassword", EditData.newPassword);
-    }else{
+    } else {
       formData.append("newPassword", "");
     }
     if (EditData.email) {
       formData.append("email", EditData.email);
-    }else{
+    } else {
       formData.append("email", "");
     }
 
-
     groupStore.updateUserInfoAction(formData as any).then((res) => {
       if (res.code == 200) {
+        emit("renewUser");
         groupUserEditIsOpen.value = false;
         formEl.resetFields();
       }
