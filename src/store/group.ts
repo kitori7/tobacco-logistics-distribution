@@ -69,7 +69,7 @@ export const useGroupStore = defineStore("group", () => {
   }
 
   //获取编辑用户信息
-  const editUserInfo= ref<IUserInfo[]>([]);
+  const editUserInfo = ref<IUserInfo[]>([]);
   async function getEditUserInfoAction(work_number: string) {
     const res = await getEditUserInfo(work_number);
     editUserInfo.value = res.data;
@@ -82,7 +82,7 @@ export const useGroupStore = defineStore("group", () => {
     }
     return res;
   }
-  
+
   return {
     postAddUserAction,
     setUserAuthorityAction,

@@ -69,8 +69,8 @@
             <el-form-item label="入职时间" prop="sign_time">
               <el-date-picker
                 v-model="addUserData.sign_time"
-                value-format="YYYY-MM-DD hh:mm:ss"
-                type="datetime"
+                value-format="YYYY-MM-DD"
+                type="date"
                 placeholder="点击输入"
               ></el-date-picker>
             </el-form-item>
@@ -82,7 +82,7 @@
             >
               <el-select v-model="addUserData.role_id">
                 <el-option
-                  v-for="item in rolesList"
+                  v-for="item in groupStore.roles"
                   :key="item.role_id"
                   :label="item.role_name"
                   :value="item.role_id"
@@ -108,7 +108,7 @@
 </template>
 <script lang="ts" setup>
   import { useGroupStore } from "@/store/group";
-  import { addUserForm , IRole } from "@/types/group";
+  import { addUserForm } from "@/types/group";
   import type { FormInstance, FormRules } from "element-plus";
   const groupStore = useGroupStore();
   const groupAddOpen = ref(false);
@@ -122,7 +122,7 @@
     department: [{ required: true, message: "请选择部门", trigger: "blur" }],
     sign_time: [{ required: true, message: "请选择入职时间", trigger: "blur" }],
     work_number: [{ required: true, message: "请输入工号", trigger: "blur" }],
-    role_id: [{ required: true, trigger: "blur" }],
+    role_id: [{ required: true, message: "请选择角色", trigger: "blur" }],
   });
   // const photo = ref<string>("");
   const addUserData = ref<addUserForm>({
@@ -130,7 +130,7 @@
     phone: "",
     email: "",
     department: "",
-    role_id: 0,
+    role_id: undefined,
     work_number: "",
     sign_time: "",
     avatarPath: "",
@@ -152,10 +152,6 @@
     "班组六",
     "营销部",
   ];
-  const rolesList = ref<Array<IRole>>()
-  groupStore.getRoleAction().then(()=>{
-    rolesList.value=groupStore.roles
-  })
   const emit = defineEmits(["renewUser"]);
   const groupAddConfirm = async (formEl: FormInstance | undefined) => {
     if (!formEl) return;

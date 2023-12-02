@@ -9,6 +9,7 @@ import {
   IRole,
 } from "@/types/group";
 import { IRequest } from "../request/type";
+import { IChangePwdForm } from "@/types/personal";
 
 // 添加用户接口
 export function postAddUser(userData: addUserForm) {
@@ -74,7 +75,18 @@ export function getEditUserInfo(work_number: string) {
 //修改用户信息
 export function updateUserInfo(data: IUserInfo) {
   return requests.post<IRequest<string>>({
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
     url: "/userservice/user/update",
+    data,
+  });
+}
+
+// 修改用户密码
+export function postUpdatePassword(data: IChangePwdForm) {
+  return requests.post<IRequest<string>>({
+    url: "/userservice/user/update/password",
     data,
   });
 }

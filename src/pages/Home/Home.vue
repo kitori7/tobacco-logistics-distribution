@@ -1,7 +1,7 @@
 <template>
   <div class="home">
     <div class="main">
-      <div class="title" @click="loginOut"></div>
+      <div class="title"></div>
       <div class="menu">
         <div
           v-for="(item, index) in MenuList"
@@ -18,7 +18,7 @@
             <el-icon class="el-icon--right"><arrow-down /></el-icon>
           <template #dropdown>
             <el-dropdown-menu >
-              <el-dropdown-item @click="openChangePwd"><el-icon><Setting /></el-icon>修改密码</el-dropdown-item>
+              <el-dropdown-item v-op="'user-service:password:update'" @click="openChangePwd"><el-icon><Setting /></el-icon>修改密码</el-dropdown-item>
               <el-dropdown-item @click="loginOut"><el-icon><SwitchButton /></el-icon>退出系统</el-dropdown-item>
             </el-dropdown-menu>
           </template>
