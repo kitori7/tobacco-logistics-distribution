@@ -14,36 +14,40 @@
       </div>
       <div class="personal">
         <el-dropdown>
-            <div class="personalAvatar"></div>
-            <el-icon class="el-icon--right"><arrow-down /></el-icon>
+          <div class="personalAvatar"></div>
+          <el-icon class="el-icon--right"><arrow-down /></el-icon>
           <template #dropdown>
-            <el-dropdown-menu >
-              <el-dropdown-item v-op="'user-service:password:update'" @click="openChangePwd"><el-icon><Setting /></el-icon>修改密码</el-dropdown-item>
-              <el-dropdown-item @click="loginOut"><el-icon><SwitchButton /></el-icon>退出系统</el-dropdown-item>
+            <el-dropdown-menu>
+              <el-dropdown-item
+                v-op="'user-service:password:update'"
+                @click="openChangePwd"
+                ><el-icon><Setting /></el-icon>修改密码</el-dropdown-item
+              >
+              <el-dropdown-item @click="loginOut"
+                ><el-icon><SwitchButton /></el-icon>退出系统</el-dropdown-item
+              >
             </el-dropdown-menu>
           </template>
         </el-dropdown>
-        </div>
+      </div>
     </div>
     <div class="content">
       <router-view></router-view>
     </div>
-    <ChangePwd
-      ref="changePwdRef" 
-    ></ChangePwd>
+    <ChangePwd ref="changePwdRef"></ChangePwd>
   </div>
 </template>
 <script lang="ts" setup>
   import { MenuList } from "./config";
-  import { useRouter,useRoute } from "vue-router";
-  import { ArrowDown , SwitchButton , Setting } from '@element-plus/icons-vue'
-  import ChangePwd  from "./personal/ChangePwd.vue"
+  import { useRouter, useRoute } from "vue-router";
+  import { ArrowDown, SwitchButton, Setting } from "@element-plus/icons-vue";
+  import ChangePwd from "./personal/ChangePwd.vue";
   const router = useRouter();
   const route = useRoute();
   const activeMenu = ref<number>(route.meta.order);
   function handleMenu(activeRouter: string, index: number) {
-      activeMenu.value = index;
-      router.push(activeRouter);
+    activeMenu.value = index;
+    router.push(activeRouter);
   }
   function loginOut() {
     ElMessageBox.confirm("确认退出登录？").then((res) => {
@@ -105,12 +109,12 @@
           }
         }
       }
-      .personal{
+      .personal {
         display: flex;
         justify-content: space-around;
         align-items: center;
         height: 100px;
-        .personalAvatar{
+        .personalAvatar {
           width: 40px;
           height: 40px;
           border-radius: 50%;

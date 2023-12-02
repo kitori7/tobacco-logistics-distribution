@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import { getCaptcha, postLogin } from "@/service/modules/login";
 import type { ILoginForm } from "@/pages/Login/types";
-import { ILoginData } from "@/types/login";
+import { ILoginData, IUser } from "@/types/login";
 import { useRouter } from "vue-router";
 
 export const useLoginStore = defineStore("login", () => {
@@ -23,9 +23,12 @@ export const useLoginStore = defineStore("login", () => {
   //   // ...JSON.parse(localStorage.getItem("userInfo"))
   // });
   const userInfo = ref<ILoginData>({
-    token: localStorage.getItem("token"),
-    user: JSON.parse(localStorage.getItem("userInfo")),
-    operations: JSON.parse(localStorage.getItem("operation")),
+    token: localStorage.getItem("token") ?? "",
+    user:
+      (JSON.parse(localStorage.getItem("userInfo") as string) as IUser) ?? "",
+    operations:
+      (JSON.parse(localStorage.getItem("operation") as string) as string[]) ??
+      "",
   });
   const token = ref<string>();
   async function loginAction(data: ILoginForm) {
