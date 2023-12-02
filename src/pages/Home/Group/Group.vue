@@ -57,11 +57,11 @@
       <template v-else>
         <div
           class="useInfoItem"
-          :key="item.avatar_path"
+          :key="item.work_number"
           v-for="item in userInfo"
         >
           <div class="usePhoto">
-            <img :src="item.avatar_path" alt="" />
+            <img alt="" />
             <el-button
               class="groupInfoItemButton"
               :icon="EditPen"
@@ -95,7 +95,7 @@
   } from "@element-plus/icons-vue";
   import { useGroupStore } from "@/store/group";
   import type { IUserInfo } from "@/types/group";
-  import { BASE_URL } from "@/service/config";
+  // import { BASE_URL } from "@/service/config";
   const groupStore = useGroupStore();
   const searchCond = ref({
     department: "",
@@ -116,6 +116,7 @@
   groupStore.getAllUserAction({}).then((res) => {
     userInfo.value = mapAvatarPath(res.data);
   });
+  groupStore.getRoleAction()
 
   const groupSettingOpenRef = ref<InstanceType<typeof GroupSetting>>();
   const groupAddRef = ref<InstanceType<typeof GroupAdd>>();
@@ -131,16 +132,19 @@
       : false;
   }
   //修改个人信息的入口
-  function openGroupUserEdit(work_number:string) {
+  function openGroupUserEdit(work_number: string) {
     typeof groupUserEditRef.value?.groupUserEditIsOpen === "boolean"
       ? (groupUserEditRef.value.groupUserEditIsOpen = true)
-      : false;      
-      groupStore.getEditUserInfoAction(work_number).then(()=>{
-        if(groupUserEditRef.value){
-          groupUserEditRef.value.EditData = groupStore.editUserInfo[0];
-        }
-      });
-
+      : false;
+    groupStore.getEditUserInfoAction(work_number).then(() => {
+      if (groupUserEditRef.value) {
+        const EditData = {
+          ...groupStore.editUserInfo[0],
+          signTime: groupStore.editUserInfo[0].sign_time,
+        };
+        groupUserEditRef.value.EditData = EditData;
+      }
+    });
   }
   const isShow = ref<boolean>(false);
   function searchUser() {
@@ -156,7 +160,8 @@
 
   function mapAvatarPath(arr: IUserInfo[]) {
     return arr.map((item: IUserInfo) => {
-      return { ...item, avatar_path: `${BASE_URL}file${item.avatar_path}` };
+      // return { ...item, avatar_path: `${BASE_URL}file${item.avatar_path}` };
+      return item;
     });
   }
 

@@ -74,6 +74,9 @@ export function getEditUserInfo(work_number: string) {
 //修改用户信息
 export function updateUserInfo(data: IUserInfo) {
   return requests.post<IRequest<string>>({
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
     url: "/userservice/user/update",
     data,
   });
