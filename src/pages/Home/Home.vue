@@ -17,9 +17,9 @@
             <div class="personalAvatar"></div>
             <el-icon class="el-icon--right"><arrow-down /></el-icon>
           <template #dropdown>
-            <el-dropdown-menu>
-              <el-dropdown-item @click="openChangePwd()"><el-icon><Setting /></el-icon>修改密码</el-dropdown-item>
-              <el-dropdown-item><el-icon><SwitchButton /></el-icon>退出系统</el-dropdown-item>
+            <el-dropdown-menu >
+              <el-dropdown-item @click="openChangePwd"><el-icon><Setting /></el-icon>修改密码</el-dropdown-item>
+              <el-dropdown-item @click="loginOut"><el-icon><SwitchButton /></el-icon>退出系统</el-dropdown-item>
             </el-dropdown-menu>
           </template>
         </el-dropdown>
@@ -114,7 +114,7 @@
           width: 40px;
           height: 40px;
           border-radius: 50%;
-          background: #62c6ff;
+          background: #73e1ff;
         }
       }
     }

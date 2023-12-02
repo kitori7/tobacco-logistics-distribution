@@ -65,7 +65,7 @@
             <el-button
               class="groupInfoItemButton"
               :icon="EditPen"
-              @click="openGroupUserEdit"
+              @click="openGroupUserEdit(item.work_number)"
               v-op="'user-service:update'"
             ></el-button>
           </div>
@@ -131,10 +131,16 @@
       : false;
   }
   //修改个人信息的入口
-  function openGroupUserEdit() {
+  function openGroupUserEdit(work_number:string) {
     typeof groupUserEditRef.value?.groupUserEditIsOpen === "boolean"
       ? (groupUserEditRef.value.groupUserEditIsOpen = true)
-      : false;
+      : false;      
+      groupStore.getEditUserInfoAction(work_number).then(()=>{
+        if(groupUserEditRef.value){
+          groupUserEditRef.value.EditData = groupStore.editUserInfo[0];
+        }
+      });
+
   }
   const isShow = ref<boolean>(false);
   function searchUser() {
