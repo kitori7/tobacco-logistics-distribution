@@ -57,15 +57,15 @@
       <template v-else>
         <div
           class="useInfoItem"
-          :key="item.avatar_path"
+          :key="item.work_number"
           v-for="item in userInfo"
         >
           <div class="usePhoto">
-            <img :src="item.avatar_path" alt="" />
+            <img alt="" />
             <el-button
               class="groupInfoItemButton"
               :icon="EditPen"
-              @click="openGroupUserEdit"
+              @click="openGroupUserEdit(item.work_number)"
               v-op="'user-service:update'"
             ></el-button>
           </div>
@@ -76,9 +76,9 @@
       </template>
     </div>
     <div class="groupDialog">
-      <GroupSetting ref="groupSettingOpenRef"></GroupSetting>
+      <GroupSetting ref="groupSettingRef"></GroupSetting>
       <GroupAdd ref="groupAddRef" @renew-user="searchUser"></GroupAdd>
-      <GroupUserEdit ref="groupUserEditRef"></GroupUserEdit>
+      <GroupUserEdit ref="groupUserEditRef" @renew-user="searchUser"></GroupUserEdit>
     </div>
   </div>
 </template>
@@ -95,7 +95,7 @@
   } from "@element-plus/icons-vue";
   import { useGroupStore } from "@/store/group";
   import type { IUserInfo } from "@/types/group";
-  import { BASE_URL } from "@/service/config";
+  // import { BASE_URL } from "@/service/config";
   const groupStore = useGroupStore();
   const searchCond = ref({
     department: "",
@@ -116,8 +116,9 @@
   groupStore.getAllUserAction({}).then((res) => {
     userInfo.value = mapAvatarPath(res.data);
   });
+  groupStore.getRoleAction()
 
-  const groupSettingOpenRef = ref<InstanceType<typeof GroupSetting>>();
+  const groupSettingRef = ref<InstanceType<typeof GroupSetting>>();
   const groupAddRef = ref<InstanceType<typeof GroupAdd>>();
   const groupUserEditRef = ref<InstanceType<typeof GroupUserEdit>>();
   function openGroupAdd() {
@@ -126,15 +127,24 @@
       : false;
   }
   function openGroupSetting() {
-    typeof groupSettingOpenRef.value?.groupSettingOpen === "boolean"
-      ? (groupSettingOpenRef.value.groupSettingOpen = true)
+    typeof groupSettingRef.value?.groupSettingOpen === "boolean"
+      ? (groupSettingRef.value.groupSettingOpen = true)
       : false;
   }
   //修改个人信息的入口
-  function openGroupUserEdit() {
+  function openGroupUserEdit(work_number: string) {
     typeof groupUserEditRef.value?.groupUserEditIsOpen === "boolean"
       ? (groupUserEditRef.value.groupUserEditIsOpen = true)
       : false;
+    groupStore.getEditUserInfoAction(work_number).then(() => {
+      if (groupUserEditRef.value) {
+        const EditData = {
+          ...groupStore.editUserInfo[0],
+          signTime: groupStore.editUserInfo[0].sign_time,
+        };
+        groupUserEditRef.value.EditData = EditData;
+      }
+    });
   }
   const isShow = ref<boolean>(false);
   function searchUser() {
@@ -150,7 +160,8 @@
 
   function mapAvatarPath(arr: IUserInfo[]) {
     return arr.map((item: IUserInfo) => {
-      return { ...item, avatar_path: `${BASE_URL}file${item.avatar_path}` };
+      // return { ...item, avatar_path: `${BASE_URL}file${item.avatar_path}` };
+      return item;
     });
   }
 

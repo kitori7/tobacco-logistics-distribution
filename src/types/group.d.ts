@@ -3,7 +3,7 @@ export interface addUserForm {
   phone: string;
   email: string;
   department: string;
-  role_id: number;
+  role_id: number | undefined;
   work_number: string;
   sign_time: string;
   avatarPath?: string;
@@ -18,11 +18,27 @@ export interface IUserSearch {
   workNumber?: string;
 }
 export interface IUserInfo {
-  user_name: string;
-  position: string;
-  work_number: string;
-  avatar_path: string;
   department: string;
+  email: string;
+  password: string;
+  phone: string;
+  role_id: number;
+  sign_time: string;
+  user_name: string;
+  work_number: string;
+  position: string;
+}
+
+export interface IParamUserInfo {
+  user_name: string;
+  work_number: string;
+  department: string;
+  phone: string;
+  role_id: number | undefined;
+  signTime: string;
+  position?: string;
+  email: string;
+  newPassword?: string;
 }
 
 export interface IAllOperations {

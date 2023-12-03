@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import { getCaptcha, postLogin } from "@/service/modules/login";
 import type { ILoginForm } from "@/pages/Login/types";
-import { ILoginData } from "@/types/login";
+import { ILoginData, IUser } from "@/types/login";
 import { useRouter } from "vue-router";
 
 export const useLoginStore = defineStore("login", () => {
@@ -17,8 +17,19 @@ export const useLoginStore = defineStore("login", () => {
       captcha.value = url;
     });
   }
+
   // 登录模块
-  const userInfo = ref<ILoginData>();
+  // const userInfo = ref<ILoginData>({
+  //   // ...JSON.parse(localStorage.getItem("userInfo"))
+  // });
+  const userInfo = ref<ILoginData>({
+    token: localStorage.getItem("token") ?? "",
+    user:
+      (JSON.parse(localStorage.getItem("userInfo") as string) as IUser) ?? "",
+    operations:
+      (JSON.parse(localStorage.getItem("operation") as string) as string[]) ??
+      "",
+  });
   const token = ref<string>();
   async function loginAction(data: ILoginForm) {
     const res = await postLogin(data, captchaText.value);
@@ -26,7 +37,10 @@ export const useLoginStore = defineStore("login", () => {
     localStorage.setItem("token", token.value);
     userInfo.value = res.data;
     localStorage.setItem("userInfo", JSON.stringify(userInfo.value?.user));
-    localStorage.setItem("operation", JSON.stringify(userInfo.value?.operations));
+    localStorage.setItem(
+      "operation",
+      JSON.stringify(userInfo.value?.operations)
+    );
     ElMessage.success("登录成功");
     router.push("/home");
   }

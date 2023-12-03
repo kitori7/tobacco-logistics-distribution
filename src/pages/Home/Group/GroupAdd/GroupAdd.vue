@@ -69,8 +69,8 @@
             <el-form-item label="入职时间" prop="sign_time">
               <el-date-picker
                 v-model="addUserData.sign_time"
-                value-format="YYYY-MM-DD hh:mm:ss"
-                type="datetime"
+                value-format="YYYY-MM-DD"
+                type="date"
                 placeholder="点击输入"
               ></el-date-picker>
             </el-form-item>
@@ -82,10 +82,10 @@
             >
               <el-select v-model="addUserData.role_id">
                 <el-option
-                  :key="item.role_id"
                   v-for="item in groupStore.roles"
+                  :key="item.role_id"
                   :label="item.role_name"
-                  :value="item.role_name"
+                  :value="item.role_id"
                 ></el-option>
               </el-select>
             </el-form-item>
@@ -122,7 +122,7 @@
     department: [{ required: true, message: "请选择部门", trigger: "blur" }],
     sign_time: [{ required: true, message: "请选择入职时间", trigger: "blur" }],
     work_number: [{ required: true, message: "请输入工号", trigger: "blur" }],
-    role_id: [{ required: true, trigger: "blur" }],
+    role_id: [{ required: true, message: "请选择角色", trigger: "blur" }],
   });
   // const photo = ref<string>("");
   const addUserData = ref<addUserForm>({
@@ -130,7 +130,7 @@
     phone: "",
     email: "",
     department: "",
-    role_id: 0,
+    role_id: undefined,
     work_number: "",
     sign_time: "",
     avatarPath: "",
@@ -172,6 +172,7 @@
       }
     });
   };
+
   //   上传图片
   // import type { UploadFile } from "element-plus";
   // const fileList = ref<UploadFile>();
@@ -187,7 +188,7 @@
 </script>
 <style lang="scss" scoped>
   .groupAddInfo {
-    margin: 5px auto;
+    margin: 10px auto;
     width: 48vw;
     color: #73e1ff;
     font-size: 20px;
@@ -243,7 +244,7 @@
       .groupAddCancel,
       .groupAddConfirm {
         width: 85px;
-        margin: 0 5vw;
+        margin: 30px 5vw;
       }
     }
   }

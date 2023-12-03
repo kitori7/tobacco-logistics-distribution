@@ -9,6 +9,7 @@ import {
   IRole,
 } from "@/types/group";
 import { IRequest } from "../request/type";
+import { IChangePwdForm } from "@/types/personal";
 
 // 添加用户接口
 export function postAddUser(userData: addUserForm) {
@@ -63,5 +64,29 @@ export function getAllUser(searchData: IUserSearch) {
 export function getRoleOperations(role_id: number) {
   return requests.get<IRequest<IOperations[]>>({
     url: `/userservice/user/get/role/operations?role_id=${role_id}`,
+  });
+}
+// 获取编辑的用户信息接口
+export function getEditUserInfo(work_number: string) {
+  return requests.get<IRequest<IUserInfo[]>>({
+    url: `/userservice/user/get?workNumber=${work_number}`,
+  });
+}
+//修改用户信息
+export function updateUserInfo(data: IUserInfo) {
+  return requests.post<IRequest<string>>({
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+    url: "/userservice/user/update",
+    data,
+  });
+}
+
+// 修改用户密码
+export function postUpdatePassword(data: IChangePwdForm) {
+  return requests.post<IRequest<string>>({
+    url: "/userservice/user/update/password",
+    data,
   });
 }
