@@ -26,7 +26,7 @@ export const useBoardStore = defineStore("board", () => {
   const boardData = ref<IBoard>({
     currentPageNum: 1,
     dataCurrentPage: [],
-    pageSize: 5,
+    pageSize: 6,
     totalCount: 0,
     totalPageNum: 0,
   });

@@ -64,6 +64,7 @@ export interface IBoardItem {
   orderDate: string;
   feedbackFileList: Array;
   feedbackStatus: number;
+  updateTime:string;
 }
 // 处理消息展示数据
 export interface ItemInfo {

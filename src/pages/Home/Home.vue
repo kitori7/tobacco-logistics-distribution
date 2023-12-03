@@ -81,8 +81,8 @@
       display: flex;
       justify-content: space-between;
       .title {
-        width: 472px;
-        height: 100px;
+        width: 30vw;
+        height: 10vh;
         background: url("@/assets/images/title.png") center no-repeat;
         background-size: contain;
       }
@@ -92,13 +92,13 @@
         flex: 1;
         justify-content: space-around;
         align-items: center;
-        height: 100px;
+        height: 10vh;
         div {
-          padding: 0 15px;
+          padding: 0 1.5vw;
           display: flex;
           align-items: center;
-          height: 45px;
-          font-size: 20px;
+          height: 5vh;
+          font-size: 1.2vw;
           cursor: pointer;
           transition: all 0.2s;
           &.active {
@@ -113,8 +113,8 @@
         display: flex;
         justify-content: space-around;
         align-items: center;
-        height: 100px;
-        .personalAvatar {
+        height: 10vh;
+        .personalAvatar{
           width: 40px;
           height: 40px;
           border-radius: 50%;
