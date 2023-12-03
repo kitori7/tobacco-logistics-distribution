@@ -81,7 +81,7 @@
       display: flex;
       justify-content: space-between;
       .title {
-        width: 472px;
+        width: 30vw;
         height: 10vh;
         background: url("@/assets/images/title.png") center no-repeat;
         background-size: contain;
