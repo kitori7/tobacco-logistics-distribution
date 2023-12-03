@@ -6,7 +6,11 @@
       padding: '0.3vh',
     }" size="small" :row-style="{ height: '6vh' }" :cell-style="tableCellStyle as any" style="font-size: 0.8vw"
       @selection-change="toggleSelection">
-      <el-table-column type="selection" fixed />
+      <el-table-column type="selection" fixed v-if="(hasOp('guest-book:logistics:exception:delete') &&
+        feedbackType === '1') ||
+        (hasOp('guest-book:marketing:exception:delete') &&
+          feedbackType === '2')
+        " />
       <el-table-column type="index" label="序号" width="65" />
       <el-table-column prop="areaName" label="大区" width="160" />
       <el-table-column prop="routeName" label="线路名称" width="180" />
@@ -29,6 +33,7 @@
   </div>
 </template>
 <script lang="ts" setup>
+import { hasOp } from "@/op";
 import type { IBoardItem } from "@/types/board";
 import { storeToRefs } from "pinia";
 import { Edit } from "@element-plus/icons-vue";
@@ -38,13 +43,13 @@ const boardStore = useBoardStore();
 const { loading } = storeToRefs(boardStore);
 interface IProps {
   tableData?: IBoardItem[];
+  feedbackType?: "1" | "2";
 }
 const props = withDefaults(defineProps<IProps>(), {
   tableData: () => {
     return [];
   },
 });
-
 // 修改表格每一行颜色
 const tableCellStyle = ({ row }: { row: IBoardItem }) => {
   if (row.feedbackStatus === 0) {

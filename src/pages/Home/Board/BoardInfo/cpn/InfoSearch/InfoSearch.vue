@@ -3,12 +3,7 @@
     <div class="title">
       <div class="round" :class="stateColor(searchForm.feedbackStatus)"></div>
       <p>{{ props.feedbackType == "1" ? "物流反馈" : "营销反馈" }}</p>
-      <el-select
-        v-model="searchForm.feedbackStatus"
-        placeholder="全部信息"
-        size="small"
-        v-on:change="changeState"
-      >
+      <el-select v-model="searchForm.feedbackStatus" placeholder="全部信息" size="small" v-on:change="changeState">
         <template v-for="item in options" :key="item.value">
           <el-option :label="item.label" :value="item.value">
             <div :class="item.class"></div>
@@ -19,68 +14,43 @@
     </div>
     <div class="search-content">
       <el-form :inline="true" label-width="100px" :model="searchForm">
-        <el-form-item label="订单时间">
-          <el-date-picker
-            v-model="time"
-            value-format="YYYY-MM-DD hh:mm:ss"
-            type="datetimerange"
-          ></el-date-picker>
+        <el-form-item label="订单时间" class="block">
+          <el-date-picker v-model="time" value-format="YYYY-MM-DD hh:mm:ss" type="datetimerange"
+          start-placeholder="开始时间" end-placeholder="结束时间" @change="changeTime" />
         </el-form-item>
         <el-form-item label="客户编码">
           <el-select filterable v-model="searchForm.customerCode">
-            <el-option
-              v-for="item in boardStore.cond?.storeList"
-              :key="item.customerCode"
-              :value="item.customerCode"
-            ></el-option>
+            <el-option v-for="item in boardStore.cond?.storeList" :key="item.customerCode"
+              :value="item.customerCode"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="客户名称">
           <el-select filterable v-model="searchForm.contactName">
-            <el-option
-              v-for="item in boardStore.cond?.storeList"
-              :key="item.contactName"
-              :value="item.contactName"
-            ></el-option>
+            <el-option v-for="item in boardStore.cond?.storeList" :key="item.contactName"
+              :value="item.contactName"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="大区">
           <el-select filterable v-model="searchForm.areaName">
-            <el-option
-              v-for="item in boardStore.cond?.areaList"
-              :key="item.areaId"
-              :value="item.areaName"
-            ></el-option>
+            <el-option v-for="item in boardStore.cond?.areaList" :key="item.areaId" :value="item.areaName"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="路线名称">
           <el-select filterable v-model="searchForm.routeId">
-            <el-option
-              v-for="item in boardStore.cond?.routeList"
-              :key="item.routeId"
-              :label="item.routeName"
-              :value="item.routeId"
-            ></el-option>
+            <el-option v-for="item in boardStore.cond?.routeList" :key="item.routeId" :label="item.routeName"
+              :value="item.routeId"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="客户专员">
           <el-select filterable v-model="searchForm.managerWorkNumber">
-            <el-option
-              v-for="item in boardStore.cond?.customerManagerList"
-              :key="item.workNumber"
-              :label="item.userName"
-              :value="item.workNumber"
-            ></el-option>
+            <el-option v-for="item in boardStore.cond?.customerManagerList" :key="item.workNumber" :label="item.userName"
+              :value="item.workNumber"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="送货员">
           <el-select filterable v-model="searchForm.deliveryWorkNumber">
-            <el-option
-              v-for="item in boardStore.cond?.deliveryUserList"
-              :key="item.workNumber"
-              :label="item.userName"
-              :value="item.workNumber"
-            ></el-option>
+            <el-option v-for="item in boardStore.cond?.deliveryUserList" :key="item.workNumber" :label="item.userName"
+              :value="item.workNumber"></el-option>
           </el-select>
         </el-form-item>
       </el-form>
@@ -90,79 +60,92 @@
       </div>
     </div>
     <div class="btn-content">
-      <el-button
-        :icon="Plus"
-        @click="handleAdd"
-        v-show="
-          (hasOp('guest-book:logistics:exception:add') &&
-            feedbackType === '1') ||
-          (hasOp('guest-book:marketing:exception:add') && feedbackType === '2')
-        "
-        >添加异常信息</el-button
-      >
-      <el-button
-        :icon="Delete"
-        v-show="
-          (hasOp('guest-book:logistics:exception:delete') &&
-            feedbackType === '1') ||
-          (hasOp('guest-book:marketing:exception:delete') &&
-            feedbackType === '2')
-        "
-        @click="handleDelete"
-        >批量删除</el-button
-      >
+      <el-button :icon="Plus" @click="handleAdd" v-show="(hasOp('guest-book:logistics:exception:add') &&
+        feedbackType === '1') ||
+        (hasOp('guest-book:marketing:exception:add') && feedbackType === '2')
+        ">添加异常信息</el-button>
+      <el-button :icon="Delete" v-show="(hasOp('guest-book:logistics:exception:delete') &&
+        feedbackType === '1') ||
+        (hasOp('guest-book:marketing:exception:delete') &&
+          feedbackType === '2')
+        " @click="handleDelete">批量删除</el-button>
     </div>
   </div>
 </template>
 <script lang="ts" setup>
-  import { Search, Refresh, Plus, Delete } from "@element-plus/icons-vue";
-  import type { ISearch } from "@/types/board";
-  import { useBoardStore } from "@/store/board";
-  import { hasOp } from "@/op";
-  const boardStore = useBoardStore();
-  const emit = defineEmits([
-    "itemAdd",
-    "itemSearch",
-    "itemReset",
-    "itemState",
-    "itemDelete",
-  ]);
-  interface IProps {
-    feedbackType?: "1" | "2";
+import { Search, Refresh, Plus, Delete } from "@element-plus/icons-vue";
+import type { ISearch } from "@/types/board";
+import { useBoardStore } from "@/store/board";
+import { hasOp } from "@/op";
+const boardStore = useBoardStore();
+const emit = defineEmits([
+  "itemAdd",
+  "itemSearch",
+  "itemReset",
+  "itemState",
+  "itemDelete",
+]);
+interface IProps {
+  feedbackType?: "1" | "2";
+}
+const props = defineProps<IProps>();
+onMounted(() => {
+  boardStore.getCondAction();
+});
+// 反馈颜色
+const options = [
+  { label: "全部", value: "", class: "sRound round all" },
+  { label: "未处理", value: "0", class: "sRound round notProcessed" },
+  { label: "处理中", value: "1", class: "sRound round dispose" },
+  { label: "已处理", value: "2", class: "sRound round processed" },
+  { label: "无需处理", value: "3", class: "sRound round notDispose" },
+];
+function stateColor(state?: string) {
+  switch (state) {
+    case "0":
+      return "notProcessed";
+    case "1":
+      return "dispose";
+    case "2":
+      return "processed";
+    case "3":
+      return "notDispose";
+    case "":
+      return "all";
   }
-  const props = defineProps<IProps>();
-  onMounted(() => {
-    boardStore.getCondAction();
-  });
-  // 反馈颜色
-  const options = [
-    { label: "全部", value: "", class: "sRound round all" },
-    { label: "未处理", value: "0", class: "sRound round notProcessed" },
-    { label: "处理中", value: "1", class: "sRound round dispose" },
-    { label: "已处理", value: "2", class: "sRound round processed" },
-    { label: "无需处理", value: "3", class: "sRound round notDispose" },
-  ];
-  function stateColor(state?: string) {
-    switch (state) {
-      case "0":
-        return "notProcessed";
-      case "1":
-        return "dispose";
-      case "2":
-        return "processed";
-      case "3":
-        return "notDispose";
-      case "":
-        return "all";
-    }
+}
+const searchForm = ref<ISearch>({
+  contactName: "",
+  areaName: "",
+  customerCodeL: "",
+  feedbackStatus: "",
+  deliveryWorkNumber: "",
+  managerWorkNumber: "",
+  orderEndDate: "",
+  orderStartDate: "",
+});
+// 时间数据处理
+const time = ref();
+function changeTime() {
+  if (time.value == null) {
+    searchForm.value.orderStartDate = ''
+    searchForm.value.orderEndDate = ''
+  } else {
+    searchForm.value.orderStartDate = time.value[0]
+    searchForm.value.orderEndDate = time.value[1]
   }
-  // 时间数据处理
-  const time = ref();
-  watch(time, (newValue) => {
-    searchForm.value.orderStartDate = newValue[0];
-    searchForm.value.orderEndDate = newValue[1];
-  });
-  const searchForm = ref<ISearch>({
+}
+// 下拉框改变请求数据
+function changeState() {
+  emit("itemState", { ...searchForm.value });
+}
+// 点击搜索
+function handleSearch() {
+  emit("itemSearch", { ...searchForm.value });
+}
+// 重置
+function handelReset() {
+  searchForm.value = {
     contactName: "",
     areaName: "",
     customerCodeL: "",
@@ -171,70 +154,56 @@
     managerWorkNumber: "",
     orderEndDate: "",
     orderStartDate: "",
-  });
-  // 下拉框改变请求数据
-  function changeState() {
-    emit("itemState", { ...searchForm.value });
-  }
-  // 点击搜索
-  function handleSearch() {
-    emit("itemSearch", { ...searchForm.value });
-  }
-  // 重置
-  function handelReset() {
-    searchForm.value = {
-      contactName: "",
-      areaName: "",
-      customerCodeL: "",
-      feedbackStatus: "",
-      deliveryWorkNumber: "",
-      managerWorkNumber: "",
-      orderEndDate: "",
-      orderStartDate: "",
-    };
-    emit("itemReset");
-  }
-  // 点击添加
-  function handleAdd() {
-    emit("itemAdd");
-  }
-  // 点击删除
-  function handleDelete() {
-    emit("itemDelete");
-  }
+  };
+  emit("itemReset");
+}
+// 点击添加
+function handleAdd() {
+  emit("itemAdd");
+}
+// 点击删除
+function handleDelete() {
+  emit("itemDelete");
+}
 </script>
 <style lang="scss" scoped>
-  .InfoSearch {
-    .title {
-      display: flex;
-      align-items: center;
-      p {
-        margin: 0 15px;
-      }
-    }
-    .search-content {
-      display: flex;
-      margin-top: 1vh;
-      padding: 2vh 3vw 0 3vw;
-      border: 2px solid $processed;
-      .el-form-item {
-        width: 30%;
-        margin-bottom: 1.8vh;
-      }
-      .search-btn {
-        width: 20%;
-        display: flex;
-        flex-direction: column;
-        align-items: start;
-        height: 100%;
-      }
-      .el-button + .el-button {
-        margin-top: 10%;
-        margin-left: 0;
-      }
-    }
-    .btn-content {
-      margin: 0.8vh 0;
+.InfoSearch {
+  .title {
+    display: flex;
+    align-items: center;
+
+    p {
+      margin: 0 15px;
     }
   }
+
+  .search-content {
+    display: flex;
+    margin-top: 1vh;
+    padding: 2vh 3vw 0 3vw;
+    border: 2px solid $processed;
+    
+    .el-form-item {
+      width: 30%;
+      margin-bottom: 1.8vh;
+    }
+
+    .search-btn {
+      width: 20%;
+      display: flex;
+      flex-direction: column;
+      align-items: start;
+      height: 100%;
+    }
+
+    .el-button+.el-button {
+      margin-top: 10%;
+      margin-left: 0;
+    }
+  }
+
+  .btn-content {
+    margin: 0.8vh 0;
+  }
+}
 </style>
