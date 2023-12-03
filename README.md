@@ -16,6 +16,8 @@ pnpm i
 ```bash
 //启动
 pnpm run dev
+//在工作室启动
+pnpm run homedev
 //打包
 pnpm run build
 ```
