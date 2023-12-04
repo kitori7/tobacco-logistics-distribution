@@ -61,7 +61,7 @@
           v-for="item in userInfo"
         >
           <div class="usePhoto">
-            <img alt="" />
+            <img alt="" :src="item.avatar_path" />
             <el-button
               class="groupInfoItemButton"
               :icon="EditPen"
@@ -78,7 +78,10 @@
     <div class="groupDialog">
       <GroupSetting ref="groupSettingRef"></GroupSetting>
       <GroupAdd ref="groupAddRef" @renew-user="searchUser"></GroupAdd>
-      <GroupUserEdit ref="groupUserEditRef" @renew-user="searchUser"></GroupUserEdit>
+      <GroupUserEdit
+        ref="groupUserEditRef"
+        @renew-user="searchUser"
+      ></GroupUserEdit>
     </div>
   </div>
 </template>
@@ -95,7 +98,6 @@
   } from "@element-plus/icons-vue";
   import { useGroupStore } from "@/store/group";
   import type { IUserInfo } from "@/types/group";
-  // import { BASE_URL } from "@/service/config";
   const groupStore = useGroupStore();
   const searchCond = ref({
     department: "",
@@ -112,12 +114,19 @@
     "营销部",
   ];
 
-  const userInfo = ref<IUserInfo[]>([]);
-  groupStore.getAllUserAction({}).then((res) => {
-    userInfo.value = mapAvatarPath(res.data);
-  });
-  groupStore.getRoleAction()
-
+  const userInfo = ref<IUserInfo[]>(groupStore.userInfoArr);
+  groupStore.getRoleAction();
+  function getData() {
+    groupStore.getAllUserAction({ ...searchCond.value }).then(() => {
+      userInfo.value = groupStore.userInfoArr;
+      if (userInfo.value.length == 0) {
+        isShow.value = true;
+      } else {
+        isShow.value = false;
+      }
+    });
+  }
+  getData();
   const groupSettingRef = ref<InstanceType<typeof GroupSetting>>();
   const groupAddRef = ref<InstanceType<typeof GroupAdd>>();
   const groupUserEditRef = ref<InstanceType<typeof GroupUserEdit>>();
@@ -148,21 +157,7 @@
   }
   const isShow = ref<boolean>(false);
   function searchUser() {
-    groupStore.getAllUserAction({ ...searchCond.value }).then((res) => {
-      userInfo.value = mapAvatarPath(res.data);
-      if (userInfo.value.length == 0) {
-        isShow.value = true;
-      } else {
-        isShow.value = false;
-      }
-    });
-  }
-
-  function mapAvatarPath(arr: IUserInfo[]) {
-    return arr.map((item: IUserInfo) => {
-      // return { ...item, avatar_path: `${BASE_URL}file${item.avatar_path}` };
-      return item;
-    });
+    getData();
   }
 
   function refreshUser() {
@@ -171,9 +166,7 @@
       userName: "",
       workNumber: "",
     };
-    groupStore.getAllUserAction({}).then((res) => {
-      userInfo.value = mapAvatarPath(res.data);
-    });
+    getData();
   }
 </script>
 <style lang="scss" scoped>

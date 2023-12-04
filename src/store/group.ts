@@ -1,4 +1,5 @@
 import { defineStore } from "pinia";
+import { getAvatar } from "@/utils/getAvatar";
 import type {
   IUserSearch,
   addUserForm,
@@ -56,11 +57,32 @@ export const useGroupStore = defineStore("group", () => {
     }
     return res;
   }
+
+  const userInfoArr = ref<IUserInfo[]>([]);
   async function getAllUserAction(searchData: IUserSearch) {
     const res = await getAllUser(searchData);
-    return res;
+    userInfoArr.value = await mapAvatarPath(res.data);
   }
-
+  async function mapAvatarPath(arr: IUserInfo[]) {
+    return Promise.all(
+      arr.map(async (item: IUserInfo) => {
+        try {
+          const avatar_path = await getAvatar(Number(item.role_id));
+          return {
+            ...item,
+            avatar_path,
+          };
+        } catch (error) {
+          console.error(
+            "Failed to load avatar for user:",
+            item.work_number,
+            error
+          );
+          return item;
+        }
+      })
+    );
+  }
   // 获取角色已有权限
   const roleAuthority = ref<IOperations[]>([]);
   async function getRoleOperationsAction(role_id: number) {
@@ -95,6 +117,7 @@ export const useGroupStore = defineStore("group", () => {
     roleAuthority,
     getRoleOperationsAction,
     editUserInfo,
+    userInfoArr,
     getEditUserInfoAction,
     updateUserInfoAction,
   };

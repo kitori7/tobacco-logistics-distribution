@@ -18,6 +18,7 @@ export interface IUserSearch {
   workNumber?: string;
 }
 export interface IUserInfo {
+  avatar_path:string,
   department: string;
   email: string;
   password: string;

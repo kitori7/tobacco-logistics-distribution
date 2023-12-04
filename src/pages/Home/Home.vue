@@ -14,10 +14,14 @@
       </div>
       <div class="personal">
         <el-dropdown>
-          <div class="personalAvatar"></div>
+          <!-- <img :src="avatar" class="personalAvatar" /> -->
+          <el-avatar shape="circle" :size="50" :src="avatar" />
           <el-icon class="el-icon--right"><arrow-down /></el-icon>
           <template #dropdown>
             <el-dropdown-menu>
+              <el-dropdown-item @click="openUserInfo"
+                ><el-icon><User /></el-icon>个人信息</el-dropdown-item
+              >
               <el-dropdown-item
                 v-op="'user-service:password:update'"
                 @click="openChangePwd"
@@ -35,15 +39,24 @@
       <router-view></router-view>
     </div>
     <ChangePwd ref="changePwdRef"></ChangePwd>
+    <UserInfo ref="userInfoRef"></UserInfo>
   </div>
 </template>
 <script lang="ts" setup>
   import { MenuList } from "./config";
   import { useRouter, useRoute } from "vue-router";
-  import { ArrowDown, SwitchButton, Setting } from "@element-plus/icons-vue";
+  import {
+    ArrowDown,
+    SwitchButton,
+    Setting,
+    User,
+  } from "@element-plus/icons-vue";
   import ChangePwd from "./personal/ChangePwd.vue";
+  import UserInfo from "./personal/UserInfo.vue";
+  import { useGetAvatar } from "@/hook/useGetAvatar";
   const router = useRouter();
   const route = useRoute();
+  const { avatar } = useGetAvatar();
   const activeMenu = ref<number>(route.meta.order);
   function handleMenu(activeRouter: string, index: number) {
     activeMenu.value = index;
@@ -65,6 +78,10 @@
     typeof changePwdRef.value?.changePwdIsOpen === "boolean"
       ? (changePwdRef.value.changePwdIsOpen = true)
       : false;
+  }
+  const userInfoRef = ref<InstanceType<typeof UserInfo>>();
+  function openUserInfo() {
+    userInfoRef.value?.handleOpen();
   }
 </script>
 <style lang="scss" scoped>
@@ -114,11 +131,10 @@
         justify-content: space-around;
         align-items: center;
         height: 10vh;
-        .personalAvatar{
+        .personalAvatar {
           width: 40px;
           height: 40px;
           border-radius: 50%;
-          background: #73e1ff;
         }
       }
     }
