@@ -57,7 +57,7 @@ export const useGroupStore = defineStore("group", () => {
     }
     return res;
   }
-
+  // 用户列表
   const userInfoArr = ref<IUserInfo[]>([]);
   async function getAllUserAction(searchData: IUserSearch) {
     const res = await getAllUser(searchData);
@@ -105,6 +105,18 @@ export const useGroupStore = defineStore("group", () => {
     return res;
   }
 
+  // 部门集合
+  const groupList = ref<string[]>([
+    "班组一",
+    "班组二",
+    "班组三",
+    "班组四",
+    "班组五",
+    "班组六",
+    "营销部",
+    "送货部"
+  ]);
+
   return {
     postAddUserAction,
     setUserAuthorityAction,
@@ -120,5 +132,6 @@ export const useGroupStore = defineStore("group", () => {
     userInfoArr,
     getEditUserInfoAction,
     updateUserInfoAction,
+    groupList,
   };
 });

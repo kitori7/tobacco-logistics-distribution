@@ -21,7 +21,7 @@
           </el-form-item>
           <el-form-item label="部门" label-width="100">
             <el-select v-model="searchCond.department">
-              <el-option v-for="item in groupList" :key="item" :value="item">
+              <el-option v-for="item in groupStore.groupList" :key="item" :value="item">
               </el-option>
             </el-select>
           </el-form-item>
@@ -104,16 +104,6 @@
     userName: "",
     workNumber: "",
   });
-  const groupList = [
-    "班组一",
-    "班组二",
-    "班组三",
-    "班组四",
-    "班组五",
-    "班组六",
-    "营销部",
-  ];
-
   const userInfo = ref<IUserInfo[]>(groupStore.userInfoArr);
   groupStore.getRoleAction();
   function getData() {

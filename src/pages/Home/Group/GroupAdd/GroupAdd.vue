@@ -59,7 +59,7 @@
             <el-form-item label="部门" prop="department">
               <el-select v-model="addUserData.department">
                 <el-option
-                  v-for="item in groupList"
+                  v-for="item in groupStore.groupList"
                   :key="item"
                   :label="item"
                   :value="item"
@@ -142,16 +142,6 @@
     // photo.value = "";
     formEl.resetFields();
   };
-  //固定班组信息
-  const groupList = [
-    "班组一",
-    "班组二",
-    "班组三",
-    "班组四",
-    "班组五",
-    "班组六",
-    "营销部",
-  ];
   const emit = defineEmits(["renewUser"]);
   const groupAddConfirm = async (formEl: FormInstance | undefined) => {
     if (!formEl) return;
