@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite --mode prd",
     "homeDev": "vite --mode homeprd",
-    "build": "vue-tsc && vite build --mode prd",
+    "build": "vue-tsc && vite build --mode homeprd",
     "build:dep": "vue-tsc && vite build --mode dep",
     "preview": "vite preview"
   },
