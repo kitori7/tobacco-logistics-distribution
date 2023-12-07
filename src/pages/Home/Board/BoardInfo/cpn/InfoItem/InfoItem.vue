@@ -131,7 +131,8 @@
   // 匹配图片路径
   function mapPath(array: string[]) {
     const newArray = array.map((i: string) => {
-      return "http://172.16.0.166:8080" + i;
+      console.log(i)
+      return import.meta.env.VITE_BASE_URL + i;
     });
     return newArray;
   }

@@ -6,10 +6,9 @@ import { ILoginData } from "@/types/login";
 import Axios from "axios";
 // 获取二维码
 export function getCaptcha() {
-  return Axios.get<Blob>(
-  `${BASE_URL}userservice/captcha/captcha`,
-    { responseType: "blob" }
-  );
+  return Axios.get<Blob>(`${BASE_URL}/userservice/captcha/captcha`, {
+    responseType: "blob",
+  });
 }
 // 登录接口
 export function postLogin(data: ILoginForm, captchaText: string) {
