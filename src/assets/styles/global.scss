@@ -47,3 +47,20 @@
         white-space: nowrap !important;
     }
 }
+.map {
+    position: fixed;
+    width: 90%;
+    background-color: #535353;
+    height: 75vh;
+    z-index: 0;
+
+    .btns {
+        position: absolute;
+        left: 50%;
+        transform: translate(-50%, 0);
+        bottom: -8%;
+        .save{
+            margin-left: 3vw;
+        }
+    }
+}

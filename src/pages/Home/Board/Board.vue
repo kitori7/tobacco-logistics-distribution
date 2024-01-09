@@ -69,7 +69,6 @@ watch(() => boardStore.UnhandledAmountData, (newValue) => {
     flex-direction: column;
 
     .el-button {
-      --el-color-primary: #73e1ff;
       --el-button-bg-color: #73e1ff;
       --el-button-border-color: #46899c;
       --el-button-text-color: rgb(0, 0, 51);

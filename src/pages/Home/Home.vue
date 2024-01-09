@@ -14,7 +14,6 @@
       </div>
       <div class="personal">
         <el-dropdown>
-          <!-- <img :src="avatar" class="personalAvatar" /> -->
           <el-avatar shape="circle" :size="50" :src="avatar" />
           <el-icon class="el-icon--right"><arrow-down /></el-icon>
           <template #dropdown>
