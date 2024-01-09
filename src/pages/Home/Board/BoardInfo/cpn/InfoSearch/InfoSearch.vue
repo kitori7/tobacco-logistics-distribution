@@ -5,7 +5,6 @@
       <p>{{ props.feedbackType == "1" ? "物流反馈" : "营销反馈" }}</p>
       <el-select
         v-model="searchForm.feedbackStatus"
-        placeholder="全部信息"
         size="small"
         v-on:change="changeState"
       >

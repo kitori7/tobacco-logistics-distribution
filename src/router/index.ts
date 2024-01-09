@@ -39,6 +39,45 @@ const constantRoutes: RouteRecordRaw[] = [
         meta: {order: 1}, 
         component: ()=>import("@/pages/Home/Group/Group.vue"),
       },
+      {
+        path: "/home/computer",
+        name: "computer",
+        meta: {order: 2}, 
+        component: ()=>import("@/pages/Home/Computer/Computer.vue"),
+        redirect: "/home/computer/area",
+        children: [
+          {
+            path: "/home/computer/area",
+            name: "area",
+            component: ()=>import("@/pages/Home/Computer/Area/Area.vue"),
+          },
+          {
+            path: "/home/computer/route",
+            name: "route",
+            component: ()=>import("@/pages/Home/Computer/Route/Route.vue"),
+          },
+          {
+            path: "/home/computer/Delivery",
+            name: "delivery",
+            component: ()=>import("@/pages/Home/Computer/Delivery/Delivery.vue"),
+          },
+          {
+            path: "/home/computer/HistoryRoute",
+            name: "HistoryRoute",
+            component: ()=>import("@/pages/Home/Computer/HistoryRoute/HistoryRoute.vue"),
+          },
+          {
+            path: "/home/computer/SaleRoute",
+            name: "SaleRoute",
+            component: ()=>import("@/pages/Home/Computer/SaleRoute/SaleRoute.vue"),
+          },
+        ],
+      },
+      {
+        path: "/home/AreaAdjust",
+        name: "AreaAdjust",
+        component: ()=>import("@/pages/Home/Computer/AreaAdjust/AreaAdjust.vue"),
+      },
     ],
   },
 ];
