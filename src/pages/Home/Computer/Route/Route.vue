@@ -1,6 +1,7 @@
 <template>
     <div class="route">
         <div class="map">
+            <el-empty description="description" />
             <div class="btns">
                 <el-button class="saveRoute">保存路径</el-button>
             </div>
