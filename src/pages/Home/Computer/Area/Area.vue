@@ -3,7 +3,7 @@
         <div class="map">
             <div class="btns">
                 <el-button class="adjust" @click="routerChange">聚集区微调</el-button>
-                <el-button class="save">保存结果</el-button>
+                <el-button class="save" @click="save">保存结果</el-button>
             </div>
         </div>
         <div class="content">
@@ -80,9 +80,17 @@ import { useRouter } from "vue-router";
 const router = useRouter();
 import { BorderBox9 } from "@dataview/datav-vue3";
 import { CollapseModelValue } from "element-plus/lib/components/collapse/src/collapse.js";
+// 跳转
 function routerChange() {
     router.replace('/home/AreaAdjust')
 }
+// 保存结果
+function save() {
+    ElMessageBox.confirm("还有未保存的聚集区错误点，是否忽略并继续保存?")
+        .then(() => {
+        })
+}
+
 const activeNames = ref(['1'])
 const handleChange = (val: CollapseModelValue) => {
     console.log(val)
@@ -147,6 +155,11 @@ const defaultProps = {
 .area {
     width: 100%;
 
+    :global(.el-message-box__message) {
+        font-size: 20px;
+        padding: 0 10px;
+    }
+
     .content {
         width: 100%;
         display: flex;
@@ -155,6 +168,7 @@ const defaultProps = {
         .dv-border-box-9 {
             height: 80vh;
             width: 20vw;
+            box-shadow: 10px 10px 5px 5px rgb(0, 0, 0, 0.4);
 
             .contentCollapse {
                 margin-left: 1vw;

@@ -62,6 +62,7 @@ const routes = [
 <style lang="scss" scoped>
 .route {
     width: 100%;
+
     .content {
         width: 100%;
         display: flex;
@@ -70,6 +71,7 @@ const routes = [
         .dv-border-box-9 {
             height: 80vh;
             width: 20vw;
+            box-shadow: 10px 10px 5px 5px rgb(0, 0, 0, 0.4);
 
             :deep(.el-input__wrapper) {
                 font-size: 20px;
@@ -84,6 +86,7 @@ const routes = [
                 font-weight: bolder;
                 text-align: center;
             }
+
             :global(.el-select-dropdown__item) {
                 display: grid !important;
                 place-items: center !important;
@@ -93,6 +96,7 @@ const routes = [
                 font-weight: bolder;
                 letter-spacing: 3px;
             }
+
             :global(.el-select-dropdown__item:first-child) {
                 border-top: 1px solid #73e1ff;
             }
@@ -105,6 +109,7 @@ const routes = [
             :global(.el-popper) {
                 border: none !important;
             }
+
             .el-select {
                 --el-select-input-focus-border-color: transparent;
                 position: absolute;
@@ -116,9 +121,11 @@ const routes = [
                 color: rgb(86, 215, 255);
                 font-size: 20px;
             }
+
             .el-input {
                 border: none;
             }
+
             .btn {
                 position: absolute;
                 left: 50%;
@@ -127,6 +134,5 @@ const routes = [
             }
         }
     }
-}
-</style>
+}</style>
   
