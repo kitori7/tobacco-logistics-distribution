@@ -10,7 +10,7 @@
                 <el-collapse v-model="activeNames" @change="handleChange">
                     <el-badge :value="1" class="item"></el-badge>
                     <el-collapse-item title="A聚集区" name="1">
-                        <div class="itemContent">
+                        <div class="itemContent" @click="openAdjustDialog">
                             武江区富家生活超市
                         </div>
                         <ul>
@@ -69,6 +69,27 @@
                 </el-collapse>
             </div>
         </BorderBox12>
+        <el-dialog style="transform: translate(34.5vw, 0);" v-model="isOpenAdjustDialog" width="25%" :modal="false"
+            :append-to-body="true">
+            <div class="adjustDialogContent">  
+                <el-collapse v-model="activeNames" @change="handleChange">
+                    <el-collapse-item title="聚集区" name="10">
+                        <ul>
+                            <li>
+                                武江区123456
+                            </li>
+                        </ul>
+                    </el-collapse-item>
+                </el-collapse>
+            </div>
+            <template #footer>
+                <span class="dialog-footer">
+                    <el-button @click="closeAdjustDialog">Cancel</el-button>
+                    <el-button @click="closeAdjustDialog">Cancel</el-button>
+                </span>
+            </template>
+        </el-dialog>
+
     </div>
 </template>
 <script lang="ts" setup>
@@ -84,6 +105,14 @@ const activeNames = ref(['1'])
 const handleChange = (val: CollapseModelValue) => {
     console.log(val)
 }
+const openAdjustDialog = () => {
+    isOpenAdjustDialog.value = true
+}
+const closeAdjustDialog = () => {
+    isOpenAdjustDialog.value = false
+
+}
+const isOpenAdjustDialog = ref(false)
 </script>
 <style lang="scss" scoped>
 .AreaAdjust {
@@ -142,10 +171,12 @@ const handleChange = (val: CollapseModelValue) => {
                 margin-left: 20.6vw;
             }
 
-            li{
+            li {
                 list-style: disc;
+                margin-left: 30px;
                 padding: 5px;
             }
+
             .itemContent {
                 padding: 5px 10px;
             }
@@ -161,6 +192,10 @@ const handleChange = (val: CollapseModelValue) => {
                 margin-right: 0.5vw;
             }
         }
+    }
+
+    .adjustDialogContent{
+        margin-top: 20px;
     }
 }
 </style>
