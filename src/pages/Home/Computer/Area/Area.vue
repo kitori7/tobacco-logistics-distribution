@@ -8,7 +8,7 @@
         </div>
         <div class="content">
             <BorderBox9 :color="['#73e5ff', '#73e5ff']" backgroundColor='#001731'>
-                <div class="contentCollapse">
+                <div class="areaCollapse">
                     <el-collapse v-model="activeNames" @change="handleChange">
                         <el-badge :value="1" class="item"></el-badge>
                         <el-collapse-item title="中转站信息改变" name="1">
@@ -61,10 +61,13 @@
                 <div class="region">
                     <el-collapse v-model="activeNames2" @change="handleChange">
                         <el-collapse-item title="A聚集区" name="1">
+                            <el-tree :data="data" :props="defaultProps" @node-click="handleNodeClick" />
                         </el-collapse-item>
                         <el-collapse-item title="B聚集区" name="2">
+                            <el-tree :data="data" :props="defaultProps" @node-click="handleNodeClick" />
                         </el-collapse-item>
                         <el-collapse-item title="C聚集区" name="3">
+                            <el-tree :data="data" :props="defaultProps" @node-click="handleNodeClick" />
                         </el-collapse-item>
                         <el-collapse-item title="D聚集区" name="4">
                             <el-tree :data="data" :props="defaultProps" @node-click="handleNodeClick" />
@@ -170,28 +173,13 @@ const defaultProps = {
             width: 20vw;
             box-shadow: 10px 10px 5px 5px rgb(0, 0, 0, 0.4);
 
-            .contentCollapse {
+            .areaCollapse {
                 margin-left: 1vw;
                 margin-top: 2vh;
                 width: 85%;
 
                 .el-collapse {
-                    --el-collapse-header-bg-color: rgb(144, 1, 121);
-                    --el-collapse-header-text-color: #e1f7ff;
-                    --el-collapse-header-font-size: 18px;
-                    --el-collapse-content-bg-color: #001731;
-                    --el-collapse-content-font-size: 18px;
-                    --el-collapse-content-text-color: #e1f7ff;
-                    --el-collapse-border-color: #001731;
-
                     .el-collapse-item {
-                        padding-left: 30px;
-                        position: relative;
-
-                        .el-collapse-item__header {
-                            background-color: #ff0000 !important;
-                        }
-
                         ::v-deep(.el-collapse-item__header::before) {
                             content: "";
                             display: inline-block;
@@ -212,22 +200,6 @@ const defaultProps = {
                             content: "";
                             display: inline-block;
                         }
-
-                        ::v-deep(.el-collapse-item__content) {
-                            padding: 0;
-                        }
-                    }
-
-                    .el-collapse-item::before {
-                        position: absolute;
-                        left: 5px;
-                        top: 0;
-                        border-right: 25px solid rgb(144, 1, 121);
-                        border-top: 24px solid transparent;
-                        border-bottom: 24px solid transparent;
-                        content: "";
-                        width: 0;
-                        height: 0;
                     }
                 }
 
