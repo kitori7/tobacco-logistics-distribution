@@ -5,114 +5,190 @@
             </el-icon>&nbsp;聚集区微调&nbsp;<el-icon size="25">
                 <LocationInformation />
             </el-icon></div>
-        <BorderBox12 backgroundColor='#001731'>
-            <div class="adjustCollapse">
-                <el-collapse v-model="activeNames" @change="handleChange">
-                    <el-badge :value="1" class="item"></el-badge>
-                    <el-collapse-item title="A聚集区" name="1">
-                        <div class="itemContent" @click="openAdjustDialog">
-                            武江区富家生活超市
-                        </div>
-                        <ul>
-                            <li>
-                                武江区123456
-                            </li>
-                        </ul>
-                    </el-collapse-item>
-                    <el-badge :value="1" class="item"></el-badge>
-                    <el-collapse-item title="B聚集区" name="2">
-                        <div class="itemContent">
-                            武江区富家生活超市
-                        </div>
-                        <ul>
-                            <li>
-                                武江区123456
-                            </li>
-                        </ul>
-                    </el-collapse-item>
-                    <el-badge :value="2" class="item"></el-badge>
-                    <el-collapse-item title="C聚集区" name="3">
-                        <div class="itemContent">
-                            武江区富家生活超市
-                        </div>
-                        <ul>
-                            <li>
-                                商铺0711-商铺0899
-                            </li>
-                        </ul>
-                    </el-collapse-item>
-                    <el-badge :value="2" class="item"></el-badge>
-                    <el-collapse-item title="D聚集区" name="4">
-                        <div class="itemContent">
-                            武江区富家生活超市
-                        </div>
-                        <ul>
-                            <li>
-                                商铺0621-商铺0512
-                            </li>
-                            <li>
-                                商铺0621-商铺0512
-                            </li>
-                        </ul>
-                    </el-collapse-item>
-                    <el-badge :value="1" class="item"></el-badge>
-                    <el-collapse-item title="E聚集区" name="5">
-                        <div class="itemContent">
-                            武江区富家生活超市
-                        </div>
-                        <ul>
-                            <li>
-                                商铺0621-商铺0512
-                            </li>
-                        </ul>
-                    </el-collapse-item>
-                </el-collapse>
-            </div>
+        <BorderBox12 backgroundColor='#001731' v-loading="isFinished" element-loading-text="加载中..."
+            element-loading-background="rgba(0,23,49,0.8)">
+            <el-empty class="empty" v-if="isShow" description="暂无数据" />
+            <el-scrollbar height="75vh">
+                <div class="adjustCollapse">
+                    <el-collapse v-model="activeNames" v-for="(item, index) in  clusterStore.errorResult" :key="index">
+                        <el-badge :value="item.number" class="item"></el-badge>
+                        <el-collapse-item :title="item.accumulationName" :name="index">
+                            <div class="itemContent" @click="openAdjustDialog(item.accumulationName, item1)"
+                                v-for="(item1, index1) in  item.data" :key="index1">
+                                {{ item1.name }}
+                                <ul>
+                                    <li v-for="(item2, index2) in  item1.son" :key="index2">
+                                        {{ item2.name }}
+                                    </li>
+                                </ul>
+                            </div>
+                        </el-collapse-item>
+                    </el-collapse>
+                </div>
+            </el-scrollbar>
         </BorderBox12>
         <el-dialog style="transform: translate(34.5vw, 0);" v-model="isOpenAdjustDialog" width="25%" :modal="false"
-            :append-to-body="true">
-            <div class="adjustDialogContent">  
-                <el-collapse v-model="activeNames" @change="handleChange">
-                    <el-collapse-item title="聚集区" name="10">
-                        <ul>
-                            <li>
-                                武江区123456
-                            </li>
-                        </ul>
+            :before-close="closeAdjustDialog" :append-to-body="true">
+            <div class="adjustDialogContent">
+                <el-collapse v-model="activeNames1">
+                    <el-collapse-item :title="infoData_fatherName" name="1" style="margin-right: 25px;">
+                        <div class="itemContent" style="padding: 5px 10px;">
+                            {{ infoData?.name }}
+                            <ul>
+                                <li style=" list-style: disc;margin-left: 30px;padding: 5px;"
+                                    v-for="(item3, index3) in  infoData?.son" :key="index3">
+                                    {{ item3.name }}
+                                </li>
+                            </ul>
+                        </div>
                     </el-collapse-item>
                 </el-collapse>
+                <div class="adjustDialogChange">
+                    <el-select v-model="leftSelect" value-key="name" style="width: 9vw;margin-left: 0.5vw;"
+                        @change="leftSelectFunction(leftSelect)">
+                        <el-option v-for="item in leftSelectList" :key="item.name" :label="item.name" :value="item" />
+                    </el-select>
+                    <el-icon style=" margin:0 1vw;">
+                        <Right />
+                    </el-icon>
+                    <el-select v-model="rightSelect" value-key="accumulationName" style="width:9vw;">
+                        <el-option v-for="item in clusterStore.AccumlationInfo" :key="item.accumulationName"
+                            :label="item.accumulationName" :value="item" />
+                    </el-select>
+                </div>
             </div>
             <template #footer>
                 <span class="dialog-footer">
-                    <el-button @click="closeAdjustDialog">Cancel</el-button>
-                    <el-button @click="closeAdjustDialog">Cancel</el-button>
+                    <el-button @click="closeAdjustDialog">取消</el-button>
+                    <el-button @click="adjustConfirmChange">确定</el-button>
                 </span>
             </template>
         </el-dialog>
-
     </div>
 </template>
 <script lang="ts" setup>
 import { BorderBox12 } from "@dataview/datav-vue3";
-import { ArrowLeftBold, LocationInformation } from "@element-plus/icons-vue";
+import { ArrowLeftBold, LocationInformation, Right } from "@element-plus/icons-vue";
 import { useRouter } from "vue-router";
-import { CollapseModelValue } from "element-plus/lib/components/collapse/src/collapse.js";
+import { useClusterStore } from "@/store/cluster";
+import { IAccumlationInfo, IAccumulationIdInfo, IErrorPoints_data, IShopData } from "@/types/cluster";
 const router = useRouter();
 function backBtn() {
     router.back()
 }
+//聚集区Store
+const clusterStore = useClusterStore();
+//定义是否加载完成的变量
+const isFinished = ref<boolean>(true)
+//定义变量是否展示
+const isShow = ref<boolean>(false)
+//获取错误点
+clusterStore.getCheckErrorPointsAction()
+    .then(() => {
+        clusterStore.getErrorPointsAction()
+            .then(() => {
+                isFinished.value = false;
+                if (clusterStore.ErrorPoints == 0) {
+                    isShow.value = true;
+                }
+            });
+    })
+//定义折叠面板的变量
 const activeNames = ref(['1'])
-const handleChange = (val: CollapseModelValue) => {
-    console.log(val)
-}
-const openAdjustDialog = () => {
+const activeNames1 = ref(['1'])
+//选择器定义变量
+const leftSelect = ref<IShopData>({
+    longitude: 0,
+    latitude: 0,
+    name: '',
+})
+const rightSelect = ref<IAccumlationInfo>({
+    accumulationName: '',
+})
+const leftSelectList = ref<IShopData[]>([])
+const rightSelectList = ref<string[]>([])
+//弹窗里面的数据定义
+const infoData = ref<IErrorPoints_data>()
+const infoData_fatherName = ref<string>()
+//定义是否打开弹窗的变量
+const isOpenAdjustDialog = ref(false)
+//打开弹窗
+const openAdjustDialog = (fatherName: string, info: IErrorPoints_data) => {
     isOpenAdjustDialog.value = true
+    infoData.value = info
+    infoData_fatherName.value = fatherName
+
+    //选择器部分处理
+    //左边
+    leftSelectList.value.push({
+        name: infoData.value.name,
+        longitude: infoData.value.longitude,
+        latitude: infoData.value.latitude,
+    })
+    infoData.value.son!.forEach((item) => {
+        leftSelectList.value.push({
+            name: item.name,
+            longitude: item.longitude,
+            latitude: item.latitude,
+        })
+    })
 }
+//定义变量需要修改的商铺的经纬度
+const optionItemData = ref<IShopData>({
+    longitude: 0,
+    latitude: 0,
+})
+//左边选择器的change事件
+const leftSelectFunction = (optionItem: IShopData) => {
+    optionItemData.value =
+    {
+        latitude: optionItem.latitude,
+        longitude: optionItem.longitude,
+    }
+    clusterStore.getClosestPointsAction(optionItemData.value)
+}
+//关闭窗口
 const closeAdjustDialog = () => {
     isOpenAdjustDialog.value = false
+    //选择器数据清空
+    leftSelect.value = {
+        longitude: 0,
+        latitude: 0,
+        name: '',
+    }
+    rightSelect.value = {
+        accumulationName: '',
+    }
+    leftSelectList.value = []
+    rightSelectList.value = []
 
 }
-const isOpenAdjustDialog = ref(false)
+//确定聚集区微调
+const adjustConfirmChange = () => {
+    const AccumulationIdInfo = ref<IAccumulationIdInfo>({
+        longitude: 0,
+        latitude: 0,
+        accumulationId: '',
+    })
+    AccumulationIdInfo.value = {
+        accumulationId: rightSelect.value.accumulationId!,
+        latitude: optionItemData.value.latitude,
+        longitude: optionItemData.value.longitude,
+    }
+    console.log(AccumulationIdInfo.value);
+    clusterStore.postUpdateStoreAccumulationIdAction(AccumulationIdInfo.value)
+        .then(() => {
+            setTimeout(() => {
+                if (clusterStore.UpdateStoreAccumulationIdCode == 200) {
+                    location.reload()
+                }
+            }, 1500);
+        })
+}
+
+//lingshi
+
+
 </script>
 <style lang="scss" scoped>
 .AreaAdjust {
@@ -137,7 +213,14 @@ const isOpenAdjustDialog = ref(false)
         width: 25vw;
         height: 80vh;
 
+        .empty {
+            width: 100%;
+            height: 100%;
+            float: left;
+        }
+
         .adjustCollapse {
+            height: 20vh;
             padding-left: 1vw;
             padding-top: 3vh;
             width: 85%;
@@ -194,8 +277,43 @@ const isOpenAdjustDialog = ref(false)
         }
     }
 
-    .adjustDialogContent{
+    .adjustDialogContent {
         margin-top: 20px;
+
+        :global(.el-collapse-item__header::before) {
+            content: "";
+            display: inline-block;
+            width: 15px;
+            height: 15px;
+            background-color: rgb(255, 51, 204);
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        :global(.el-collapse-item__header::after) {
+            margin-left: 10px;
+            margin-right: -15px;
+            width: 33px;
+            height: 33px;
+            background: rgb(255, 51, 204);
+            transform: rotate(45deg);
+            content: "";
+            display: inline-block;
+        }
+
+        :global(.itemContent:before) {
+            content: "";
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background-color: fuchsia;
+            border-radius: 50%;
+            margin-bottom: 4px;
+            margin-right: 0.5vw;
+        }
+
+        :global(.adjustDialogChange) {
+            margin-top: 25px;
+        }
     }
-}
-</style>
+}</style>
