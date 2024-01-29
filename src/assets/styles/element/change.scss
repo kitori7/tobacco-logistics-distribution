@@ -43,7 +43,7 @@
 
 // el-input
 .el-input {
-  width: 200px !important;
+  // width: 200px !important;
   --el-input-border-color: rgb(204, 255, 255) !important;
   --el-input-bg-color: rgba(0, 0, 0, 0) !important;
   --el-input-text-color: rgb(204, 255, 255) !important;
@@ -67,6 +67,7 @@
   display: flex;
   align-items: center;
   color: $processed;
+  // background-color: #011631;
 
   &:hover {
     background-color: #73e1ff;
@@ -238,6 +239,10 @@
 .el-message-box {
   background-color: #001731 !important;
   border: 1px solid rgb(204, 255, 255) !important;
+}
+.el-message-box__title {
+  color: #31d2ff !important;
+  font-size: 25px;
 }
 
 .el-message-box__content {
