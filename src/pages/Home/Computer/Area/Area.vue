@@ -9,69 +9,30 @@
         <div class="content">
             <BorderBox9 :color="['#73e5ff', '#73e5ff']" backgroundColor='#001731'>
                 <div class="areaCollapse">
-                    <el-collapse v-model="activeNames" @change="handleChange">
-                        <el-badge :value="1" class="item"></el-badge>
-                        <el-collapse-item title="中转站信息改变" name="1">
+                    <el-collapse v-model="activeNames" v-for="(item, index) in  clusterStore.InformationList">
+                        <el-badge :value="item.number" class="item"></el-badge>
+                        <el-collapse-item :title="item.name" :name="index">
                             <ul>
-                                <li>
-                                    A区中转站位置改为更改为24.123，113.123
-                                </li>
-                            </ul>
-                        </el-collapse-item>
-                        <el-badge :value="1" class="item"></el-badge>
-                        <el-collapse-item title="商品信息改变" name="2">
-                            <ul>
-                                <li>
-                                    100号商铺位置更改为24.456，113.456
-                                </li>
-                            </ul>
-                        </el-collapse-item>
-                        <el-badge :value="2" class="item"></el-badge>
-                        <el-collapse-item title="系统参数改变" name="3">
-                            <ul>
-                                <li>
-                                    密集度系数更改威威0.98
-                                </li>
-                            </ul>
-                        </el-collapse-item>
-                        <el-badge :value="2" class="item"></el-badge>
-                        <el-collapse-item title="D聚集区" name="4">
-                            <ul>
-                                <li>
-                                    新增一条A路
-                                </li>
-                                <li>
-                                    新增一条B路
-                                </li>
-                            </ul>
-                        </el-collapse-item>
-                        <el-badge :value="1" class="item"></el-badge>
-                        <el-collapse-item title="异常情况发生" name="5">
-                            <ul>
-                                <li>
-                                    某路段已到常“路面结冰”时段
+                                <li v-for="(item1) in item.data">
+                                    {{ item1 }}
                                 </li>
                             </ul>
                         </el-collapse-item>
                     </el-collapse>
                 </div>
-                <el-button class="btn">重新计算</el-button>
+                <el-button class="btn" @click="CalculateBtnFunction">重新计算</el-button>
             </BorderBox9>
             <BorderBox9 :color="['#73e5ff', '#73e5ff']" backgroundColor='#001731'>
                 <div class="region">
-                    <el-collapse v-model="activeNames2" @change="handleChange">
-                        <el-collapse-item title="A聚集区" name="1">
-                            <el-tree :data="data" :props="defaultProps" @node-click="handleNodeClick" />
-                        </el-collapse-item>
-                        <el-collapse-item title="B聚集区" name="2">
-                            <el-tree :data="data" :props="defaultProps" @node-click="handleNodeClick" />
-                        </el-collapse-item>
-                        <el-collapse-item title="C聚集区" name="3">
-                            <el-tree :data="data" :props="defaultProps" @node-click="handleNodeClick" />
-                        </el-collapse-item>
-                        <el-collapse-item title="D聚集区" name="4">
-                            <el-tree :data="data" :props="defaultProps" @node-click="handleNodeClick" />
-                        </el-collapse-item>
+                    <el-collapse v-loading="isResultPointsFinished" element-loading-text="加载中..."
+                        element-loading-background="rgba(0,23,49,0.8)" v-model="activeNames2" accordion>
+                        <el-scrollbar height="75vh">
+                            <el-collapse-item v-for="(item, index) in clusterStore.clusterAndShopList"
+                                :title=item.accumulation :name=index>
+                                <div class="regionCollapseItemContext" v-for="(item1) in item.son">{{ item1.shopName }}
+                                </div>
+                            </el-collapse-item>
+                        </el-scrollbar>
                     </el-collapse>
                 </div>
             </BorderBox9>
@@ -79,80 +40,82 @@
     </div>
 </template>
 <script lang="ts" setup>
+import { useClusterStore } from "@/store/cluster";
+import { ElLoading } from 'element-plus'
 import { useRouter } from "vue-router";
-const router = useRouter();
 import { BorderBox9 } from "@dataview/datav-vue3";
-import { CollapseModelValue } from "element-plus/lib/components/collapse/src/collapse.js";
+const router = useRouter();
 // 跳转
 function routerChange() {
     router.replace('/home/AreaAdjust')
 }
+//聚集区Store
+const clusterStore = useClusterStore();
+
+//获取修改数据信息列表
+clusterStore.getInformationListAction()
+
+//获取聚集区错误点（只有数量、检查）
+clusterStore.getCheckErrorPointsAction()
+
 // 保存结果
 function save() {
-    ElMessageBox.confirm("还有未保存的聚集区错误点，是否忽略并继续保存?")
+    if (clusterStore.ErrorPoints == undefined) {
+        ElMessage.warning('数据处理中请稍后再试。');
+    } else {
+        const loading1 = ElLoading.service({
+            lock: true,
+            text: '保存中...',
+            background: 'rgba(0, 0, 0, 0.7)',
+        })
+        if (clusterStore.ErrorPoints === 0) {
+            clusterStore.deleteClearInformationListAction()
+                .then(() => {
+                    clusterStore.getInformationListAction()
+                })
+            loading1.close()
+            ElMessage.success('保存成功')
+        } else {
+            ElMessageBox({
+                title: '注意!',
+                message: '还有未保存的聚集区错误点，是否忽略并继续保存?',
+                showCancelButton: true,
+            }).then((action) => {
+                if (action == 'confirm') {
+                    clusterStore.deleteClearInformationListAction()
+                        .then(() => {
+                            clusterStore.getInformationListAction()
+                        })
+                    loading1.close()
+                    ElMessage.success('保存成功')
+                }
+            })
+        };
+    }
+}
+//第一个折叠面板的参数
+const activeNames = ref(['0'])
+//第二个折叠面板的参数
+const activeNames2 = ref(['0'])
+//定义是否加载完成的变量
+const isResultPointsFinished = ref<boolean>(true)
+//获取聚集区和商铺信息的方法
+clusterStore.getAllResultPointsAction()
+    .then(() => { isResultPointsFinished.value = false });
+
+//计算接口
+const CalculateBtnFunction = () => {
+    const loading = ElLoading.service({
+        lock: true,
+        text: '计算中...',
+        background: 'rgba(0, 0, 0, 0.7)',
+    })
+    clusterStore.postCalculateAllAction()
         .then(() => {
+            loading.close()
         })
 }
 
-const activeNames = ref(['1'])
-const handleChange = (val: CollapseModelValue) => {
-    console.log(val)
-}
-const activeNames2 = ref(['1'])
-
-interface Tree {
-    label: string
-    children?: Tree[]
-}
-
-const handleNodeClick = (data: Tree) => {
-    console.log(data)
-}
-
-const data: Tree[] = [
-    {
-        label: '商户A',
-        children: [
-            {
-                label: 'Level two 1-1',
-                children: [
-                    {
-                        label: 'Level three 1-1-1',
-                    },
-                ],
-            },
-        ],
-    },
-    {
-        label: '商户B',
-        children: [
-            {
-                label: '1',
-            },
-        ],
-    },
-    {
-        label: '商户C',
-        children: [
-            {
-                label: '1',
-            },
-        ],
-    },
-    {
-        label: '商户D',
-        children: [
-            {
-                label: '1',
-            },
-        ],
-    },
-]
-
-const defaultProps = {
-    children: 'children',
-    label: 'label',
-}
 </script>
 <style lang="scss" scoped>
 .area {
@@ -175,7 +138,7 @@ const defaultProps = {
 
             .areaCollapse {
                 margin-left: 1vw;
-                margin-top: 2vh;
+                margin-top: 3vh;
                 width: 85%;
 
                 .el-collapse {
@@ -223,12 +186,13 @@ const defaultProps = {
                     background-color: fuchsia;
                     border-radius: 50%;
                     margin-bottom: 4px;
+                    margin-right: 10px;
                 }
             }
 
             .region {
-                margin-left: 1vw;
-                margin-top: 2vh;
+                margin-left: 1.4vw;
+                margin-top: 3vh;
                 width: 85%;
 
                 .el-collapse {
@@ -247,6 +211,21 @@ const defaultProps = {
 
                     ::v-deep(.el-collapse-item__content) {
                         padding: 0;
+                    }
+
+                    .regionCollapseItemContext {
+                        margin: 10px 0;
+                    }
+
+                    .regionCollapseItemContext:before {
+                        content: "";
+                        display: inline-block;
+                        width: 8px;
+                        height: 8px;
+                        background-color: rgb(0, 179, 255);
+                        border-radius: 50%;
+                        margin-bottom: 4px;
+                        margin-right: 10px;
                     }
                 }
 
@@ -267,7 +246,7 @@ const defaultProps = {
                 position: absolute;
                 left: 50%;
                 transform: translate(-50%, 0);
-                bottom: 5%;
+                bottom: 8%;
             }
         }
     }
