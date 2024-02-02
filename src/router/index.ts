@@ -7,77 +7,83 @@ const constantRoutes: RouteRecordRaw[] = [
   {
     path: "/login",
     name: "login",
-    component: ()=>import("@/pages/Login/Login.vue"),
+    component: () => import("@/pages/Login/Login.vue"),
   },
   {
     path: "/home",
     name: "home",
-    component: ()=>import("@/pages/Home/Home.vue"),
-    meta: {order: 0}, 
+    component: () => import("@/pages/Home/Home.vue"),
+    meta: { order: 0 },
     redirect: "/home/board",
     children: [
       {
         path: "/home/board",
-        component: ()=>import("@/pages/Home/Board/Board.vue"),
+        component: () => import("@/pages/Home/Board/Board.vue"),
         redirect: "/home/board/info?feedbackType=1",
         children: [
           {
             path: "/home/board/info",
             name: "boardInfo",
-            component: ()=>import("@/pages/Home/Board/BoardInfo/BoardInfo.vue"),
+            component: () => import("@/pages/Home/Board/BoardInfo/BoardInfo.vue"),
           },
           {
             path: "/home/board/analyze",
             name: "analyze",
-            component: ()=>import("@/pages/Home/Board/BoardAnalyze/BoardAnalyze.vue"),
+            component: () => import("@/pages/Home/Board/BoardAnalyze/BoardAnalyze.vue"),
           },
         ],
       },
       {
         path: "/home/group",
         name: "group",
-        meta: {order: 1}, 
-        component: ()=>import("@/pages/Home/Group/Group.vue"),
+        meta: { order: 1 },
+        component: () => import("@/pages/Home/Group/Group.vue"),
       },
       {
         path: "/home/computer",
         name: "computer",
-        meta: {order: 2}, 
-        component: ()=>import("@/pages/Home/Computer/Computer.vue"),
+        meta: { order: 2 },
+        component: () => import("@/pages/Home/Computer/Computer.vue"),
         redirect: "/home/computer/area",
         children: [
           {
             path: "/home/computer/area",
             name: "area",
-            component: ()=>import("@/pages/Home/Computer/Area/Area.vue"),
+            component: () => import("@/pages/Home/Computer/Area/Area.vue"),
           },
           {
             path: "/home/computer/route",
             name: "route",
-            component: ()=>import("@/pages/Home/Computer/Route/Route.vue"),
+            component: () => import("@/pages/Home/Computer/Route/Route.vue"),
           },
           {
             path: "/home/computer/Delivery",
             name: "delivery",
-            component: ()=>import("@/pages/Home/Computer/Delivery/Delivery.vue"),
+            component: () => import("@/pages/Home/Computer/Delivery/Delivery.vue"),
           },
           {
             path: "/home/computer/HistoryRoute",
             name: "HistoryRoute",
-            component: ()=>import("@/pages/Home/Computer/HistoryRoute/HistoryRoute.vue"),
+            component: () => import("@/pages/Home/Computer/HistoryRoute/HistoryRoute.vue"),
           },
           {
             path: "/home/computer/SaleRoute",
             name: "SaleRoute",
-            component: ()=>import("@/pages/Home/Computer/SaleRoute/SaleRoute.vue"),
+            component: () => import("@/pages/Home/Computer/SaleRoute/SaleRoute.vue"),
           },
         ],
       },
       {
         path: "/home/AreaAdjust",
         name: "AreaAdjust",
-        component: ()=>import("@/pages/Home/Computer/AreaAdjust/AreaAdjust.vue"),
+        component: () => import("@/pages/Home/Computer/AreaAdjust/AreaAdjust.vue"),
       },
+      {
+        path: "/home/AnalysisRoute",
+        name: "AnalysisRoute",
+        component: () => import("@/pages/Home/Computer/AnalysisRoute/AnalysisRoute.vue"),
+      },
+
     ],
   },
 ];
@@ -108,7 +114,7 @@ router.beforeEach((to) => {
 // 声明meta属性类型
 declare module 'vue-router' {
   interface RouteMeta {
-    order : number
-   }
- }
+    order: number
+  }
+}
 export default router;

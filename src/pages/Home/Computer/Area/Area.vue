@@ -1,6 +1,7 @@
 <template>
     <div class="area">
         <div class="map">
+            <div id="container"></div>
             <div class="btns">
                 <el-button class="adjust" @click="routerChange">聚集区微调</el-button>
                 <el-button class="save" @click="save">保存结果</el-button>
@@ -44,6 +45,10 @@ import { useClusterStore } from "@/store/cluster";
 import { ElLoading } from 'element-plus'
 import { useRouter } from "vue-router";
 import { BorderBox9 } from "@dataview/datav-vue3";
+import AMapLoader from "@amap/amap-jsapi-loader";
+window._AMapSecurityConfig = {
+    securityJsCode: "64c03ae77b4521e9dbb72475e120e70c",
+};
 const router = useRouter();
 // 跳转
 function routerChange() {
@@ -115,11 +120,73 @@ const CalculateBtnFunction = () => {
             loading.close()
         })
 }
+//
+let map: { destroy: () => void; } | null = null;
+const data = [
+    {
+        lnglat: [116.397455, 39.909187], //经纬度
+        name: "天安门",
+    },
+    {
+        lnglat: [116.402394, 39.937182],
+        name: "南锣鼓巷",
+    },
+    //, …,{}, …
+];
+onMounted(() => {
 
+    AMapLoader.load({
+        key: "64c03ae77b4521e9dbb72475e120e70c", // 申请好的Web端开发者Key，首次调用 load 时必填
+        version: "2.0", // 指定要加载的 JSAPI 的版本，缺省时默认为 1.4.15
+        plugins: [], // 需要使用的的插件列表，如比例尺'AMap.Scale'等
+    })
+        .then((AMap) => {
+            const style = {
+                url: "/src/assets/images/amap/mapRedPoint.png", //图标地址
+                // url: "//webapi.amap.com/theme/v1.3/markers/b/mark_r.png",
+                size: new AMap.Size(20, 20), //图标大小
+                // anchor: new AMap.Pixel(5, 5), //图标显示位置偏移量，基准点为图标左上角
+            };
+            map = new AMap.Map("container", {
+                zoom: 12, //地图级别
+                center: [116.397428, 39.90923], //地图中心点
+                mapStyle: "amap://styles/whitesmoke", //设置地图的显示样式
+                viewMode: "2D", //设置地图模式
+            });
+            var massMarks = new AMap.MassMarks(data, {
+                zIndex: 5, //海量点图层叠加的顺序
+                zooms: [3, 19], //在指定地图缩放级别范围内展示海量点图层
+                style: style, //设置样式对象
+            });
+            massMarks.setMap(map);
+        })
+        .catch((e) => {
+            console.log(e);
+        });
+})
+
+onBeforeUnmount(() => {
+    //销毁地图，并清空地图容器
+    map!.destroy();
+    //地图对象赋值为null
+    map = null
+    //清除地图容器的 DOM 元素
+    document.getElementById("container")!.remove(); //"container" 为指定 DOM 元素的id
+})
 </script>
 <style lang="scss" scoped>
 .area {
     width: 100%;
+    display: flex;
+    justify-content: center;
+
+    #container {
+        padding: 0px;
+        margin: 0px;
+        width: 100%;
+        height: 100%;
+        margin: 0.5vh 0;
+    }
 
     :global(.el-message-box__message) {
         font-size: 20px;

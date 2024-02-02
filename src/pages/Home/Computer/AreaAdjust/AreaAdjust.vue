@@ -5,6 +5,8 @@
             </el-icon>&nbsp;聚集区微调&nbsp;<el-icon size="25">
                 <LocationInformation />
             </el-icon></div>
+            <div id="container"></div>
+
         <BorderBox12 backgroundColor='#001731' v-loading="isFinished" element-loading-text="加载中..."
             element-loading-background="rgba(0,23,49,0.8)">
             <el-empty class="empty" v-if="isShow" description="暂无数据" />
@@ -187,6 +189,24 @@ const adjustConfirmChange = () => {
 }
 
 //lingshi
+import AMapLoader from "@amap/amap-jsapi-loader";
+window._AMapSecurityConfig = {
+    securityJsCode: "64c03ae77b4521e9dbb72475e120e70c",
+};
+AMapLoader.load({
+    key: "64c03ae77b4521e9dbb72475e120e70c", //申请好的 Web 端开发者 Key，首次调用 load 时必填
+    version: "2.0", //指定要加载的 JS API 的版本，缺省时默认为 1.4.15
+    plugins: ["AMap.Scale"], //需要使用的的插件列表，如比例尺'AMap.Scale'，支持添加多个如：['AMap.Scale','...','...']
+})
+    .then((AMap) => {
+        var map = new AMap.Map("container"); //"container"为 <div> 容器的 id
+        console.log(map);
+
+    })
+    .catch((e) => {
+        console.log(e);
+    });
+
 
 
 </script>
@@ -207,11 +227,21 @@ const adjustConfirmChange = () => {
             cursor: pointer;
         }
     }
+    #container{
+        padding:0px;
+        margin: 0px;
+        width: 70vw;
+        height: 79vh;
+        margin: 0.5vh 0;
+    }
 
     .dv-border-box-12 {
-        margin-left: auto;
+        position: absolute;
+        top: 13vh;
+        right: 1vw;
         width: 25vw;
         height: 80vh;
+
 
         .empty {
             width: 100%;
@@ -316,4 +346,5 @@ const adjustConfirmChange = () => {
             margin-top: 25px;
         }
     }
-}</style>
+}
+</style>
