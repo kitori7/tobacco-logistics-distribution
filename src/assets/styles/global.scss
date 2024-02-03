@@ -49,8 +49,7 @@
 }
 .map {
     position: fixed;
-    width: 90%;
-    background-color: #bb5353;
+    width: 49%;
     height: 75vh;
     z-index: 0;
 
@@ -59,7 +58,7 @@
         left: 50%;
         transform: translate(-50%, 0);
         bottom: -8%;
-        .save{
+        .saveRoute{
             margin-left: 3vw;
         }
     }
