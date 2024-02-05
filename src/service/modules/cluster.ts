@@ -1,6 +1,6 @@
 import requests from "../index";
 import { IRequest } from "../request/type";
-import { IAccumlationInfo, IAccumulationIdInfo, IErrorPoints, IInformationList, IMapResultPoints, IResultPoints, IShopData, ItestInformation } from "@/types/cluster";
+import { IAccumlationInfo, IAccumulationIdInfo, IErrorPoints, IInformationList, IMapResult, IResultPoints, IShopData, ItestInformation } from "@/types/cluster";
 
 // 获取所有聚集区及商铺点
 export function getAllResultPoints() {
@@ -33,7 +33,7 @@ export function deleteClearInformationList() {
     });
 }
 
-//获取当前商铺可调整到的聚集区（）
+//获取当前商铺可调整到的聚集区
 export function getClosestPoints(data: IShopData) {
     return requests.get<IRequest<IAccumlationInfo[]>>({
         url: `/clustercalculate/cluster/getClosestPoints?latitude=${data.latitude}&longitude=${data.longitude}`,
@@ -56,7 +56,8 @@ export function getInformationList() {
 
 //获取地图所有商铺点()
 export function getMapResultPoints() {
-    return requests.get<IRequest<IMapResultPoints[]>>({
+    return requests.get<IRequest<IMapResult>>({
+        timeout: 1000 * 60 * 4,
         url: "/clustercalculate/cluster/getMapResultPoints",
     });
 }
@@ -69,7 +70,7 @@ export function postTestInformation(data: ItestInformation) {
     });
 }
 
-//聚集区微调接口（）
+//聚集区微调接口
 export function postUpdateStoreAccumulationId(data: IAccumulationIdInfo) {
     return requests.post<IRequest<any[]>>({
         headers: {

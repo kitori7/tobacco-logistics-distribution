@@ -15,7 +15,7 @@ export interface IShopList {
 export interface IShopData {
     longitude: number;
     latitude: number;
-    name?:string;
+    name?: string;
 }
 export interface IAccumlationInfo {
     accumulationId?: string;
@@ -35,13 +35,13 @@ export interface IErrorPoints_data {
     longitude: number;
     latitude: number;
     name: string;
-    son?:IErrorPoints_data[]
+    son?: IErrorPoints_data[]
 }
 
 export interface IErrorPoints {
     number: number,
     accumulationName: string,
-    data:IErrorPoints_data[],
+    data: IErrorPoints_data[],
 
 }
 
@@ -64,8 +64,20 @@ export interface IInformationList {
 
 
 export interface IMapResultPoints {
-    longitude: number;
-    latitude: number;
-    state: string;
+    lnglat: number[];
+    state?: string;
     name: string;
+    style?: number;
 }
+
+export interface IMapResultSurface {
+    center: number[];
+    radius: number
+}
+
+
+export interface IMapResult {
+    point: IMapResultPoints[];
+    side: IMapResultSurface[];
+}
+
