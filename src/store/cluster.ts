@@ -1,5 +1,5 @@
-import { deleteClearInformationList, getAllResultPoints, getCheckErrorPoints, getClosestPoints, getErrorPoints, getInformationList, postCalculateAll, postUpdateStoreAccumulationId } from "@/service/modules/cluster";
-import { IAccumlationInfo, IAccumulationIdInfo, IClusterAndShopList, IErrorPoints, IInformationList, IResultPoints, IShopData } from "@/types/cluster";
+import { deleteClearInformationList, getAllResultPoints, getCheckErrorPoints, getClosestPoints, getErrorPoints, getInformationList, getMapResultPoints, postCalculateAll, postUpdateStoreAccumulationId } from "@/service/modules/cluster";
+import { IAccumlationInfo, IAccumulationIdInfo, IClusterAndShopList, IErrorPoints, IInformationList, IMapResultPoints, IMapResultSurface, IResultPoints, IShopData } from "@/types/cluster";
 import { defineStore } from "pinia";
 
 export const useClusterStore = defineStore("cluster", () => {
@@ -58,7 +58,7 @@ export const useClusterStore = defineStore("cluster", () => {
         
     }
 
-    //获取错误点接口（）
+    //获取错误点接口
     const errorResult = ref<IErrorPoints[]>()
     // const errorPointsData = ref<IErrorPoints_data[]>();
     async function getErrorPointsAction() {
@@ -66,7 +66,7 @@ export const useClusterStore = defineStore("cluster", () => {
         errorResult.value = res.data
     }
 
-    //获取当前商铺可调整到的聚集区（）
+    //获取当前商铺可调整到的聚集区
     const AccumlationInfo = ref<IAccumlationInfo[]>()
     async function getClosestPointsAction(data: IShopData) {
         const res = await getClosestPoints(data);
@@ -86,6 +86,17 @@ export const useClusterStore = defineStore("cluster", () => {
         }
     }
 
+    //获取地图所有商铺点
+    //定义变量储存数据
+    const MapResultPoints =ref<IMapResultPoints[]>()
+    const MapResultSurface =ref<IMapResultSurface[]>()
+    async function getMapResultPointsAction() {
+        const res = await getMapResultPoints();
+        console.log(res);
+        MapResultPoints.value = res.data.point
+        MapResultSurface.value = res.data.side
+    }
+
     return {
         getAllResultPointsAction,
         clusterAndShopList,
@@ -101,6 +112,9 @@ export const useClusterStore = defineStore("cluster", () => {
         getClosestPointsAction,
         AccumlationInfo,
         postUpdateStoreAccumulationIdAction,
-        UpdateStoreAccumulationIdCode
+        UpdateStoreAccumulationIdCode,
+        getMapResultPointsAction,
+        MapResultPoints,
+        MapResultSurface,
     }
 })
