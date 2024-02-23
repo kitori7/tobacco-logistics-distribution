@@ -81,3 +81,41 @@ export interface IMapResult {
     side: IMapResultSurface[];
 }
 
+export interface IRouteData {
+    routeId: string,
+    routeName: string,
+    distance: string,
+    transitDepotId:string ,
+    areaId:string ,
+    polyline:string,
+    createTime?: string,
+    updateTime?: string,
+    cargoWeight?:string ,
+    versionId?: string,
+    delete?: boolean,
+}
+
+export interface ICalculateInfo {
+    apiKey: string,
+    areaName?: string,
+    assignNumber?: string,
+}
+
+export interface IAreaDetails {
+    areaId: string,
+    areaName: string,
+    routeList:IRouteList[],
+}
+
+interface IRouteList {
+    routeId: string,
+    routeName: string,
+    accumulationList:IAccumulationList[],
+}
+interface IAccumulationList {
+    accumulationId: string,
+    accumulationName: string,
+    longitude:number,
+    latitude:number,
+    accumulationAddress:string,
+}

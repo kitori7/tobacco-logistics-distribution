@@ -36,7 +36,7 @@
                             </el-collapse-item>
                         </el-collapse>
                     </div>
-                    <el-button class="btn">重新计算</el-button>
+                    <el-button class="btn" @click="CalculateBtnFunction()">重新计算</el-button>
                 </div>
             </BorderBox9>
             <BorderBox9 :color="['#73e5ff', '#73e5ff']" backgroundColor='#001731'>
@@ -45,26 +45,14 @@
                         <el-option v-for="item in routes" :key="item.value" :label="item.label" :value="item.value" />
                     </el-select>
                     <div class="detailedRoute">
-                        <el-collapse v-model="activeNames2" @change="handleChange">
-                            <el-collapse-item title="A区" name="1">
-                                <el-tree :data="data" :props="defaultProps" @node-click="handleNodeClick" />
-                            </el-collapse-item>
-                            <el-collapse-item title="B区" name="2">
-                                <el-tree :data="data" :props="defaultProps" @node-click="handleNodeClick" />
-                            </el-collapse-item>
-                            <el-collapse-item title="C区" name="3">
-                                <el-tree :data="data" :props="defaultProps" @node-click="handleNodeClick" />
-                            </el-collapse-item>
-                            <el-collapse-item title="D区" name="4">
-                                <el-tree :data="data" :props="defaultProps" @node-click="handleNodeClick" />
+                        <el-collapse v-model="activeNames2">
+                            <el-collapse-item :title="item.areaName" :name="item.areaId" v-for="(item) in clusterStore.routeDetails">
+                                <el-tree :data="data" :props="defaultProps" />
                             </el-collapse-item>
                         </el-collapse>
                     </div>
                 </div>
-
             </BorderBox9>
-
-
         </div>
     </div>
 </template>
@@ -73,6 +61,7 @@ import router from "@/router";
 import { BorderBox9 } from "@dataview/datav-vue3";
 import { CollapseModelValue } from "element-plus/lib/components/collapse/src/collapse.js";
 import AMapLoader from "@amap/amap-jsapi-loader";
+import { useClusterStore } from "@/store/cluster";
 window._AMapSecurityConfig = {
     securityJsCode: "64c03ae77b4521e9dbb72475e120e70c",
 };
@@ -80,6 +69,8 @@ window._AMapSecurityConfig = {
 const analysisRouteBtn = () => {
     router.push('/home/AnalysisRoute')
 }
+//聚集区Store
+const clusterStore = useClusterStore();
 let map = null;
 AMapLoader.load({
     key: "64c03ae77b4521e9dbb72475e120e70c", // 申请好的Web端开发者Key，首次调用 load 时必填
@@ -108,9 +99,6 @@ interface Tree {
     children?: Tree[]
 }
 
-const handleNodeClick = (data: Tree) => {
-    console.log(data)
-}
 
 const data: Tree[] = [
     {
@@ -147,17 +135,6 @@ const data: Tree[] = [
         children: [
             {
                 label: 'C聚集区',
-                children: [
-                    {
-                        label: 'A商户',
-                    },
-                    {
-                        label: 'B商户',
-                    },
-                    {
-                        label: 'C商户',
-                    },
-                ],
             },
             {
                 label: 'D聚集区',
@@ -195,28 +172,16 @@ const defaultProps = {
     children: 'children',
     label: 'label',
 }
-const area = ref('韶关市')
+const area = ref('南雄市')
 const areas = [
     {
         value: '韶关市',
         label: '韶关市',
     },
     {
-        value: 'A区',
-        label: 'A区',
-    },
-    {
-        value: 'B区',
-        label: 'B区',
-    },
-    {
-        value: 'C区',
-        label: 'C区',
-    },
-    {
-        value: 'D区',
-        label: 'D区',
-    },
+        value: '南雄市',
+        label: '南雄市',
+    }
 ]
 const route = ref('路线详情')
 const routes = [
@@ -230,6 +195,34 @@ const routes = [
     },
 
 ]
+//lujing
+clusterStore.getMapDataAction()
+clusterStore.getRouteDetailsAction().then(()=>{
+    console.log(clusterStore.routeDetails);
+})
+
+
+
+const pathCalculateInfo =ref({
+    apiKey:"cdeaa7cd146a1a9612827190fb0e0962",
+    areaName: "",
+    assignNumber: "10",
+
+})
+//路径重新计算
+const CalculateBtnFunction = () => {
+    const loading = ElLoading.service({
+        lock: true,
+        text: '计算中...',
+        background: 'rgba(0, 0, 0, 0.7)',
+    })
+    pathCalculateInfo.value.areaName = area.value
+    clusterStore.pathCalculateOneAction(pathCalculateInfo.value)
+        .then(() => {
+            loading.close()
+        })
+}
+
 </script>
 <style lang="scss" scoped>
 .route {

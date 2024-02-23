@@ -1,5 +1,5 @@
-import { deleteClearInformationList, getAllResultPoints, getCheckErrorPoints, getClosestPoints, getErrorPoints, getInformationList, getMapResultPoints, postCalculateAll, postUpdateStoreAccumulationId } from "@/service/modules/cluster";
-import { IAccumlationInfo, IAccumulationIdInfo, IClusterAndShopList, IErrorPoints, IInformationList, IMapResultPoints, IMapResultSurface, IResultPoints, IShopData } from "@/types/cluster";
+import { deleteClearInformationList, getAllResultPoints, getCheckErrorPoints, getClosestPoints, getErrorPoints, getInformationList, getMapData, getMapResultPoints, getRouteDetails, pathCalculateOne, postCalculateAll, postUpdateStoreAccumulationId } from "@/service/modules/cluster";
+import { IAccumlationInfo, IAccumulationIdInfo, IAreaDetails, ICalculateInfo, IClusterAndShopList, IErrorPoints, IInformationList, IMapResultPoints, IMapResultSurface, IResultPoints, IShopData } from "@/types/cluster";
 import { defineStore } from "pinia";
 
 export const useClusterStore = defineStore("cluster", () => {
@@ -55,7 +55,7 @@ export const useClusterStore = defineStore("cluster", () => {
         const res = await getCheckErrorPoints();
         ErrorPoints.value = res.data
         console.log(res);
-        
+
     }
 
     //获取错误点接口
@@ -74,11 +74,11 @@ export const useClusterStore = defineStore("cluster", () => {
     }
 
     //获取成功的code
-    const  UpdateStoreAccumulationIdCode = ref<number>()
+    const UpdateStoreAccumulationIdCode = ref<number>()
     //聚集区微调接口
     async function postUpdateStoreAccumulationIdAction(data: IAccumulationIdInfo) {
         const res = await postUpdateStoreAccumulationId(data);
-        UpdateStoreAccumulationIdCode.value= res.code
+        UpdateStoreAccumulationIdCode.value = res.code
         if (res.code === 200) {
             ElMessage.success(res.msg);
         } else {
@@ -88,13 +88,34 @@ export const useClusterStore = defineStore("cluster", () => {
 
     //获取地图所有商铺点
     //定义变量储存数据
-    const MapResultPoints =ref<IMapResultPoints[]>()
-    const MapResultSurface =ref<IMapResultSurface[]>()
+    const MapResultPoints = ref<IMapResultPoints[]>()
+    const MapResultSurface = ref<IMapResultSurface[]>()
     async function getMapResultPointsAction() {
         const res = await getMapResultPoints();
         console.log(res);
         MapResultPoints.value = res.data.point
         MapResultSurface.value = res.data.side
+    }
+
+    //路径计算接口
+    async function pathCalculateOneAction(data: ICalculateInfo) {
+        const res = await pathCalculateOne(data);
+        console.log(res);
+    }
+
+    //路径分析获取地图数据
+    async function getMapDataAction() {
+        const res = await getMapData();
+        console.log(res);
+    }
+    
+    //获取路线详情
+    //定义路线存储数据变量
+    const routeDetails = ref<IAreaDetails[]>()
+    async function getRouteDetailsAction() {
+        const res = await getRouteDetails();
+        console.log(res);
+        routeDetails.value = res.data
     }
 
     return {
@@ -116,5 +137,9 @@ export const useClusterStore = defineStore("cluster", () => {
         getMapResultPointsAction,
         MapResultPoints,
         MapResultSurface,
+        pathCalculateOneAction,
+        getMapDataAction,
+        getRouteDetailsAction,
+        routeDetails
     }
 })
