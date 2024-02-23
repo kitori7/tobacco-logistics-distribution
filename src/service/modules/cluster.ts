@@ -1,6 +1,6 @@
 import requests from "../index";
 import { IRequest } from "../request/type";
-import { IAccumlationInfo, IAccumulationIdInfo, IErrorPoints, IInformationList, IMapResult, IResultPoints, IShopData, ItestInformation } from "@/types/cluster";
+import { IAccumlationInfo, IAccumulationIdInfo, IAreaDetails, ICalculateInfo, IErrorPoints, IInformationList, IMapResult, IResultPoints, IRouteData, IShopData, ItestInformation } from "@/types/cluster";
 
 // 获取所有聚集区及商铺点
 export function getAllResultPoints() {
@@ -78,5 +78,27 @@ export function postUpdateStoreAccumulationId(data: IAccumulationIdInfo) {
         },
         url: "/clustercalculate/cluster/updateStoreAccumulationId",
         data,
+    });
+}
+
+//路径计算接口
+export function pathCalculateOne(data:ICalculateInfo) {
+    return requests.get<IRequest<IRouteData>>({
+        timeout: 1000 * 15,
+        url: `/pathcalculate/path/calculateOne?apiKey=${data.apiKey}&areaName=${data.areaName}&assignNumber=${data.assignNumber}`,
+    });
+}
+
+//获取地图数据
+export function getMapData() {
+    return requests.get<IRequest<IRouteData>>({
+        url: "/pathcalculate/path/getMapData",
+    });
+}
+
+//获取路线详情-大区路线聚集区数据
+export function getRouteDetails() {
+    return requests.get<IRequest<IAreaDetails[]>>({
+        url: "/pathcalculate/path/getRouteDetails",
     });
 }
