@@ -85,14 +85,18 @@ export interface IRouteData {
     routeId: string,
     routeName: string,
     distance: string,
-    transitDepotId:string ,
-    areaId:string ,
-    polyline:string,
+    transitDepotId: string,
+    areaId: string,
+    polyline: polylineData[],
     createTime?: string,
     updateTime?: string,
-    cargoWeight?:string ,
+    cargoWeight?: string,
     versionId?: string,
     delete?: boolean,
+}
+interface polylineData{
+    longitude: number,
+    latitude: number,
 }
 
 export interface ICalculateInfo {
@@ -104,18 +108,18 @@ export interface ICalculateInfo {
 export interface IAreaDetails {
     areaId: string,
     areaName: string,
-    routeList:IRouteList[],
+    routeList: IRouteList[],
 }
 
 interface IRouteList {
     routeId: string,
     routeName: string,
-    accumulationList:IAccumulationList[],
+    accumulationList: IAccumulationList[],
 }
 interface IAccumulationList {
     accumulationId: string,
     accumulationName: string,
-    longitude:number,
-    latitude:number,
-    accumulationAddress:string,
+    longitude: number,
+    latitude: number,
+    accumulationAddress: string,
 }

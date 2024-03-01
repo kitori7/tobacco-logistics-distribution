@@ -83,8 +83,8 @@ export function postUpdateStoreAccumulationId(data: IAccumulationIdInfo) {
 
 //路径计算接口
 export function pathCalculateOne(data:ICalculateInfo) {
-    return requests.get<IRequest<IRouteData>>({
-        timeout: 1000 * 15,
+    return requests.get<IRequest<IRouteData[]>>({
+        timeout: 1000 * 30,
         url: `/pathcalculate/path/calculateOne?apiKey=${data.apiKey}&areaName=${data.areaName}&assignNumber=${data.assignNumber}`,
     });
 }
