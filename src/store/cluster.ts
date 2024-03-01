@@ -1,5 +1,5 @@
 import { deleteClearInformationList, getAllResultPoints, getCheckErrorPoints, getClosestPoints, getErrorPoints, getInformationList, getMapData, getMapResultPoints, getRouteDetails, pathCalculateOne, postCalculateAll, postUpdateStoreAccumulationId } from "@/service/modules/cluster";
-import { IAccumlationInfo, IAccumulationIdInfo, IAreaDetails, ICalculateInfo, IClusterAndShopList, IErrorPoints, IInformationList, IMapResultPoints, IMapResultSurface, IResultPoints, IShopData } from "@/types/cluster";
+import { IAccumlationInfo, IAccumulationIdInfo, IAreaDetails, ICalculateInfo, IClusterAndShopList, IErrorPoints, IInformationList, IMapResultPoints, IMapResultSurface, IResultPoints, IRouteData, IShopData } from "@/types/cluster";
 import { defineStore } from "pinia";
 
 export const useClusterStore = defineStore("cluster", () => {
@@ -98,9 +98,13 @@ export const useClusterStore = defineStore("cluster", () => {
     }
 
     //路径计算接口
+    //定义变量储存重新计算完的路径数据
+    const newPathResult = ref<IRouteData[]>()
     async function pathCalculateOneAction(data: ICalculateInfo) {
         const res = await pathCalculateOne(data);
+        newPathResult.value = res.data
         console.log(res);
+
     }
 
     //路径分析获取地图数据
@@ -140,6 +144,7 @@ export const useClusterStore = defineStore("cluster", () => {
         pathCalculateOneAction,
         getMapDataAction,
         getRouteDetailsAction,
-        routeDetails
+        routeDetails,
+        newPathResult
     }
 })

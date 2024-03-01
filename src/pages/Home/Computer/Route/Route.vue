@@ -46,7 +46,8 @@
                     </el-select>
                     <div class="detailedRoute">
                         <el-collapse v-model="activeNames2">
-                            <el-collapse-item :title="item.areaName" :name="item.areaId" v-for="(item) in clusterStore.routeDetails">
+                            <el-collapse-item :title="item.areaName" :name="item.areaId"
+                                v-for="(item) in clusterStore.routeDetails">
                                 <el-tree :data="data" :props="defaultProps" />
                             </el-collapse-item>
                         </el-collapse>
@@ -71,7 +72,7 @@ const analysisRouteBtn = () => {
 }
 //聚集区Store
 const clusterStore = useClusterStore();
-let map = null;
+let map: any = null;
 AMapLoader.load({
     key: "64c03ae77b4521e9dbb72475e120e70c", // 申请好的Web端开发者Key，首次调用 load 时必填
     version: "2.0", // 指定要加载的 JSAPI 的版本，缺省时默认为 1.4.15
@@ -197,14 +198,15 @@ const routes = [
 ]
 //lujing
 clusterStore.getMapDataAction()
-clusterStore.getRouteDetailsAction().then(()=>{
+clusterStore.getRouteDetailsAction().then(() => {
     console.log(clusterStore.routeDetails);
 })
 
 
-
-const pathCalculateInfo =ref({
-    apiKey:"cdeaa7cd146a1a9612827190fb0e0962",
+//楚鸿的key： 309bde1e73b984c7d8a87ab19255963c
+//我的key：   cdeaa7cd146a1a9612827190fb0e0962
+const pathCalculateInfo = ref({
+    apiKey: "309bde1e73b984c7d8a87ab19255963c",
     areaName: "",
     assignNumber: "10",
 
@@ -219,6 +221,23 @@ const CalculateBtnFunction = () => {
     pathCalculateInfo.value.areaName = area.value
     clusterStore.pathCalculateOneAction(pathCalculateInfo.value)
         .then(() => {
+            //折线数据展示
+            console.log(1);
+            clusterStore.newPathResult!.forEach((item) => {
+                //配置折线路径
+                let path : AMap.LngLat[] = [];
+                item.polyline.forEach((item) => {
+                    path.push(new AMap.LngLat(item.longitude, item.latitude))
+                })
+                //创建 Polyline 实例
+                var polyline = new AMap.Polyline({
+                    path: path,
+                    borderWeight: 2, //线条宽度，默认为1
+                    strokeColor: "red", //线条颜色
+                    lineJoin: "round", //折线拐点连接处样式
+                });
+                map.add(polyline);
+            })
             loading.close()
         })
 }
@@ -355,6 +374,7 @@ const CalculateBtnFunction = () => {
 
             .rightInformation {
                 margin-left: 0.5vw;
+
                 .detailedRoute {
                     padding-left: 1vw;
                     padding-top: 4vh;
