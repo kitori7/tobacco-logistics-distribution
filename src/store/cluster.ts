@@ -1,5 +1,5 @@
-import { deleteClearInformationList, getAllResultPoints, getCheckErrorPoints, getClosestPoints, getErrorPoints, getInformationList, getMapData, getMapResultPoints, getRouteDetails, pathCalculateOne, postCalculateAll, postUpdateStoreAccumulationId } from "@/service/modules/cluster";
-import { IAccumlationInfo, IAccumulationIdInfo, IAreaDetails, ICalculateInfo, IClusterAndShopList, IErrorPoints, IInformationList, IMapResultPoints, IMapResultSurface, IResultPoints, IRouteData, IShopData } from "@/types/cluster";
+import { deleteClearInformationList, getAllResultPoints, getAreaRouteData, getCheckErrorPoints, getClosestPoints, getErrorPoints, getInformationList, getMapData, getMapResultPoints, getRouteData, getRouteDetails, getStoreDetails, pathCalculateOne, postAddRoute, postCalculateAll, postUpdateStoreAccumulationId } from "@/service/modules/cluster";
+import { IAccumlationInfo, IAccumulationIdInfo, IAreaDetails, ICalculateInfo, IClusterAndShopList, IErrorPoints, IHistoricalPath, IInformationList, IMapResultPoints, IMapResultSurface, IResultPoints, IRouteData, IShopData, IStoreDetails } from "@/types/cluster";
 import { defineStore } from "pinia";
 
 export const useClusterStore = defineStore("cluster", () => {
@@ -92,7 +92,6 @@ export const useClusterStore = defineStore("cluster", () => {
     const MapResultSurface = ref<IMapResultSurface[]>()
     async function getMapResultPointsAction() {
         const res = await getMapResultPoints();
-        console.log(res);
         MapResultPoints.value = res.data.point
         MapResultSurface.value = res.data.side
     }
@@ -108,19 +107,62 @@ export const useClusterStore = defineStore("cluster", () => {
     }
 
     //路径分析获取地图数据
+    //定义变量储存路径数据
+    const oldPathResult = ref<IRouteData[]>()
     async function getMapDataAction() {
         const res = await getMapData();
+        oldPathResult.value = res.data
         console.log(res);
     }
-    
-    //获取路线详情
+
+    //获取路线详情-大区路线聚集区详情
     //定义路线存储数据变量
     const routeDetails = ref<IAreaDetails[]>()
     async function getRouteDetailsAction() {
         const res = await getRouteDetails();
-        console.log(res);
         routeDetails.value = res.data
     }
+
+    //获取路线详情-聚集区下商户信息
+    //定义变量商户信息
+    const storeResult = ref<IStoreDetails[]>()
+    async function getStoreDetailsAction(data: string) {
+        const res = await getStoreDetails(data);
+        storeResult.value = res.data
+        console.log(res);
+    }
+
+    //获取路径分析-大区历史路径数据
+    //定义变量存储历史路径数据
+    const historicalPath = ref<IHistoricalPath[]>()
+    async function getAreaRouteDataAction() {
+        const res = await getAreaRouteData();
+        historicalPath.value = res.data
+    }
+
+    //保存路径
+    async function postAddRouteAction(data: IRouteData[]) {
+        const res = await postAddRoute(data);
+        if (res.code === 200) {
+            ElMessage.success(res.msg);
+        } else {
+            ElMessage.error('失败');
+        }
+    }
+
+    //获取路径分析详细数据
+    //定义变量存储正在分析的路径数据
+    async function getRouteDataAction(data:IRouteData) {
+        const res = await getRouteData(data);
+        console.log(res);
+        if (res.code === 200) {
+            ElMessage.success(res.msg);
+        } else {
+            ElMessage.error('失败');
+        }
+        
+    }
+
 
     return {
         getAllResultPointsAction,
@@ -143,8 +185,15 @@ export const useClusterStore = defineStore("cluster", () => {
         MapResultSurface,
         pathCalculateOneAction,
         getMapDataAction,
+        oldPathResult,
         getRouteDetailsAction,
         routeDetails,
-        newPathResult
+        newPathResult,
+        getStoreDetailsAction,
+        storeResult,
+        getAreaRouteDataAction,
+        historicalPath,
+        postAddRouteAction,
+        getRouteDataAction,
     }
 })

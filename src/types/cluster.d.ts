@@ -82,19 +82,19 @@ export interface IMapResult {
 }
 
 export interface IRouteData {
-    routeId: string,
+    routeId?: string,
     routeName: string,
-    distance: string,
-    transitDepotId: string,
+    distance?: string,
+    transitDepotId?: string,
     areaId: string,
-    polyline: polylineData[],
+    polyline?: polylineData[],
     createTime?: string,
     updateTime?: string,
     cargoWeight?: string,
     versionId?: string,
     delete?: boolean,
 }
-interface polylineData{
+interface polylineData {
     longitude: number,
     latitude: number,
 }
@@ -109,12 +109,14 @@ export interface IAreaDetails {
     areaId: string,
     areaName: string,
     routeList: IRouteList[],
+
 }
 
 interface IRouteList {
     routeId: string,
     routeName: string,
     accumulationList: IAccumulationList[],
+    isOpen?: boolean,
 }
 interface IAccumulationList {
     accumulationId: string,
@@ -122,4 +124,18 @@ interface IAccumulationList {
     longitude: number,
     latitude: number,
     accumulationAddress: string,
+}
+
+export interface IStoreDetails {
+    storeId: string,
+    storeName: string,
+    longitude: number,
+    latitude: number,
+    storeAddress: string,
+}
+
+export interface IHistoricalPath{
+    areaId:string,
+    areaName:string,
+    licensePlateNumberList:string[],
 }

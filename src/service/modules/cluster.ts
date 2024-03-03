@@ -1,6 +1,6 @@
 import requests from "../index";
 import { IRequest } from "../request/type";
-import { IAccumlationInfo, IAccumulationIdInfo, IAreaDetails, ICalculateInfo, IErrorPoints, IInformationList, IMapResult, IResultPoints, IRouteData, IShopData, ItestInformation } from "@/types/cluster";
+import { IAccumlationInfo, IAccumulationIdInfo, IAreaDetails, ICalculateInfo, IErrorPoints, IHistoricalPath, IInformationList, IMapResult, IResultPoints, IRouteData, IRouteList, IShopData, IStoreDetails, ItestInformation } from "@/types/cluster";
 
 // 获取所有聚集区及商铺点
 export function getAllResultPoints() {
@@ -82,7 +82,7 @@ export function postUpdateStoreAccumulationId(data: IAccumulationIdInfo) {
 }
 
 //路径计算接口
-export function pathCalculateOne(data:ICalculateInfo) {
+export function pathCalculateOne(data: ICalculateInfo) {
     return requests.get<IRequest<IRouteData[]>>({
         timeout: 1000 * 30,
         url: `/pathcalculate/path/calculateOne?apiKey=${data.apiKey}&areaName=${data.areaName}&assignNumber=${data.assignNumber}`,
@@ -91,7 +91,7 @@ export function pathCalculateOne(data:ICalculateInfo) {
 
 //获取地图数据
 export function getMapData() {
-    return requests.get<IRequest<IRouteData>>({
+    return requests.get<IRequest<IRouteData[]>>({
         url: "/pathcalculate/path/getMapData",
     });
 }
@@ -100,5 +100,37 @@ export function getMapData() {
 export function getRouteDetails() {
     return requests.get<IRequest<IAreaDetails[]>>({
         url: "/pathcalculate/path/getRouteDetails",
+    });
+}
+
+//获取路线详情-聚集区下商户信息
+export function getStoreDetails(data: string) {
+    return requests.get<IRequest<IStoreDetails[]>>({
+        url: `/pathcalculate/path/getStoreDetails/${data}`,
+    });
+}
+
+//获取路径分析-大区历史路径数据
+export function getAreaRouteData() {
+    return requests.get<IRequest<IHistoricalPath[]>>({
+        url: "/pathcalculate/path/getAreaRouteData",
+    });
+}
+
+//保存路径
+export function postAddRoute(data: IRouteData[]) {
+    return requests.post<IRequest<any>>({
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+        },
+        url: "/pathcalculate/path/addRoute",
+        data,
+    });
+}
+
+// 获取路径分析详细数据（any未改）
+export function getRouteData(data:IRouteData) {
+    return requests.get<IRequest<any[]>>({
+        url: `/pathcalculate/path/getRouteData?areaId=${data.areaId}&routeName=${data.routeName}`,
     });
 }

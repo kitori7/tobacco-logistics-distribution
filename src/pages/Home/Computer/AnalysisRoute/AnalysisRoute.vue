@@ -6,7 +6,20 @@
             </el-icon>&nbsp;路径分析&nbsp;
         </div>
         <div class="AnalysisRouteTop">
-            <div class="selete">请选择您要分析的路径：
+            <div class="selete">
+                请选择您要分析的路径：
+                <el-select  v-model="selectValue" placeholder="请选择大区-车牌号" size="large" style="width: 230px; margin-top: 30px;">
+                    <el-option-group  v-for="item in clusterStore.historicalPath" :key="item.areaId"
+                        :label="item.areaName">
+                        <el-option v-for="(item1) in item.licensePlateNumberList" :key="item1" :label="item1"
+                            :value="item1" @click="selectValueFun(item.areaName + '-' + item1, item.areaId)">
+                        </el-option>
+                    </el-option-group>
+                </el-select>
+                <el-date-picker style="width: 230px; margin-top: 30px;" v-model="pickerDate" type="date"
+                    placeholder="选择日期时间" value-format="YYYY.M.D">
+                </el-date-picker>
+                <el-button class="btn" @click="analysisBtn">进行分析</el-button>
                 <el-button class="btn">导出分析图</el-button>
             </div>
             <div class="oldRoute">
@@ -42,12 +55,14 @@
 
     </div>
 </template>
+
 <script lang="ts" setup>
 import { ArrowLeftBold } from "@element-plus/icons-vue";
 import { useRouter } from "vue-router";
 import { BorderBox11 } from "@dataview/datav-vue3";
 import AMapLoader from "@amap/amap-jsapi-loader";
 import echarts from "@/store/echart";
+import { useClusterStore } from "@/store/cluster";
 window._AMapSecurityConfig = {
     securityJsCode: "64c03ae77b4521e9dbb72475e120e70c",
 };
@@ -133,7 +148,31 @@ onMounted(() => {
     myChart3.setOption(option);
 })
 
+
+//聚集区Store
+const clusterStore = useClusterStore();
+
+clusterStore.getAreaRouteDataAction().then(() => {
+    console.log(clusterStore.historicalPath);
+})
+//大区-车牌号
+const selectValue = ref('')
+const saveAreaId = ref('')
+const selectValueFun = (data: string, areaId: string) => {
+    selectValue.value = data
+    saveAreaId.value = areaId 
+}
+//日期
+const pickerDate = ref('')
+//分析
+const analysisBtn = () => {
+    var week = new Array("日", "一", "二", "三", "四", "五", "六");
+    var weekNumber = new Date(pickerDate.value).getDay();
+    let routeName = selectValue.value + '-星期' + week[weekNumber]+'-'+pickerDate.value
+    clusterStore.getRouteDataAction({areaId:saveAreaId.value,routeName:routeName,})
+}
 </script>
+
 <style lang="scss" scoped>
 .AnalysisRoute {
     width: 100%;
@@ -161,7 +200,8 @@ onMounted(() => {
             border: 1px solid #ff0000;
             height: 45vh;
             color: #73e1ff;
-            font-size: 18px;
+            font-size: 21px;
+
             .btn {
                 margin-top: 20%;
             }
