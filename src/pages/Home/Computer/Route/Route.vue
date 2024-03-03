@@ -4,7 +4,7 @@
             <div id="container"></div>
             <div class="btns">
                 <el-button class="analysisRoute" @click="analysisRouteBtn">路径分析</el-button>
-                <el-button class="saveRoute">保存路径</el-button>
+                <el-button class="saveRoute"  @click="addRouteBtn">保存路径</el-button>
             </div>
         </div>
         <div class="content">
@@ -14,7 +14,7 @@
                         <el-option v-for="item in areas" :key="item.value" :label="item.label" :value="item.value" />
                     </el-select>
                     <div class="routeCollapse">
-                        <el-collapse v-model="activeNames" @change="handleChange">
+                        <el-collapse v-model="activeNames">
                             <el-badge :value="1" class="item"></el-badge>
                             <el-collapse-item title="聚集区信息改变" name="1">
                                 <ul>
@@ -41,28 +41,54 @@
             </BorderBox9>
             <BorderBox9 :color="['#73e5ff', '#73e5ff']" backgroundColor='#001731'>
                 <div class="rightInformation">
-                    <el-select v-model="route">
-                        <el-option v-for="item in routes" :key="item.value" :label="item.label" :value="item.value" />
-                    </el-select>
+                    <el-select v-model="route"></el-select>
                     <div class="detailedRoute">
-                        <el-collapse v-model="activeNames2">
-                            <el-collapse-item :title="item.areaName" :name="item.areaId"
-                                v-for="(item) in clusterStore.routeDetails">
-                                <el-tree :data="data" :props="defaultProps" />
-                            </el-collapse-item>
-                        </el-collapse>
+                        <el-scrollbar height="75vh">
+                            <el-collapse v-model="activeNames2">
+                                <el-collapse-item :title="item.areaName" :name="item.areaId"
+                                    v-for="(item ) in clusterStore.routeDetails">
+                                    <ul>
+                                        <li class="routeNameLi" v-for="(item1) in item.routeList"
+                                            @click="item1.isOpen = !item1.isOpen">
+                                            <div class="routeName">
+                                                {{ item1.routeName }}
+                                            </div>
+                                            <ul>
+                                                <li class="accumulationNameLi" v-for="(item2) in item1.accumulationList"
+                                                    v-show="item1.isOpen"
+                                                    @click.stop="accumulationNameClick(item2)">
+                                                    {{ item2.accumulationName }}
+                                                </li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </el-collapse-item>
+                            </el-collapse>
+                        </el-scrollbar>
                     </div>
+                    <el-dialog style="transform: translate(16vw, 43vh); height: 30vh;" v-model="isOpenRouteDialog"
+                        width="20%" :modal="false" :before-close="closeRouteDialog" :append-to-body="true" :title="titleAccumulationName" >
+                        <!-- :draggable=true 拖动 -->
+                        <el-scrollbar height="20vh">
+                            <ul style="margin-left: 20px;">
+                                <li style="padding: 5px; list-style: square ;" v-for="(item3) in clusterStore.storeResult ">
+                                    {{ item3.storeAddress }}
+                                </li>
+                            </ul>
+                        </el-scrollbar>
+                    </el-dialog>
                 </div>
             </BorderBox9>
         </div>
     </div>
 </template>
+
 <script lang="ts" setup>
 import router from "@/router";
 import { BorderBox9 } from "@dataview/datav-vue3";
-import { CollapseModelValue } from "element-plus/lib/components/collapse/src/collapse.js";
 import AMapLoader from "@amap/amap-jsapi-loader";
 import { useClusterStore } from "@/store/cluster";
+import { IAccumulationList } from "@/types/cluster";
 window._AMapSecurityConfig = {
     securityJsCode: "64c03ae77b4521e9dbb72475e120e70c",
 };
@@ -82,97 +108,17 @@ AMapLoader.load({
         map = new AMap.Map("container", {
             // 设置地图容器id
             viewMode: "3D", // 是否为3D地图模式
-            zoom: 11, // 初始化地图级别
-            center: [114, 25], // 初始化地图中心点位置
+            zoom: 12 , // 初始化地图级别
+            center: [114.30421, 25.10769], // 初始化地图中心点位置
         });
-        console.log(map);
     })
     .catch((e) => {
         console.log(e);
     });
-const activeNames = ref(['1'])
-const activeNames2 = ref(['1'])
-const handleChange = (val: CollapseModelValue) => {
-    console.log(val)
-}
-interface Tree {
-    label: string
-    children?: Tree[]
-}
+const activeNames = ref(['0'])
+const activeNames2 = ref(['0'])
 
 
-const data: Tree[] = [
-    {
-        label: 'A路线',
-        children: [
-            {
-                label: 'Level two 1-1',
-                children: [
-                    {
-                        label: 'Level three 1-1-1',
-                    },
-                ],
-            },
-        ],
-    },
-    {
-        label: 'B路线',
-        children: [
-            {
-                label: 'A聚集区',
-            },
-        ],
-    },
-    {
-        label: 'C路线',
-        children: [
-            {
-                label: 'B聚集区',
-            },
-        ],
-    },
-    {
-        label: 'D路线',
-        children: [
-            {
-                label: 'C聚集区',
-            },
-            {
-                label: 'D聚集区',
-                children: [
-                    {
-                        label: 'A商户',
-                    },
-                    {
-                        label: 'B商户',
-                    },
-                    {
-                        label: 'C商户',
-                    },
-                ],
-            },
-            {
-                label: 'E聚集区',
-                children: [
-                    {
-                        label: 'A商户',
-                    },
-                    {
-                        label: 'B商户',
-                    },
-                    {
-                        label: 'C商户',
-                    },
-                ],
-            },
-        ],
-    },
-]
-
-const defaultProps = {
-    children: 'children',
-    label: 'label',
-}
 const area = ref('南雄市')
 const areas = [
     {
@@ -185,33 +131,18 @@ const areas = [
     }
 ]
 const route = ref('路线详情')
-const routes = [
-    {
-        value: '路线详情',
-        label: '路线详情',
-    },
-    {
-        value: '路线分析',
-        label: '路线分析',
-    },
 
-]
-//lujing
-clusterStore.getMapDataAction()
-clusterStore.getRouteDetailsAction().then(() => {
-    console.log(clusterStore.routeDetails);
-})
-
-
+//lujin
 //楚鸿的key： 309bde1e73b984c7d8a87ab19255963c
 //我的key：   cdeaa7cd146a1a9612827190fb0e0962
 const pathCalculateInfo = ref({
-    apiKey: "309bde1e73b984c7d8a87ab19255963c",
+    apiKey: "cdeaa7cd146a1a9612827190fb0e0962",
     areaName: "",
     assignNumber: "10",
 
 })
 //路径重新计算
+const newPolylineList: AMap.Polyline[] = []
 const CalculateBtnFunction = () => {
     const loading = ElLoading.service({
         lock: true,
@@ -222,27 +153,84 @@ const CalculateBtnFunction = () => {
     clusterStore.pathCalculateOneAction(pathCalculateInfo.value)
         .then(() => {
             //折线数据展示
-            console.log(1);
-            clusterStore.newPathResult!.forEach((item) => {
+            clusterStore.newPathResult?.forEach((item) => {
                 //配置折线路径
-                let path : AMap.LngLat[] = [];
-                item.polyline.forEach((item) => {
+                let path: AMap.LngLat[] = [];
+                item.polyline?.forEach((item) => {
                     path.push(new AMap.LngLat(item.longitude, item.latitude))
                 })
                 //创建 Polyline 实例
-                var polyline = new AMap.Polyline({
+                let polyline = new AMap.Polyline({
                     path: path,
-                    borderWeight: 2, //线条宽度，默认为1
+                    strokeWeight: 5,
+                    showDir: true,
                     strokeColor: "red", //线条颜色
                     lineJoin: "round", //折线拐点连接处样式
                 });
-                map.add(polyline);
+                newPolylineList.push(polyline)
             })
+            // map.remove(oldPolylineList);
+            map.add(newPolylineList)
             loading.close()
         })
 }
+//获取地图数据
+const oldPolylineList: AMap.Polyline[] = []
+clusterStore.getMapDataAction()
+    .then(() => {
+        //折线数据展示
+        clusterStore.oldPathResult!.forEach((item) => {
+            //配置折线路径
+            let path: AMap.LngLat[] = [];
+            item.polyline?.forEach((item) => {
+                path.push(new AMap.LngLat(item.longitude, item.latitude))
+            })
+            //创建 Polyline 实例
+            let polyline = new AMap.Polyline({
+                path: path,
+                strokeWeight: 5,
+                showDir: true,
+                strokeColor: "#001731", //线条颜色
+                lineJoin: "round", //折线拐点连接处样式
+            });
+            oldPolylineList.push(polyline)
+        })
+        map.add(oldPolylineList)
+    })
 
+
+
+//获取路线详情-大区路线聚集区信息
+clusterStore.getRouteDetailsAction()
+//定义弹框标题accumulationName的变量
+const titleAccumulationName = ref<string>('')
+//获取路线详情-聚集区下商户信息
+const accumulationNameClick = (accumulation: IAccumulationList) => {
+    titleAccumulationName.value = accumulation.accumulationName
+    clusterStore.getStoreDetailsAction(accumulation.accumulationId)
+    isOpenRouteDialog.value = true
+}
+//定义是否打开弹窗的变量
+const isOpenRouteDialog = ref(false)
+//关闭窗口
+const closeRouteDialog = () => {
+    isOpenRouteDialog.value = false
+}
+const addRouteBtn = () =>{
+    console.log(1222);
+    console.log(clusterStore.newPathResult);
+    clusterStore.newPathResult?.forEach((item)=>{
+        delete item.createTime
+        delete item.updateTime
+        delete item.versionId
+        delete item.delete
+        delete item.routeId
+    })
+    console.log(clusterStore.newPathResult);
+    clusterStore.postAddRouteAction(clusterStore.newPathResult!)
+}
 </script>
+
 <style lang="scss" scoped>
 .route {
     width: 100%;
@@ -375,6 +363,7 @@ const CalculateBtnFunction = () => {
             .rightInformation {
                 margin-left: 0.5vw;
 
+
                 .detailedRoute {
                     padding-left: 1vw;
                     padding-top: 4vh;
@@ -396,6 +385,44 @@ const CalculateBtnFunction = () => {
 
                         ::v-deep(.el-collapse-item__content) {
                             padding: 0;
+                        }
+
+                        .routeNameLi {
+                            padding-left: 5px;
+
+                            .routeName:before {
+                                content: "";
+                                display: inline-block;
+                                width: 8px;
+                                height: 8px;
+                                background-color: rgb(0, 179, 255);
+                                border-radius: 50%;
+                                margin-bottom: 4px;
+                                margin-right: 10px;
+                            }
+
+                            .routeName:hover {
+                                background-color: #0277a8;
+                            }
+
+                            .accumulationNameLi {
+                                padding-left: 25px;
+                            }
+
+                            .accumulationNameLi:hover {
+                                background-color: #0277a8;
+                            }
+
+                            .accumulationNameLi:before {
+                                content: "";
+                                display: inline-block;
+                                width: 8px;
+                                height: 8px;
+                                background-color: rgb(255, 238, 0);
+                                border-radius: 50%;
+                                margin-bottom: 4px;
+                                margin-right: 10px;
+                            }
                         }
                     }
 

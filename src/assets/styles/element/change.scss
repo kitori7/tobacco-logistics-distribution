@@ -158,7 +158,9 @@
   border: 1px solid #72e1ff;
 
   .el-dialog__body {
-    color: #73e1ff;
+    color: #d1f5ff;
+    font-size: 16px;
+    padding: 20px;
   }
 
   .el-dialog__title {
@@ -186,8 +188,18 @@
   --el-bg-color-overlay: rgb(0, 0, 51);
 }
 
+.el-date-picker__header {
+  --el-datepicker-icon-color: #ffffff;
+}
+
+.el-date-picker__header-label {
+  color: #ffffff;
+}
+
 .el-date-picker {
   width: auto;
+  color: #ffffff;
+  --el-datepicker-header-text-color: #ffffff;
 }
 
 .el-date-picker .el-picker-panel__content {
@@ -240,6 +252,7 @@
   background-color: #001731 !important;
   border: 1px solid rgb(204, 255, 255) !important;
 }
+
 .el-message-box__title {
   color: #31d2ff !important;
   font-size: 25px;
@@ -366,6 +379,7 @@
   font-size: 18px;
   --el-tree-node-content-height: 30px;
   --el-tree-node-hover-bg-color: rgb(2, 119, 168);
+
   .el-tree-node__content:hover {
     background-color: rgb(2, 119, 168);
   }
