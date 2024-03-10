@@ -60,8 +60,8 @@
     "watchEffect": true,
     "watchPostEffect": true,
     "watchSyncEffect": true,
-    "ElLoading": true,
     "ElMessageBox": true,
+    "ElLoading": true,
     "ElMessage": true
   }
 }

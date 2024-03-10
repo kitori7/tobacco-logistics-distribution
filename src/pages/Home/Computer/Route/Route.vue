@@ -4,7 +4,7 @@
             <div id="container"></div>
             <div class="btns">
                 <el-button class="analysisRoute" @click="analysisRouteBtn">路径分析</el-button>
-                <el-button class="saveRoute"  @click="addRouteBtn">保存路径</el-button>
+                <el-button class="saveRoute" @click="addRouteBtn">保存路径</el-button>
             </div>
         </div>
         <div class="content">
@@ -54,10 +54,11 @@
                                                 {{ item1.routeName }}
                                             </div>
                                             <ul>
-                                                <li class="accumulationNameLi" v-for="(item2) in item1.accumulationList"
-                                                    v-show="item1.isOpen"
+                                                <li class="accumulationNameLi" tabindex="1"
+                                                    v-for="(item2) in item1.accumulationList" v-show="item1.isOpen"
                                                     @click.stop="accumulationNameClick(item2)">
                                                     {{ item2.accumulationName }}
+                                                    <!-- <div v-if=""></div> -->
                                                 </li>
                                             </ul>
                                         </li>
@@ -67,11 +68,13 @@
                         </el-scrollbar>
                     </div>
                     <el-dialog style="transform: translate(16vw, 43vh); height: 30vh;" v-model="isOpenRouteDialog"
-                        width="20%" :modal="false" :before-close="closeRouteDialog" :append-to-body="true" :title="titleAccumulationName" >
+                        width="20%" :modal="false" :before-close="closeRouteDialog" :append-to-body="true"
+                        :title="titleAccumulationName">
                         <!-- :draggable=true 拖动 -->
                         <el-scrollbar height="20vh">
                             <ul style="margin-left: 20px;">
-                                <li style="padding: 5px; list-style: square ;" v-for="(item3) in clusterStore.storeResult ">
+                                <li style="padding: 5px; list-style: square ;"
+                                    v-for="(item3) in clusterStore.storeResult ">
                                     {{ item3.storeAddress }}
                                 </li>
                             </ul>
@@ -94,7 +97,11 @@ window._AMapSecurityConfig = {
 };
 //路径分析入口
 const analysisRouteBtn = () => {
-    router.push('/home/AnalysisRoute')
+    if (choiceCalculateType.value !== 0) {
+        router.push('/home/AnalysisRoute')
+    } else {
+        ElMessage.warning("请先进行重新计算");
+    }
 }
 //聚集区Store
 const clusterStore = useClusterStore();
@@ -108,8 +115,8 @@ AMapLoader.load({
         map = new AMap.Map("container", {
             // 设置地图容器id
             viewMode: "3D", // 是否为3D地图模式
-            zoom: 12 , // 初始化地图级别
-            center: [114.30421, 25.10769], // 初始化地图中心点位置
+            zoom: 9, // 初始化地图级别
+            center: [113.597324, 24.810977], // 初始化地图中心点位置
         });
     })
     .catch((e) => {
@@ -132,48 +139,7 @@ const areas = [
 ]
 const route = ref('路线详情')
 
-//lujin
-//楚鸿的key： 309bde1e73b984c7d8a87ab19255963c
-//我的key：   cdeaa7cd146a1a9612827190fb0e0962
-const pathCalculateInfo = ref({
-    apiKey: "cdeaa7cd146a1a9612827190fb0e0962",
-    areaName: "",
-    assignNumber: "10",
 
-})
-//路径重新计算
-const newPolylineList: AMap.Polyline[] = []
-const CalculateBtnFunction = () => {
-    const loading = ElLoading.service({
-        lock: true,
-        text: '计算中...',
-        background: 'rgba(0, 0, 0, 0.7)',
-    })
-    pathCalculateInfo.value.areaName = area.value
-    clusterStore.pathCalculateOneAction(pathCalculateInfo.value)
-        .then(() => {
-            //折线数据展示
-            clusterStore.newPathResult?.forEach((item) => {
-                //配置折线路径
-                let path: AMap.LngLat[] = [];
-                item.polyline?.forEach((item) => {
-                    path.push(new AMap.LngLat(item.longitude, item.latitude))
-                })
-                //创建 Polyline 实例
-                let polyline = new AMap.Polyline({
-                    path: path,
-                    strokeWeight: 5,
-                    showDir: true,
-                    strokeColor: "red", //线条颜色
-                    lineJoin: "round", //折线拐点连接处样式
-                });
-                newPolylineList.push(polyline)
-            })
-            // map.remove(oldPolylineList);
-            map.add(newPolylineList)
-            loading.close()
-        })
-}
 //获取地图数据
 const oldPolylineList: AMap.Polyline[] = []
 clusterStore.getMapDataAction()
@@ -198,6 +164,79 @@ clusterStore.getMapDataAction()
         map.add(oldPolylineList)
     })
 
+//楚鸿的key： 309bde1e73b984c7d8a87ab19255963c
+//我的key：   cdeaa7cd146a1a9612827190fb0e0962
+const pathCalculateInfo = ref({
+    apiKey: "cdeaa7cd146a1a9612827190fb0e0962",
+    areaName: "",
+    assignNumber: "10",
+
+})
+const choiceCalculateType = ref(0)
+//路径重新计算
+const newPolylineList: AMap.Polyline[] = []
+const CalculateBtnFunction = () => {
+    const loading = ElLoading.service({
+        lock: true,
+        text: '计算中...',
+        background: 'rgba(0, 0, 0, 0.7)',
+    })
+    if (area.value == "韶关市") {
+        clusterStore.calculateAllAction({ apiKey: pathCalculateInfo.value.apiKey })
+            .then(() => {
+                //折线数据展示
+                clusterStore.newPathResultAll?.forEach((item) => {
+                    //配置折线路径
+                    let path: AMap.LngLat[] = [];
+                    item.polyline?.forEach((item) => {
+                        path.push(new AMap.LngLat(item.longitude, item.latitude))
+                    })
+                    //创建 Polyline 实例
+                    let polyline = new AMap.Polyline({
+                        path: path,
+                        strokeWeight: 5,
+                        showDir: true,
+                        strokeColor: "red", //线条颜色
+                        lineJoin: "round", //折线拐点连接处样式
+                    });
+                    newPolylineList.push(polyline)
+                })
+                map.remove(oldPolylineList);
+                map.add(newPolylineList)
+                loading.close()
+                window.sessionStorage.setItem('newPath', JSON.stringify(clusterStore.newPathResultAll));
+                choiceCalculateType.value = 1
+            })
+    } else {
+        pathCalculateInfo.value.areaName = area.value
+        clusterStore.pathCalculateOneAction(pathCalculateInfo.value)
+            .then(() => {
+                //折线数据展示
+                clusterStore.newPathResult?.forEach((item) => {
+                    //配置折线路径
+                    let path: AMap.LngLat[] = [];
+                    item.polyline?.forEach((item) => {
+                        path.push(new AMap.LngLat(item.longitude, item.latitude))
+                    })
+                    //创建 Polyline 实例
+                    let polyline = new AMap.Polyline({
+                        path: path,
+                        strokeWeight: 5,
+                        showDir: true,
+                        strokeColor: "red", //线条颜色
+                        lineJoin: "round", //折线拐点连接处样式
+                    });
+                    newPolylineList.push(polyline)
+                })
+                map.remove(oldPolylineList);
+                map.add(newPolylineList)
+                loading.close()
+                window.sessionStorage.setItem('newPath', JSON.stringify(clusterStore.newPathResult));
+                choiceCalculateType.value = 2
+            })
+    }
+}
+
 
 
 //获取路线详情-大区路线聚集区信息
@@ -216,18 +255,38 @@ const isOpenRouteDialog = ref(false)
 const closeRouteDialog = () => {
     isOpenRouteDialog.value = false
 }
-const addRouteBtn = () =>{
-    console.log(1222);
-    console.log(clusterStore.newPathResult);
-    clusterStore.newPathResult?.forEach((item)=>{
-        delete item.createTime
-        delete item.updateTime
-        delete item.versionId
-        delete item.delete
-        delete item.routeId
-    })
-    console.log(clusterStore.newPathResult);
-    clusterStore.postAddRouteAction(clusterStore.newPathResult!)
+const addRouteBtn = () => {
+    console.log("保存路径");
+    if (choiceCalculateType.value == 0) {
+        ElMessage.warning("请先进行重新计算");
+    }
+    if (choiceCalculateType.value == 1) {
+        clusterStore.newPathResultAll?.forEach((item) => {
+            delete item.createTime
+            delete item.updateTime
+            delete item.versionId
+            delete item.delete
+            delete item.routeId
+            delete item.workTime
+        })
+        console.log(clusterStore.newPathResultAll);
+        clusterStore.postAddRouteAction(clusterStore.newPathResultAll!)
+    }
+    if (choiceCalculateType.value == 2) {
+        clusterStore.newPathResult?.forEach((item) => {
+            delete item.createTime
+            delete item.updateTime
+            delete item.versionId
+            delete item.delete
+            delete item.routeId
+            delete item.workTime
+
+        })
+        console.log(clusterStore.newPathResult);
+        clusterStore.postAddRouteAction(clusterStore.newPathResult!)
+    }
+
+
 }
 </script>
 
@@ -388,7 +447,7 @@ const addRouteBtn = () =>{
                         }
 
                         .routeNameLi {
-                            padding-left: 5px;
+                            // padding-left: 5px;
 
                             .routeName:before {
                                 content: "";

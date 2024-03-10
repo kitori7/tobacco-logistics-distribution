@@ -30,7 +30,7 @@
                 </div>
             </el-scrollbar>
         </BorderBox12>
-        <el-dialog style="transform: translate(34.5vw, 0);" v-model="isOpenAdjustDialog" width="25%" :modal="false"
+        <el-dialog style="transform: translate(36.5vw, 0);" v-model="isOpenAdjustDialog" width="25%" :modal="false"
             :before-close="closeAdjustDialog" :append-to-body="true">
             <div class="adjustDialogContent">
                 <el-collapse v-model="activeNames1">
