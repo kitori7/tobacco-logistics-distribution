@@ -1,6 +1,6 @@
 import requests from "../index";
 import { IRequest } from "../request/type";
-import { IAccumlationInfo, IAccumulationIdInfo, IAreaDetails, ICalculateInfo, IErrorPoints, IHistoricalPath, IInformationList, IMapResult, IResultPoints, IRouteData, IRouteList, IShopData, IStoreDetails, ItestInformation } from "@/types/cluster";
+import { IAccumlationInfo, IAccumulationIdInfo, IAreaDetails, ICalculateInfo, IErrorPoints, IHistoricalPath, IInformationList, IMapResult, IResultPoints, IRouteData, IShopData, IStoreDetails, ItestInformation } from "@/types/cluster";
 
 // 获取所有聚集区及商铺点
 export function getAllResultPoints() {
@@ -89,6 +89,14 @@ export function pathCalculateOne(data: ICalculateInfo) {
     });
 }
 
+//路径计算接口
+export function calculateAll(data: ICalculateInfo) {
+    return requests.get<IRequest<IRouteData[]>>({
+        timeout: 1000 * 60 * 4,
+        url: `/pathcalculate/path/calculateAll?apiKey=${data.apiKey}`,
+    });
+}
+
 //获取地图数据
 export function getMapData() {
     return requests.get<IRequest<IRouteData[]>>({
@@ -111,26 +119,23 @@ export function getStoreDetails(data: string) {
 }
 
 //获取路径分析-大区历史路径数据
-export function getAreaRouteData() {
+export function getTransitDepotRouteData() {
     return requests.get<IRequest<IHistoricalPath[]>>({
-        url: "/pathcalculate/path/getAreaRouteData",
+        url: "/pathcalculate/path/getTransitDepotRouteData",
     });
 }
 
 //保存路径
 export function postAddRoute(data: IRouteData[]) {
     return requests.post<IRequest<any>>({
-        headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-        },
         url: "/pathcalculate/path/addRoute",
         data,
     });
 }
 
-// 获取路径分析详细数据（any未改）
+// 获取路径分析详细数据
 export function getRouteData(data:IRouteData) {
-    return requests.get<IRequest<any[]>>({
-        url: `/pathcalculate/path/getRouteData?areaId=${data.areaId}&routeName=${data.routeName}`,
+    return requests.get<IRequest<IRouteData>>({
+        url: `/pathcalculate/path/getRouteData?transitDepotId=${data.transitDepotId}&routeName=${data.routeName}`,
     });
 }

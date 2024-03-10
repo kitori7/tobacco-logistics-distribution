@@ -84,13 +84,14 @@ export interface IMapResult {
 export interface IRouteData {
     routeId?: string,
     routeName: string,
-    distance?: string,
     transitDepotId?: string,
-    areaId: string,
+    areaId?: string,
     polyline?: polylineData[],
+    distance?: string,
+    cargoWeight?: string,
+    workTime?:number,
     createTime?: string,
     updateTime?: string,
-    cargoWeight?: string,
     versionId?: string,
     delete?: boolean,
 }
@@ -135,7 +136,7 @@ export interface IStoreDetails {
 }
 
 export interface IHistoricalPath{
-    areaId:string,
-    areaName:string,
+    transitDepotId:string,
+    transitDepotName:string,
     licensePlateNumberList:string[],
 }
