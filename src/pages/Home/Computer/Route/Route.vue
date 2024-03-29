@@ -36,6 +36,7 @@
                             </el-collapse-item>
                         </el-collapse>
                     </div>
+                    <el-input-number class="num" v-model="num" :min="1" :max="1000" style="color: black;" />
                     <el-button class="btn" @click="CalculateBtnFunction()">重新计算</el-button>
                 </div>
             </BorderBox9>
@@ -93,7 +94,7 @@ import AMapLoader from "@amap/amap-jsapi-loader";
 import { useClusterStore } from "@/store/cluster";
 import { IAccumulationList } from "@/types/cluster";
 window._AMapSecurityConfig = {
-    securityJsCode: "64c03ae77b4521e9dbb72475e120e70c",
+    securityJsCode: "1b6291b2fceee1cd3b7798bfdd4c39e4",
 };
 //路径分析入口
 const analysisRouteBtn = () => {
@@ -109,15 +110,49 @@ let map: any = null;
 AMapLoader.load({
     key: "64c03ae77b4521e9dbb72475e120e70c", // 申请好的Web端开发者Key，首次调用 load 时必填
     version: "2.0", // 指定要加载的 JSAPI 的版本，缺省时默认为 1.4.15
-    plugins: [], // 需要使用的的插件列表，如比例尺'AMap.Scale'等
+    plugins: ['AMap.DistrictSearch'], // 需要使用的的插件列表，如比例尺'AMap.Scale'等
 })
     .then((AMap) => {
-        map = new AMap.Map("container", {
-            // 设置地图容器id
-            viewMode: "3D", // 是否为3D地图模式
-            zoom: 9, // 初始化地图级别
-            center: [113.597324, 24.810977], // 初始化地图中心点位置
-        });
+        const district = new AMap.DistrictSearch({ subdistrict: 1, extensions: 'all', level: 'province' });
+        district.search('韶关市', function (status: any, result: any) {
+            // 查询成功时，result即为对应的行政区信息
+            console.log(status);
+            console.log(result);
+
+            const bounds = result.districtList[0].boundaries
+            const mask = []
+            for (let i = 0; i < bounds.length; i++) {
+                mask.push([bounds[i]])
+            }
+            map = new AMap.Map("container", {  // 设置地图容器id
+                mask: mask, // 为Map实例制定掩模的路径,各图层将值显示路径范围内图像,3D模式下有效
+                zoom: 9, // 设置当前显示级别
+                expandZoomRange: true, // 开启显示范围设置
+                zooms: [9, 18], //最小显示级别为7，最大显示级别为20
+                center: [113.767587, 24.718014], // 设置地图中心点位置
+                viewMode: "3D",    // 特别注意,设置为3D则其他地区不显示
+                zoomEnable: true, // 是否可以缩放地图
+                resizeEnable: true,
+            });
+            // 添加描边
+            for (let i = 0; i < bounds.length; i++) {
+                const polyline = new AMap.Polyline({
+                    path: bounds[i], // polyline 路径，支持 lineString 和 MultiLineString
+                    strokeColor: '#3078AC', // 线条颜色，使用16进制颜色代码赋值。默认值为#00D3FC
+                    strokeWeight: 2, // 轮廓线宽度,默认为:2
+                    // map:map // 这种方式相当于: polyline.setMap(map);
+                })
+                polyline.setMap(map);
+            }
+            //限制移动范围
+            const limitBound = map.getBounds();
+            map.setLimitBounds(limitBound);
+            //绑定点击事件
+            map.on('click', function (e: any) {
+                console.log(e);
+                console.log(e.lnglat.getLng() + ',' + e.lnglat.getLat());
+            });
+        })
     })
     .catch((e) => {
         console.log(e);
@@ -126,15 +161,35 @@ const activeNames = ref(['0'])
 const activeNames2 = ref(['0'])
 
 
-const area = ref('南雄市')
+const area = ref('韶关市')
 const areas = [
     {
         value: '韶关市',
         label: '韶关市',
     },
     {
-        value: '南雄市',
-        label: '南雄市',
+        value: '仁化',
+        label: '仁化县中转站',
+    },
+    {
+        value: '新丰',
+        label: '新丰县中转站',
+    },
+    {
+        value: '坪石',
+        label: '坪石县中转站',
+    },
+    {
+        value: '翁源',
+        label: '翁源县中转站',
+    },
+    {
+        value: '马市',
+        label: '马市烟叶工作站',
+    },
+    {
+        value: '物流配送中心',
+        label: '物流配送中心',
     }
 ]
 const route = ref('路线详情')
@@ -161,8 +216,10 @@ clusterStore.getMapDataAction()
             });
             oldPolylineList.push(polyline)
         })
-        map.add(oldPolylineList)
+        // map.add(oldPolylineList)
     })
+
+
 
 //楚鸿的key： 309bde1e73b984c7d8a87ab19255963c
 //我的key：   cdeaa7cd146a1a9612827190fb0e0962
@@ -173,6 +230,7 @@ const pathCalculateInfo = ref({
 
 })
 const choiceCalculateType = ref(0)
+const num = ref(10)
 //路径重新计算
 const newPolylineList: AMap.Polyline[] = []
 const CalculateBtnFunction = () => {
@@ -208,6 +266,7 @@ const CalculateBtnFunction = () => {
                 choiceCalculateType.value = 1
             })
     } else {
+        pathCalculateInfo.value.assignNumber = String(num.value)
         pathCalculateInfo.value.areaName = area.value
         clusterStore.pathCalculateOneAction(pathCalculateInfo.value)
             .then(() => {
@@ -237,7 +296,7 @@ const CalculateBtnFunction = () => {
     }
 }
 
-
+//1123
 
 //获取路线详情-大区路线聚集区信息
 clusterStore.getRouteDetailsAction()
@@ -285,9 +344,10 @@ const addRouteBtn = () => {
         console.log(clusterStore.newPathResult);
         clusterStore.postAddRouteAction(clusterStore.newPathResult!)
     }
-
-
 }
+
+
+
 </script>
 
 <style lang="scss" scoped>
@@ -352,7 +412,7 @@ const addRouteBtn = () => {
             }
 
             :deep(.el-icon) {
-                color: rgb(86, 215, 255);
+                // color: rgb(255, 255, 255);
                 font-size: 20px;
             }
 
@@ -360,9 +420,25 @@ const addRouteBtn = () => {
                 border: none;
             }
 
-            .btn {
+            .num {
+                width: 120px;
+                height: 40px;
                 position: absolute;
-                left: 50%;
+                left: 30%;
+                transform: translate(-50%, 0);
+                bottom: 3%;
+            }
+
+            .el-input__inner {
+                color: #ff0000;
+
+            }
+
+            .btn {
+                width: 120px;
+                height: 40px;
+                position: absolute;
+                left: 70%;
                 transform: translate(-50%, 0);
                 bottom: 3%;
             }

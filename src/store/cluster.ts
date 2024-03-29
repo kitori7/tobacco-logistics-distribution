@@ -1,5 +1,5 @@
-import { deleteClearInformationList, getAllResultPoints, getTransitDepotRouteData, getCheckErrorPoints, getClosestPoints, getErrorPoints, getInformationList, getMapData, getMapResultPoints, getRouteData, getRouteDetails, getStoreDetails, pathCalculateOne, postAddRoute, postCalculateAll, postUpdateStoreAccumulationId, calculateAll } from "@/service/modules/cluster";
-import { IAccumlationInfo, IAccumulationIdInfo, IAreaDetails, ICalculateInfo, IClusterAndShopList, IErrorPoints, IHistoricalPath, IInformationList, IMapResultPoints, IMapResultSurface, IResultPoints, IRouteData, IShopData, IStoreDetails } from "@/types/cluster";
+import { deleteClearInformationList, getAllResultPoints, getTransitDepotRouteData, getCheckErrorPoints, getClosestPoints, getErrorPoints, getInformationList, getMapData, getMapResultPoints, getRouteData, getRouteDetails, getStoreDetails, pathCalculateOne, postAddRoute, postCalculateAll, postUpdateStoreAccumulationId, calculateAll, getRouteVersion } from "@/service/modules/cluster";
+import { IAccumlationInfo, IAccumulationIdInfo, IAreaDetails, ICalculateInfo, IClusterAndShopList, IErrorPoints, IHistoricalPath, IInformationList, IMapResultPoints, IMapResultSurface, IResultPoints, IRouteData, IShopData, IStoreDetails, IVersionRequest } from "@/types/cluster";
 import { defineStore } from "pinia";
 
 export const useClusterStore = defineStore("cluster", () => {
@@ -102,6 +102,7 @@ export const useClusterStore = defineStore("cluster", () => {
     async function pathCalculateOneAction(data: ICalculateInfo) {
         const res = await pathCalculateOne(data);
         newPathResult.value = res.data
+        console.log(res);
     }
 
     //计算全部大区接口
@@ -110,6 +111,7 @@ export const useClusterStore = defineStore("cluster", () => {
     async function calculateAllAction(data: ICalculateInfo) {
         const res = await calculateAll(data);
         newPathResultAll.value = res.data
+        console.log(res);
     }
 
     //路径分析获取地图数据
@@ -118,6 +120,7 @@ export const useClusterStore = defineStore("cluster", () => {
     async function getMapDataAction() {
         const res = await getMapData();
         oldPathResult.value = res.data
+        console.log(res);
     }
 
     //获取路线详情-大区路线聚集区详情
@@ -167,6 +170,14 @@ export const useClusterStore = defineStore("cluster", () => {
         analysisRouteData.value = res.data
     }
 
+    //获取路径版本号
+    const routeVersion = ref<string[]>()
+    async function getRouteVersionAction(data:IVersionRequest) {
+        const res = await getRouteVersion(data);
+        console.log(res);
+        routeVersion.value = res.data
+    }
+
 
     return {
         getAllResultPointsAction,
@@ -202,5 +213,7 @@ export const useClusterStore = defineStore("cluster", () => {
         postAddRouteAction,
         getRouteDataAction,
         analysisRouteData,
+        getRouteVersionAction,
+        routeVersion
     }
 })

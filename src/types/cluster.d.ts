@@ -140,3 +140,8 @@ export interface IHistoricalPath{
     transitDepotName:string,
     licensePlateNumberList:string[],
 }
+
+export interface IVersionRequest{
+    date:string,
+    transitDepotId:string,
+}

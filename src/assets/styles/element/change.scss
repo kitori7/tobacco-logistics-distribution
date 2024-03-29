@@ -50,6 +50,10 @@
   --el-disabled-bg-color: rgba(0, 0, 0, 0.2);
   height: 4vh;
 }
+.el-input-number__increase,.el-input-number__decrease {
+  background:#73E1FF;
+  border-color: #73E1FF;
+}
 
 // textarea
 .el-textarea__inner {
