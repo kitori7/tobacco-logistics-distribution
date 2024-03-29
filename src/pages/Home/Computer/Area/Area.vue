@@ -47,7 +47,7 @@ import { ElLoading } from 'element-plus'
 import { useRouter } from "vue-router";
 import { BorderBox9 } from "@dataview/datav-vue3";
 import AMapLoader from "@amap/amap-jsapi-loader";
-// import { IMapResultPoints } from "@/types/cluster";
+// import { IMapResultPoints } from "@/types/cluster";111111
 window._AMapSecurityConfig = {
     securityJsCode: "1b6291b2fceee1cd3b7798bfdd4c39e4",
 };
