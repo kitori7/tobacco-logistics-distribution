@@ -307,7 +307,7 @@ onBeforeUnmount(() => {
                             display: inline-block;
                             width: 15px;
                             height: 15px;
-                            background-color: rgb(255, 51, 204);
+                            background-color: #fcd539;
                             border-radius: 50%;
                             margin-right: 10px;
                         }
@@ -317,7 +317,7 @@ onBeforeUnmount(() => {
                             margin-right: -15px;
                             width: 33px;
                             height: 33px;
-                            background: rgb(255, 51, 204);
+                            background: #fcd539;
                             transform: rotate(45deg);
                             content: "";
                             display: inline-block;
