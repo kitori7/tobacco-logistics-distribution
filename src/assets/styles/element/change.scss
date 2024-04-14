@@ -1,6 +1,7 @@
 // 改变客户表格表头颜色
 .el-table__header th {
-  background-color: rgb(200, 194, 254) !important;
+  // background-color: rgb(200, 194, 254) !important;
+  background-color:rgb(200, 194, 254)  ;
   border-left: 1px solid rgb(255, 255, 255);
   color: #000000;
 }
@@ -49,6 +50,10 @@
   --el-input-text-color: rgb(204, 255, 255) !important;
   --el-disabled-bg-color: rgba(0, 0, 0, 0.2);
   height: 4vh;
+}
+.el-input-number__increase,.el-input-number__decrease {
+  background:#73E1FF;
+  border-color: #73E1FF;
 }
 
 // textarea
@@ -122,7 +127,7 @@
 
 // 按钮提示
 .el-badge__content--danger {
-  background-color: rgb(255, 51, 204) !important;
+  background-color: #fcd539 ;
 }
 
 /*鼠标悬浮，没有按下；鼠标按下后抬起，没有移开*/
@@ -321,7 +326,7 @@
 
 //折叠面板
 .el-collapse {
-  --el-collapse-header-bg-color: rgb(144, 1, 121);
+  --el-collapse-header-bg-color: #b5a55f;
   --el-collapse-header-text-color: #e1f7ff;
   --el-collapse-header-font-size: 18px;
   --el-collapse-content-bg-color: #001731;
@@ -363,7 +368,7 @@
     position: absolute;
     left: 5px;
     top: 0;
-    border-right: 25px solid rgb(144, 1, 121);
+    border-right: 25px solid #b5a55f;
     border-top: 24px solid transparent;
     border-bottom: 24px solid transparent;
     content: "";

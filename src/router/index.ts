@@ -83,7 +83,24 @@ const constantRoutes: RouteRecordRaw[] = [
         name: "AnalysisRoute",
         component: () => import("@/pages/Home/Computer/AnalysisRoute/AnalysisRoute.vue"),
       },
-
+      {
+        path: "/home/management",
+        name: "management",
+        meta: { order: 3 },
+        component: () => import("@/pages/Home/Management/Management.vue"),
+        children: [
+          {
+            path: "/home/management/shops",
+            name: "shops",
+            component: () => import("@/pages/Home/Management/Shops/Shops.vue"),
+          },
+          {
+            path: "/home/management/area",
+            name: "areas",
+            component: () => import("@/pages/Home/Management/Area/Area.vue"),
+          },
+        ],
+      },
     ],
   },
 ];
