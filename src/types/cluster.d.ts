@@ -94,6 +94,7 @@ export interface IRouteData {
     updateTime?: string,
     versionId?: string,
     delete?: boolean,
+    convex?:polylineData[]
 }
 interface polylineData {
     longitude: number,
@@ -139,4 +140,9 @@ export interface IHistoricalPath{
     transitDepotId:string,
     transitDepotName:string,
     licensePlateNumberList:string[],
+}
+
+export interface IVersionRequest{
+    date:string,
+    transitDepotId:string,
 }
