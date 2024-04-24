@@ -146,3 +146,9 @@ export function getRouteVersion(data: IVersionRequest) {
         url: `/pathcalculate/path/getRouteVersion?transitDepotId=${data.transitDepotId}&date=${data.date}`,
     });
 }
+
+export function getSplitLines() {
+    return requests.get({
+        url: '/pathcalculate/path/getSplitLines',
+    });
+}
