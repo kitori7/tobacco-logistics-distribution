@@ -1,4 +1,4 @@
-import { deleteClearInformationList, getAllResultPoints, getTransitDepotRouteData, getCheckErrorPoints, getClosestPoints, getErrorPoints, getInformationList, getMapData, getMapResultPoints, getRouteData, getRouteDetails, getStoreDetails, pathCalculateOne, postAddRoute, postCalculateAll, postUpdateStoreAccumulationId, calculateAll, getRouteVersion } from "@/service/modules/cluster";
+import { deleteClearInformationList, getAllResultPoints, getTransitDepotRouteData, getCheckErrorPoints, getClosestPoints, getErrorPoints, getInformationList, getMapData, getMapResultPoints, getRouteData, getRouteDetails, getStoreDetails, pathCalculateOne, postAddRoute, postCalculateAll, postUpdateStoreAccumulationId, calculateAll, getRouteVersion,getSplitLines } from "@/service/modules/cluster";
 import { IAccumlationInfo, IAccumulationIdInfo, IAreaDetails, ICalculateInfo, IClusterAndShopList, IErrorPoints, IHistoricalPath, IInformationList, IMapResultPoints, IMapResultSurface, IResultPoints, IRouteData, IShopData, IStoreDetails, IVersionRequest } from "@/types/cluster";
 import { defineStore } from "pinia";
 
@@ -181,6 +181,14 @@ export const useClusterStore = defineStore("cluster", () => {
         routeVersion.value = res.data
     }
 
+    const SplitLines = ref<any>()
+    async function getSplitLinesAction() {
+        const res = await getSplitLines();
+        console.log(res);
+        SplitLines.value = res.data
+    }
+
+
 
     return {
         getAllResultPointsAction,
@@ -217,6 +225,8 @@ export const useClusterStore = defineStore("cluster", () => {
         getRouteDataAction,
         analysisRouteData,
         getRouteVersionAction,
-        routeVersion
+        routeVersion,
+        getSplitLinesAction,
+        SplitLines
     }
 })

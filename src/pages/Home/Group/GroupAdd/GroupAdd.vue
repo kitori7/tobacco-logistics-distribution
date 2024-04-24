@@ -7,22 +7,6 @@
       @close="closeGroupAdd(userFormRef)"
     >
       <div class="groupAddInfo">
-        <!-- <div class="groupAddOne">
-          <div class="groupAvatarBorder"><img :src="photo" alt="" /></div>
-          <el-upload
-            accept="image/*"
-            multiple
-            action="fakeaction"
-            :show-file-list="false"
-            :auto-upload="false"
-            :on-change="handleChange"
-            ref="uploadref"
-          >
-            <el-button type="primary" class="groupAvatarUploadButton"
-              >上传头像</el-button
-            >
-          </el-upload>
-        </div> -->
         <div class="groupAddTwo">
           <el-form
             :inline="true"
@@ -139,7 +123,6 @@
   const closeGroupAdd = (formEl: FormInstance | undefined) => {
     if (!formEl) return;
     groupAddOpen.value = false;
-    // photo.value = "";
     formEl.resetFields();
   };
   const emit = defineEmits(["renewUser"]);
@@ -163,18 +146,7 @@
     });
   };
 
-  //   上传图片
-  // import type { UploadFile } from "element-plus";
-  // const fileList = ref<UploadFile>();
-  // const handleChange = (file: UploadFile) => {
-  //   fileList.value = file;
-  //   let dataForm = new FormData();
-  //   dataForm.append("photo", fileList.value?.raw as any);
-  //   groupStore.userAvatarAction(dataForm).then((res) => {
-  //     addUserData.value.avatarPath = res.data;
-  //     photo.value = "http://172.16.0.166:8080/file" + res.data;
-  //   });
-  // };
+
 </script>
 <style lang="scss" scoped>
   .groupAddInfo {
@@ -182,38 +154,11 @@
     width: 48vw;
     color: #73e1ff;
     font-size: 20px;
-    // .groupAddOne {
-    //   display: flex;
-    //   flex-direction: row;
-    //   justify-content: center;
-    //   align-items: flex-end;
-    //   margin-left: 130px;
-    //   .groupAvatarBorder {
-    //     width: 170px;
-    //     height: 230px;
-    //     border: 1px solid #73e1ff;
-    //     img {
-    //       width: 100%;
-    //       height: 100%;
-    //       object-fit: cover;
-    //     }
-    //   }
-    //   .groupAvatarUploadButton {
-    //     margin-left: 10px;
-    //     width: 90px;
-    //     height: 42px;
-    //   }
-    // }
     .groupAddTwo {
       .el-form-item {
         width: 40%;
         margin: 35px;
       }
-
-      // .groupAddMessage {
-      //   color: $processed;
-      //   padding-left: 55px;
-      // }
       .groupAddRadioGroup {
         width: 80%;
         .el-form-item__label {
