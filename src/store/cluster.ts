@@ -114,7 +114,6 @@ export const useClusterStore = defineStore("cluster", () => {
     async function calculateAllAction(data: ICalculateInfo) {
         const res = await calculateAll(data);
         newPathResultAll.value = res.data
-        console.log(res);
     }
 
     //路径分析获取地图数据
@@ -123,7 +122,6 @@ export const useClusterStore = defineStore("cluster", () => {
     async function getMapDataAction() {
         const res = await getMapData();
         oldPathResult.value = res.data
-        console.log(res);
     }
 
     //获取路线详情-大区路线聚集区详情
