@@ -26,14 +26,14 @@ function routerChange(route: any) {
     display: flex;
 
     .List{
-        width: 12.5vw;
-        height: 85vh;
+        width: 10vw;
+        height: 70vh;
         color: #66ecf5;
-        font-size: 22px;
+        font-size: 1.2vw;
         text-align: center;
-        margin-right: 30px;
+        margin-right: 2vw;
         .listItem{
-            padding: 20px 0;
+            padding: 1vw 0;
             background-color:rgba(0, 31, 60,0.6);
         }
         .active{
@@ -42,8 +42,6 @@ function routerChange(route: any) {
     }
     .content{
         width: 100%;
-        height: 85vh;
-      
     }   
 }
 </style>

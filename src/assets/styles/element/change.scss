@@ -1,7 +1,6 @@
 // 改变客户表格表头颜色
 .el-table__header th {
-  // background-color: rgb(200, 194, 254) !important;
-  background-color:rgb(200, 194, 254)  ;
+  background: #73e1ff !important;
   border-left: 1px solid rgb(255, 255, 255);
   color: #000000;
 }
@@ -18,11 +17,11 @@
 // 改变表格每一行的颜色
 .el-table .el-table__row {
   --el-table-tr-bg-color: rgb(0, 43, 78, 0.1);
-
+  
 }
 
 .el-table__body {
-  -webkit-border-vertical-spacing: 5px; // 垂直间距 设置的是行间距
+  -webkit-border-vertical-spacing: 0.4vh; // 垂直间距 设置的是行间距
 }
 
 .el-table td.el-table__cell {

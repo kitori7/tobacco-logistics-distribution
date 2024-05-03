@@ -1,28 +1,28 @@
 <template>
   <div class="InfoTable">
     <el-table v-loading="loading" :data="props.tableData" :header-cell-style="{
-      height: '5vh',
+      height: '4vh',
       'text-align': 'center',
-      padding: '0.3vh',
-    }" size="small" :row-style="{ height: '6vh' }" :cell-style="tableCellStyle as any" style="font-size: 0.8vw"
+    }" size="small" :row-style="{ height: '4.3vh' }" :cell-style="tableCellStyle as any" style="font-size: 0.8vw"
       @selection-change="toggleSelection">
       <el-table-column type="selection" fixed v-if="(hasOp('guest-book:logistics:exception:delete') &&
         feedbackType === '1') ||
         (hasOp('guest-book:marketing:exception:delete') &&
           feedbackType === '2')
-        " />
-      <el-table-column type="index" label="序号" width="65" />
-      <el-table-column prop="areaName" label="大区" width="160" />
-      <el-table-column prop="routeName" label="线路名称" width="180" />
-      <el-table-column prop="deliveryName" label="送货员" width="80" />
-      <el-table-column prop="customerManagerName" label="客户专员" width="100" />
-      <el-table-column prop="customerCode" label="客户编码" width="100" />
-      <el-table-column prop="contactName" label="客户名称" width="100" />
-      <el-table-column prop="storeAddress" label="客户地址" width="280" />
-      <el-table-column prop="feedbackInformation" label="异常信息反馈" width="250" />
-      <el-table-column prop="orderDate" label="订单时间" width="180" />
-      <el-table-column prop="updateTime" label="最新回复时间" width="180" />
-      <el-table-column label="操作" width="60" fixed="right">
+        " min-width="3%"
+       />
+      <el-table-column type="index" label="序号" min-width="3%" />
+      <el-table-column prop="areaName" label="大区" min-width="4%" />
+      <el-table-column prop="routeName" label="线路名称" min-width="5%" />
+      <el-table-column prop="deliveryName" label="送货员" min-width="4%" />
+      <el-table-column prop="customerManagerName" label="客户专员" min-width="5%" />
+      <el-table-column prop="customerCode" label="客户编码" min-width="5%" />
+      <el-table-column prop="contactName" label="客户名称" min-width="5%" />
+      <el-table-column prop="storeAddress" label="客户地址" min-width="20%" />
+      <el-table-column prop="feedbackInformation" label="异常信息反馈" min-width="8%" />
+      <el-table-column prop="orderDate" label="订单时间" min-width="10%" />
+      <el-table-column prop="updateTime" label="最新回复时间" min-width="10%" />
+      <el-table-column label="操作" min-width="4%" fixed="right">
         <template #default="scope">
           <el-button link size="small" @click="handleEdit(scope.row)"><el-icon color="rgb(204,255,255)" size="15">
               <Edit />
