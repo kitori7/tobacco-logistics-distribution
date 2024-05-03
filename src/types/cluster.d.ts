@@ -96,6 +96,7 @@ export interface IRouteData {
     delete?: boolean,
     convex?:polylineData[]
 }
+
 interface polylineData {
     longitude: number,
     latitude: number,
@@ -104,7 +105,7 @@ interface polylineData {
 export interface ICalculateInfo {
     apiKey: string,
     areaName?: string,
-    assignNumber?: string,
+    assignNumber?: number,
 }
 
 export interface IAreaDetails {

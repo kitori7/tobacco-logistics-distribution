@@ -26,11 +26,7 @@ const constantRoutes: RouteRecordRaw[] = [
             name: "boardInfo",
             component: () => import("@/pages/Home/Board/BoardInfo/BoardInfo.vue"),
           },
-          {
-            path: "/home/board/analyze",
-            name: "analyze",
-            component: () => import("@/pages/Home/Board/BoardAnalyze/BoardAnalyze.vue"),
-          },
+       
         ],
       },
       {

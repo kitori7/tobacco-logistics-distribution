@@ -31,6 +31,7 @@ function routerChange(route: any) {
         color: #66ecf5;
         font-size: 22px;
         text-align: center;
+        margin-right: 30px;
         .listItem{
             padding: 20px 0;
             background-color:rgba(0, 31, 60,0.6);
@@ -42,6 +43,7 @@ function routerChange(route: any) {
     .content{
         width: 100%;
         height: 85vh;
+      
     }   
 }
 </style>
