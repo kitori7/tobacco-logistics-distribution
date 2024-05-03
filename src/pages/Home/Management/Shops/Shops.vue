@@ -1,6 +1,6 @@
 <template>
   <div class="Shops">
-    <div style="display: flex">
+    <div     style="display: flex;">
       <div class="top">
         <el-input class="input" style="width: 500px" placeholder="请点击搜索" @focus="searchData" />
         <div class="search" v-show="isShow">
@@ -64,18 +64,18 @@
     <div class="main">
       <el-table :data="tableData" :cell-style="{ textAlign: 'center' }" @selection-change="handleSelectionChange"
         v-loading="datamanagementStore.loading" :header-cell-style="{
-          'text-align': 'center',
-
-        }">
-        <el-table-column type="selection" width="55" />
-        <el-table-column label="序号" width="55" type="index" />
-        <el-table-column label="客户编码" width="130" prop="customerCode" />
-        <el-table-column label="客户名称" width="130" prop="customerManagerName" />
-        <el-table-column label="负责人" width="100" prop="contactName" />
-        <el-table-column label="订货电话" width="180" prop="contactPhone" />
-        <el-table-column label="地址" width="550" prop="storeAddress" />
-        <el-table-column label="所属行政区" width="130" prop="areaName" />
-        <el-table-column label="所属配送线路" width="180" prop="routeName" />
+      height: '4vh',
+      'text-align': 'center'
+    }" size="small" :row-style="{ height: '4.3vh'}" style="font-size: 0.8vw" >
+        <el-table-column type="selection"  min-width="1%" />
+        <el-table-column label="序号" min-width="2%" type="index" />
+        <el-table-column label="客户编码" min-width="3%" prop="customerCode" />
+        <el-table-column label="客户名称" min-width="3%" prop="customerManagerName" />
+        <el-table-column label="负责人" min-width="2%" prop="contactName" />
+        <el-table-column label="订货电话" min-width="4%" prop="contactPhone" />
+        <el-table-column label="地址" min-width="12%" prop="storeAddress" />
+        <el-table-column label="所属行政区" min-width="3%" prop="areaName" />
+        <el-table-column label="所属配送线路" min-width="4%" prop="routeName" />
       </el-table>
       <el-pagination layout="prev, pager, next" :current-page="pageData.pageNum" :page-size="pageData.pageSize"
         :total="Number(datamanagementStore.datamanagementList.total)" @current-change="currentChange" />
@@ -268,21 +268,18 @@ onMounted(() => {
 </script>
 <style lang="scss" scoped>
 .Shops {
+ 
   .top {
-    margin: 10px 0px;
+    margin: 1vh 0px;
 
     .select {
-      margin: 0 10px;
-    }
-
-    .input {
-      margin: 0 10px;
+      margin: 0 1vw;
     }
 
     .btn {
       box-sizing: border-box;
       width: 2.3vw;
-      height: 4.1vh;
+      height: 4vh;
     }
 
     .search {
@@ -290,11 +287,10 @@ onMounted(() => {
       z-index: 9;
       background-color: #091b3a;
       width: 500px;
-      margin-left: 10px;
 
       .off {
-        width: 20px;
-        height: 20px;
+        width: 2vw;
+        height: 2vh;
         background-color: #9addf6;
         position: absolute;
         right: 0;
@@ -322,13 +318,13 @@ onMounted(() => {
   }
 
   .second {
-    margin: 10px;
+    margin: 1vh;
 
     .btn {
       margin: 0 10px;
       box-sizing: border-box;
       width: 6.5vw;
-      height: 4.1vh;
+      height: 4vh;
     }
   }
 
@@ -343,18 +339,18 @@ onMounted(() => {
   display: flex;
   justify-content: center;
   margin-right: 130px;
-  margin-top: 10px;
+  margin-top: 1vh;
 }
 
 .info {
-  height: 45px;
+  height: 4.5vh;
   font-size: 20px;
   color: rgb(204, 255, 255);
-  margin-bottom: 30px;
+  margin-bottom: 3vh;
 }
 
 .confirmArea {
-  margin-top: 100px;
+  margin-top: 10vh;
   width: 100px;
   position: relative;
   left: 50%;

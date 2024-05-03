@@ -48,7 +48,7 @@
   const route = useRoute();
   const pageData = ref<IBoardSearchData>({
     pageNum: 1,
-    pageSize: 6,
+    pageSize: 7,
   });
   // 页码改变
   const infoSearchRef = ref<InstanceType<typeof InfoSearch>>();
