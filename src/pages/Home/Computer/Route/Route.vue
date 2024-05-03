@@ -90,11 +90,13 @@
                   :title="item.areaName"
                   :name="item.areaId"
                   v-for="item in clusterStore.routeDetails"
+                  :key="item.areaId"
                 >
                   <ul>
                     <li
                       class="routeNameLi"
                       v-for="item1 in item.routeList"
+                      :key="item1.routeId"
                       @click="item1.isOpen = !item1.isOpen"
                     >
                       <div class="routeName">
@@ -105,6 +107,7 @@
                           class="accumulationNameLi"
                           tabindex="1"
                           v-for="item2 in item1.accumulationList"
+                          :key="item2.accumulationId"
                           v-show="item1.isOpen"
                           @click.stop="accumulationNameClick(item2)"
                         >
@@ -134,6 +137,7 @@
                 <li
                   style="padding: 5px; list-style: square"
                   v-for="item3 in clusterStore.storeResult"
+                  :key="item3.storeId"
                 >
                   {{ item3.storeAddress }}
                 </li>
@@ -220,183 +224,76 @@
           console.log(e.lnglat.getLng() + "," + e.lnglat.getLat());
         });
 
-        // var path = [
-        //   [113.597324, 24.810977],
-        //   [113.69787695331921, 24.912117208993585],
-        //   [113.584506, 25.306438],
-        // ];
-        // var path2 = [
-        //   [113.597324,24.810977],
-        //   [113.62132633024994,24.787390598519842],
-        //   [113.59228, 24.514982],
-        // ];
-        // var path3 = [
-        //   [113.597324,24.810977],
-        //   [ 114.00625822886536,24.802612592916987],
-        //   [114.169044, 24.689661],
-        // ];
-        // var path4 = [
-        //   [ 113.597324,24.810977],
-        //   [ 113.830373839544,24.81932788820915],
-        //   [114.169044,24.689661],
-        // ];
-        // var path5 = [
-        //   [ 113.597324,24.810977],
-        //   [ 113.72611237000724, 24.737621242978527],
-        //   [113.599592,24.512977],
-        // ];
-        // var polyline = new AMap.Polyline({
-        //   path: path,
-        //   isOutline: true,
-        //   outlineColor: "#ffeeff",
-        //   borderWeight: 3,
-        //   strokeColor: "#3366FF",
-        //   strokeOpacity: 1,
-        //   strokeWeight: 6,
-        //   // 折线样式还支持 'dashed'
-        //   strokeStyle: "solid",
-        //   // strokeStyle是dashed时有效
-        //   strokeDasharray: [10, 5],
-        //   lineJoin: "round",
-        //   lineCap: "round",
-        //   zIndex: 50,
-        // });
-        // var polyline2 = new AMap.Polyline({
-        //   path: path2,
-        //   isOutline: true,
-        //   outlineColor: "#ffeeff",
-        //   borderWeight: 3,
-        //   strokeColor: "#3366FF",
-        //   strokeOpacity: 1,
-        //   strokeWeight: 6,
-        //   // 折线样式还支持 'dashed'
-        //   strokeStyle: "solid",
-        //   // strokeStyle是dashed时有效
-        //   strokeDasharray: [10, 5],
-        //   lineJoin: "round",
-        //   lineCap: "round",
-        //   zIndex: 50,
-        // });
-        // var polyline3 = new AMap.Polyline({
-        //   path: path3,
-        //   isOutline: true,
-        //   outlineColor: "#ffeeff",
-        //   borderWeight: 3,
-        //   strokeColor: "#3366FF",
-        //   strokeOpacity: 1,
-        //   strokeWeight: 6,
-        //   // 折线样式还支持 'dashed'
-        //   strokeStyle: "solid",
-        //   // strokeStyle是dashed时有效
-        //   strokeDasharray: [10, 5],
-        //   lineJoin: "round",
-        //   lineCap: "round",
-        //   zIndex: 50,
-        // });
-        // var polyline4 = new AMap.Polyline({
-        //   path: path4,
-        //   isOutline: true,
-        //   outlineColor: "#ffeeff",
-        //   borderWeight: 3,
-        //   strokeColor: "#3366FF",
-        //   strokeOpacity: 1,
-        //   strokeWeight: 6,
-        //   // 折线样式还支持 'dashed'
-        //   strokeStyle: "solid",
-        //   // strokeStyle是dashed时有效
-        //   strokeDasharray: [10, 5],
-        //   lineJoin: "round",
-        //   lineCap: "round",
-        //   zIndex: 50,
-        // });
-        // var polyline5 = new AMap.Polyline({
-        //   path: path5,
-        //   isOutline: true,
-        //   outlineColor: "#ffeeff",
-        //   borderWeight: 3,
-        //   strokeColor: "#3366FF",
-        //   strokeOpacity: 1,
-        //   strokeWeight: 6,
-        //   // 折线样式还支持 'dashed'
-        //   strokeStyle: "solid",
-        //   // strokeStyle是dashed时有效
-        //   strokeDasharray: [10, 5],
-        //   lineJoin: "round",
-        //   lineCap: "round",
-        //   zIndex: 50,
-        // });
-        // map.add([polyline,polyline5,polyline2,polyline3,polyline4]);
-        // map.setFitView();
-        //自定义坐标数据
+     
         const myCoordinateList1 = ref<any[]>([
-        //   {
-        //     //longitude
-        //     polyline: [
-        //       { latitude: 25.20778628, longitude: 113.2119596663 },
-        //       { latitude: 25.20778628, longitude: 113.507437962 },
-        //       { latitude: 24.893000694, longitude: 113.507437962 },
-        //       { latitude: 24.893000694, longitude: 113.2119596663 },
-        //     ],
-        //     centen: [113.36062079058831, 25.05219532868564],
-        //     marker: {},
-        //   },
-        //   {
-        //     polyline: [
-        //       { latitude: 24.8701570951955, longitude: 113.41900839283704 },
-        //       { latitude: 24.8701570951955, longitude: 113.79489895520231 },
-        //       { latitude: 24.5085448015983, longitude: 113.79489895520231 },
-        //       { latitude: 24.5085448015983, longitude: 113.41900839283704 },
-        //     ],
-        //     centen: [113.59682684527587, 24.685887616201747],
-        //     marker: {},
-        //   },
-        //   {
-        //     polyline: [
-        //       { latitude: 24.2, longitude: 113.46635951793562 },
-        //       { latitude: 24.2, longitude: 113.05094914668015 },
-        //       { latitude: 24.4, longitude: 113.05094914668015 },
-        //       { latitude: 24.4, longitude: 113.46635951793562 },
-        //     ],
-        //     centen: [113.26449041949456, 24.27844789476107],
-        //     marker: {},
-        //   },
+          {
+            //longitude
+            polyline: [
+              { latitude: 25.20778628, longitude: 113.2119596663 },
+              { latitude: 25.20778628, longitude: 113.507437962 },
+              { latitude: 24.893000694, longitude: 113.507437962 },
+              { latitude: 24.893000694, longitude: 113.2119596663 },
+            ],
+            centen: [113.36062079058831, 25.05219532868564],
+            marker: {},
+          },
+          {
+            polyline: [
+              { latitude: 24.8701570951955, longitude: 113.41900839283704 },
+              { latitude: 24.8701570951955, longitude: 113.79489895520231 },
+              { latitude: 24.5085448015983, longitude: 113.79489895520231 },
+              { latitude: 24.5085448015983, longitude: 113.41900839283704 },
+            ],
+            centen: [113.59682684527587, 24.685887616201747],
+            marker: {},
+          },
+          {
+            polyline: [
+              { latitude: 24.2, longitude: 113.46635951793562 },
+              { latitude: 24.2, longitude: 113.05094914668015 },
+              { latitude: 24.4, longitude: 113.05094914668015 },
+              { latitude: 24.4, longitude: 113.46635951793562 },
+            ],
+            centen: [113.26449041949456, 24.27844789476107],
+            marker: {},
+          },
         ]);
 
         const myCoordinateList = ref<any[]>([
-        //   {
-        //     //longitude
-        //     polyline: [
-        //       { latitude: 25.30305881240751, longitude: 114.05512268976841 },
-        //       { latitude: 25.30305881240751, longitude: 114.6279588101562 },
-        //       { latitude: 24.99153464936327, longitude: 114.6279588101562 },
-        //       { latitude: 24.99153464936327, longitude: 114.05512268976841 },
-        //     ],
-        //     centen: [114.09076333840919, 25.185733927294645],
-        //     marker: {},
-        //   },
-        //   //[25., ,25.30305881240751, 114.6279588101562,24.99153464936327, 114.6279588101562,24.99153464936327, 114.05512268976841]
-        //   {
-        //     polyline: [
-        //       { latitude: 24.844526655385806, longitude: 113.98392877859017 },
-        //       { latitude: 24.844526655385806, longitude: 114.6825439387864 },
-        //       { latitude: 24.650962204906058, longitude: 114.6825439387864 },
-        //       { latitude: 24.650962204906058, longitude: 113.98392877859017 },
-        //     ],
-        //     centen: [114.12518341658414, 24.72474172297631],
-        //     marker: {},
-        //   },
-        //   //[24.844526655385806, 113.98392877859017,24.844526655385806, 114.6825439387864,24.400962204906058, 114.6825439387864,24.400962204906058, 113.98392877859017]
-        //   {
-        //     polyline: [
-        //       { latitude: 24.522647595124194, longitude: 113.98732903481549 },
-        //       { latitude: 24.522647595124194, longitude: 114.4214653275176 },
-        //       { latitude: 23.999840460114168, longitude: 114.4214653275176 },
-        //       { latitude: 23.999840460114168, longitude: 113.98732903481549 },
-        //     ],
-        //     centen: [114.17956514727454, 24.207264598161338],
-        //     marker: {},
-        //   },
-          //[24.522647595124194, 113.98732903481549,24.522647595124194, 114.4214653275176,23.999840460114168, 114.4214653275176,23.999840460114168, 113.98732903481549]
+          {
+            //longitude
+            polyline: [
+              { latitude: 25.30305881240751, longitude: 114.05512268976841 },
+              { latitude: 25.30305881240751, longitude: 114.6279588101562 },
+              { latitude: 24.99153464936327, longitude: 114.6279588101562 },
+              { latitude: 24.99153464936327, longitude: 114.05512268976841 },
+            ],
+            centen: [114.09076333840919, 25.185733927294645],
+            marker: {},
+          },
+          //[25., ,25.30305881240751, 114.6279588101562,24.99153464936327, 114.6279588101562,24.99153464936327, 114.05512268976841]
+          {
+            polyline: [
+              { latitude: 24.844526655385806, longitude: 113.98392877859017 },
+              { latitude: 24.844526655385806, longitude: 114.6825439387864 },
+              { latitude: 24.650962204906058, longitude: 114.6825439387864 },
+              { latitude: 24.650962204906058, longitude: 113.98392877859017 },
+            ],
+            centen: [114.12518341658414, 24.72474172297631],
+            marker: {},
+          },
+          //[24.844526655385806, 113.98392877859017,24.844526655385806, 114.6825439387864,24.400962204906058, 114.6825439387864,24.400962204906058, 113.98392877859017]
+          {
+            polyline: [
+              { latitude: 24.522647595124194, longitude: 113.98732903481549 },
+              { latitude: 24.522647595124194, longitude: 114.4214653275176 },
+              { latitude: 23.999840460114168, longitude: 114.4214653275176 },
+              { latitude: 23.999840460114168, longitude: 113.98732903481549 },
+            ],
+            centen: [114.17956514727454, 24.207264598161338],
+            marker: {},
+          },
+          [24.522647595124194, 113.98732903481549,24.522647595124194, 114.4214653275176,23.999840460114168, 114.4214653275176,23.999840460114168, 113.98732903481549]
         ]);
 
         function addPolygon(data: any, item: any, index: number) {
