@@ -7,6 +7,7 @@
         </el-icon>
       </el-button>
       <div id="container"></div>
+      <el-button class="adjust" @click="areaChange">打卡点调整</el-button>
       <div class="AnalysisRouteBottom" v-show="isChartDisplayed">
         <div class="BottomLeft">
           <BorderBox9
@@ -156,11 +157,12 @@
   import { BorderBox9 } from "@dataview/datav-vue3";
   import AMapLoader from "@amap/amap-jsapi-loader";
   import { useClusterStore } from "@/store/cluster";
-  import { IAccumulationList } from "@/types/cluster";
+  import { IAccumulationList ,polylineData,IRouteSave} from "@/types/cluster";
   import echarts from "@/store/echart";
   window._AMapSecurityConfig = {
     securityJsCode: "1b6291b2fceee1cd3b7798bfdd4c39e4",
   };
+  function areaChange() {}
   //路径分析入口
   // const analysisRouteBtn = () => {
   //     if (choiceCalculateType.value !== 0) {
@@ -224,76 +226,75 @@
           console.log(e.lnglat.getLng() + "," + e.lnglat.getLat());
         });
 
-     
         const myCoordinateList1 = ref<any[]>([
-          {
-            //longitude
-            polyline: [
-              { latitude: 25.20778628, longitude: 113.2119596663 },
-              { latitude: 25.20778628, longitude: 113.507437962 },
-              { latitude: 24.893000694, longitude: 113.507437962 },
-              { latitude: 24.893000694, longitude: 113.2119596663 },
-            ],
-            centen: [113.36062079058831, 25.05219532868564],
-            marker: {},
-          },
-          {
-            polyline: [
-              { latitude: 24.8701570951955, longitude: 113.41900839283704 },
-              { latitude: 24.8701570951955, longitude: 113.79489895520231 },
-              { latitude: 24.5085448015983, longitude: 113.79489895520231 },
-              { latitude: 24.5085448015983, longitude: 113.41900839283704 },
-            ],
-            centen: [113.59682684527587, 24.685887616201747],
-            marker: {},
-          },
-          {
-            polyline: [
-              { latitude: 24.2, longitude: 113.46635951793562 },
-              { latitude: 24.2, longitude: 113.05094914668015 },
-              { latitude: 24.4, longitude: 113.05094914668015 },
-              { latitude: 24.4, longitude: 113.46635951793562 },
-            ],
-            centen: [113.26449041949456, 24.27844789476107],
-            marker: {},
-          },
+          // {
+          //   //longitude
+          //   polyline: [
+          //     { latitude: 25.20778628, longitude: 113.2119596663 },
+          //     { latitude: 25.20778628, longitude: 113.507437962 },
+          //     { latitude: 24.893000694, longitude: 113.507437962 },
+          //     { latitude: 24.893000694, longitude: 113.2119596663 },
+          //   ],
+          //   centen: [113.36062079058831, 25.05219532868564],
+          //   marker: {},
+          // },
+          // {
+          //   polyline: [
+          //     { latitude: 24.8701570951955, longitude: 113.41900839283704 },
+          //     { latitude: 24.8701570951955, longitude: 113.79489895520231 },
+          //     { latitude: 24.5085448015983, longitude: 113.79489895520231 },
+          //     { latitude: 24.5085448015983, longitude: 113.41900839283704 },
+          //   ],
+          //   centen: [113.59682684527587, 24.685887616201747],
+          //   marker: {},
+          // },
+          // {
+          //   polyline: [
+          //     { latitude: 24.2, longitude: 113.46635951793562 },
+          //     { latitude: 24.2, longitude: 113.05094914668015 },
+          //     { latitude: 24.4, longitude: 113.05094914668015 },
+          //     { latitude: 24.4, longitude: 113.46635951793562 },
+          //   ],
+          //   centen: [113.26449041949456, 24.27844789476107],
+          //   marker: {},
+          // },
         ]);
 
         const myCoordinateList = ref<any[]>([
-          {
-            //longitude
-            polyline: [
-              { latitude: 25.30305881240751, longitude: 114.05512268976841 },
-              { latitude: 25.30305881240751, longitude: 114.6279588101562 },
-              { latitude: 24.99153464936327, longitude: 114.6279588101562 },
-              { latitude: 24.99153464936327, longitude: 114.05512268976841 },
-            ],
-            centen: [114.09076333840919, 25.185733927294645],
-            marker: {},
-          },
-          //[25., ,25.30305881240751, 114.6279588101562,24.99153464936327, 114.6279588101562,24.99153464936327, 114.05512268976841]
-          {
-            polyline: [
-              { latitude: 24.844526655385806, longitude: 113.98392877859017 },
-              { latitude: 24.844526655385806, longitude: 114.6825439387864 },
-              { latitude: 24.650962204906058, longitude: 114.6825439387864 },
-              { latitude: 24.650962204906058, longitude: 113.98392877859017 },
-            ],
-            centen: [114.12518341658414, 24.72474172297631],
-            marker: {},
-          },
-          //[24.844526655385806, 113.98392877859017,24.844526655385806, 114.6825439387864,24.400962204906058, 114.6825439387864,24.400962204906058, 113.98392877859017]
-          {
-            polyline: [
-              { latitude: 24.522647595124194, longitude: 113.98732903481549 },
-              { latitude: 24.522647595124194, longitude: 114.4214653275176 },
-              { latitude: 23.999840460114168, longitude: 114.4214653275176 },
-              { latitude: 23.999840460114168, longitude: 113.98732903481549 },
-            ],
-            centen: [114.17956514727454, 24.207264598161338],
-            marker: {},
-          },
-          [24.522647595124194, 113.98732903481549,24.522647595124194, 114.4214653275176,23.999840460114168, 114.4214653275176,23.999840460114168, 113.98732903481549]
+          // {
+          //   //longitude
+          //   polyline: [
+          //     { latitude: 25.30305881240751, longitude: 114.05512268976841 },
+          //     { latitude: 25.30305881240751, longitude: 114.6279588101562 },
+          //     { latitude: 24.99153464936327, longitude: 114.6279588101562 },
+          //     { latitude: 24.99153464936327, longitude: 114.05512268976841 },
+          //   ],
+          //   centen: [114.09076333840919, 25.185733927294645],
+          //   marker: {},
+          // },
+          // //[25., ,25.30305881240751, 114.6279588101562,24.99153464936327, 114.6279588101562,24.99153464936327, 114.05512268976841]
+          // {
+          //   polyline: [
+          //     { latitude: 24.844526655385806, longitude: 113.98392877859017 },
+          //     { latitude: 24.844526655385806, longitude: 114.6825439387864 },
+          //     { latitude: 24.650962204906058, longitude: 114.6825439387864 },
+          //     { latitude: 24.650962204906058, longitude: 113.98392877859017 },
+          //   ],
+          //   centen: [114.12518341658414, 24.72474172297631],
+          //   marker: {},
+          // },
+          // //[24.844526655385806, 113.98392877859017,24.844526655385806, 114.6825439387864,24.400962204906058, 114.6825439387864,24.400962204906058, 113.98392877859017]
+          // {
+          //   polyline: [
+          //     { latitude: 24.522647595124194, longitude: 113.98732903481549 },
+          //     { latitude: 24.522647595124194, longitude: 114.4214653275176 },
+          //     { latitude: 23.999840460114168, longitude: 114.4214653275176 },
+          //     { latitude: 23.999840460114168, longitude: 113.98732903481549 },
+          //   ],
+          //   centen: [114.17956514727454, 24.207264598161338],
+          //   marker: {},
+          // },
+          // [24.522647595124194, 113.98732903481549,24.522647595124194, 114.4214653275176,23.999840460114168, 114.4214653275176,23.999840460114168, 113.98732903481549]
         ]);
 
         function addPolygon(data: any, item: any, index: number) {
@@ -358,7 +359,6 @@
           });
           map.add(polygon);
         }
-        const List: AMap.Polyline[] = []
         const colorList = ref(["#DC143C", "#FF0000", "#FF6347"]);
         function addPolygon1(data: any, item: any, index: number) {
           let polygon = new AMap.Polygon({
@@ -528,33 +528,42 @@
         .calculateAllAction({ apiKey: pathCalculateInfo.value.apiKey })
         .then(() => {
           //折线数据展示
-        
-            let route1 = clusterStore.newPathResultAll?.filter(i=>i.transitDepotId=="1")
-            let route2 = clusterStore.newPathResultAll?.filter(i=>i.transitDepotId=="2")
-            let route3 = clusterStore.newPathResultAll?.filter(i=>i.transitDepotId=="3")
-            let route4 = clusterStore.newPathResultAll?.filter(i=>i.transitDepotId=="4")
-            let route5 = clusterStore.newPathResultAll?.filter(i=>i.transitDepotId=="5")
-            let route6 = clusterStore.newPathResultAll?.filter(i=>i.transitDepotId=="6")
-          
-          
-         
+
+          let route1 = clusterStore.newPathResultAll?.filter(
+            (i) => i.transitDepotId == "1"
+          );
+          let route2 = clusterStore.newPathResultAll?.filter(
+            (i) => i.transitDepotId == "2"
+          );
+          let route3 = clusterStore.newPathResultAll?.filter(
+            (i) => i.transitDepotId == "3"
+          );
+          let route4 = clusterStore.newPathResultAll?.filter(
+            (i) => i.transitDepotId == "4"
+          );
+          let route5 = clusterStore.newPathResultAll?.filter(
+            (i) => i.transitDepotId == "5"
+          );
+          let route6 = clusterStore.newPathResultAll?.filter(
+            (i) => i.transitDepotId == "6"
+          );
+
           route1?.forEach((item) => {
             //配置折线路径
             let path: AMap.LngLat[] = [];
             item.convex?.forEach((item) => {
               path.push(new AMap.LngLat(item.longitude, item.latitude));
             });
-            console.log(path);
-          
+
             //创建 Polyline 实例
             let polyline1 = new AMap.Polyline({
               path: path,
               strokeWeight: 5,
               // showDir: true,
               strokeColor: "red", //线条颜色
-                          //折线拐点连接处样式
+              //折线拐点连接处样式
             });
-            
+
             newPolylineList.push(polyline1);
           });
           route2?.forEach((item) => {
@@ -563,17 +572,17 @@
             item.convex?.forEach((item) => {
               path.push(new AMap.LngLat(item.longitude, item.latitude));
             });
-            console.log(path);
-          
+
+
             //创建 Polyline 实例
             let polyline2 = new AMap.Polyline({
               path: path,
               strokeWeight: 5,
               // showDir: true,
-              strokeColor: "pink", //线条颜色
-                          //折线拐点连接处样式
+              strokeColor: "gray", //线条颜色
+              //折线拐点连接处样式
             });
-            
+
             newPolylineList.push(polyline2);
           });
           route3?.forEach((item) => {
@@ -582,17 +591,17 @@
             item.convex?.forEach((item) => {
               path.push(new AMap.LngLat(item.longitude, item.latitude));
             });
-            console.log(path);
-          
+  
+
             //创建 Polyline 实例
             let polyline3 = new AMap.Polyline({
               path: path,
               strokeWeight: 5,
               // showDir: true,
               strokeColor: "blue", //线条颜色
-                          //折线拐点连接处样式
+              //折线拐点连接处样式
             });
-            
+
             newPolylineList.push(polyline3);
           });
           route4?.forEach((item) => {
@@ -601,17 +610,17 @@
             item.convex?.forEach((item) => {
               path.push(new AMap.LngLat(item.longitude, item.latitude));
             });
-            console.log(path);
-          
+    
+
             //创建 Polyline 实例
             let polyline4 = new AMap.Polyline({
               path: path,
               strokeWeight: 5,
               // showDir: true,
               strokeColor: "purple", //线条颜色
-                          //折线拐点连接处样式
+              //折线拐点连接处样式
             });
-            
+
             newPolylineList.push(polyline4);
           });
           route5?.forEach((item) => {
@@ -620,17 +629,16 @@
             item.convex?.forEach((item) => {
               path.push(new AMap.LngLat(item.longitude, item.latitude));
             });
-            console.log(path);
-          
+
             //创建 Polyline 实例
             let polyline5 = new AMap.Polyline({
               path: path,
               strokeWeight: 5,
               // showDir: true,
               strokeColor: "green", //线条颜色
-                          //折线拐点连接处样式
+              //折线拐点连接处样式
             });
-            
+
             newPolylineList.push(polyline5);
           });
           route6?.forEach((item) => {
@@ -639,20 +647,20 @@
             item.convex?.forEach((item) => {
               path.push(new AMap.LngLat(item.longitude, item.latitude));
             });
-            console.log(path);
-          
+
             //创建 Polyline 实例
             let polyline6 = new AMap.Polyline({
               path: path,
               strokeWeight: 5,
               // showDir: true,
               strokeColor: "black", //线条颜色
-                          //折线拐点连接处样式
+              //折线拐点连接处样式
             });
-            
+
             newPolylineList.push(polyline6);
           });
           // map.remove(oldPolylineList);
+         
           map.add(newPolylineList);
           loading.close();
           window.sessionStorage.setItem(
@@ -666,7 +674,7 @@
       pathCalculateInfo.value.areaName = area.value;
       clusterStore.pathCalculateOneAction(pathCalculateInfo.value).then(() => {
         //折线数据展示
-        
+
         clusterStore.newPathResult?.forEach((item) => {
           //配置折线路径
           let path: AMap.LngLat[] = [];
@@ -679,7 +687,7 @@
             strokeWeight: 5,
             //showDir: true,
             strokeColor: "red", //线条颜色
-                     //折线拐点连接处样式
+            //折线拐点连接处样式
           });
           newPolylineList.push(polyline);
         });
@@ -712,7 +720,6 @@
     isOpenRouteDialog.value = false;
   };
   const addRouteBtn = () => {
-    console.log("保存路径");
     if (choiceCalculateType.value == 0) {
       ElMessage.warning("请先进行重新计算");
     }
@@ -725,8 +732,15 @@
         delete item.routeId;
         delete item.workTime;
       });
-      console.log(clusterStore.newPathResultAll);
-      clusterStore.postAddRouteAction(clusterStore.newPathResultAll!);
+     
+      let saveRouteData =  clusterStore.newPathResultAll!.map(i=>{
+        i.areaId = Number(i.areaId);
+        i.transitDepotId = Number(i.transitDepotId)
+        return i
+      })
+      console.log(saveRouteData);
+      
+      clusterStore.postAddRouteAction(saveRouteData);
     }
     if (choiceCalculateType.value == 2) {
       clusterStore.newPathResult?.forEach((item) => {
@@ -737,8 +751,14 @@
         delete item.routeId;
         delete item.workTime;
       });
-      console.log(clusterStore.newPathResult);
-      clusterStore.postAddRouteAction(clusterStore.newPathResult!);
+      let saveRouteData =  clusterStore.newPathResult!.map(i=>{
+        i.areaId = Number(i.areaId);
+        i.transitDepotId = Number(i.transitDepotId)
+        return i
+      })
+      console.log(saveRouteData);
+      
+      clusterStore.postAddRouteAction(saveRouteData);
     }
   };
 
@@ -760,11 +780,34 @@
     let myChart = echarts.init(document.getElementById("main3"));
     myChart.setOption(option);
   };
+  function SplitLines(){
+    clusterStore.getSplitLinesAction().then(()=>{
+   console.log( clusterStore.SplitLines);
+      clusterStore.SplitLines?.forEach((item:polylineData[])=>{
+        let path: AMap.LngLat[] = [];
+              item.forEach((item:polylineData) => {
+                  path.push(new AMap.LngLat(item.longitude, item.latitude))
+              })
+              let polyline = new AMap.Polyline({
+                  path: path,
+                  strokeWeight: 5,
+                  showDir: true,
+                  strokeColor: "#001731", //线条颜色
+                  lineJoin: "round", //折线拐点连接处样式
+              });
+              map.add(polyline);
+          })
+          
+      })
+
+
+  }
   onMounted(() => {
     setEchartsOptions();
     setEchartsOptions2();
     setEchartsOptions3();
     changeIconFunction();
+    SplitLines()
   });
   let option = {
     textStyle: {
@@ -841,16 +884,20 @@
     width: 100%;
     display: flex;
     justify-content: center;
-
+    .adjust {
+      position: relative;
+      left: 50%;
+      transform: translate(-60%,50%);
+    }
     .map {
-      height: 79vh;
+   
       :deep(.amap-marker-label) {
         background-color: #3490f5;
         border: 0px;
         border-radius: 30%;
       }
       #container {
-        height: 79vh;
+        height: 75vh;
       }
 
       .icon {
@@ -868,7 +915,7 @@
       .AnalysisRouteBottom {
         display: flex;
         position: relative;
-        top: -34%;
+        top: -39%;
         color: #73e5ff;
 
         .title {

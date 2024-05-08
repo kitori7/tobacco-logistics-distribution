@@ -29,22 +29,10 @@
           />
         </el-form-item>
         <el-form-item label="客户编码">
-          <el-select clearable filterable v-model="searchForm.customerCode">
-            <el-option
-              v-for="item in boardStore.cond?.storeList"
-              :key="item.customerCode"
-              :value="item.customerCode"
-            ></el-option>
-          </el-select>
+          <el-input v-model="searchForm.customerCode"  placeholder="点击输入"></el-input>
         </el-form-item>
         <el-form-item label="客户名称">
-          <el-select clearable  filterable v-model="searchForm.contactName">
-            <el-option
-              v-for="item in boardStore.cond?.storeList"
-              :key="item.contactName"
-              :value="item.contactName"
-            ></el-option>
-          </el-select>
+          <el-input v-model="searchForm.contactName"  placeholder="点击输入"></el-input>
         </el-form-item>
         <el-form-item label="大区">
           <el-select clearable  filterable v-model="searchForm.areaName">
@@ -56,14 +44,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="路线名称">
-          <el-select clearable  filterable v-model="searchForm.routeId">
-            <el-option
-              v-for="item in boardStore.cond?.routeList"
-              :key="item.routeId"
-              :label="item.routeName"
-              :value="item.routeId"
-            ></el-option>
-          </el-select>
+          <el-input v-model="searchForm.routeName"  placeholder="点击输入"></el-input>
         </el-form-item>
         <el-form-item label="客户专员">
           <el-select clearable  filterable v-model="searchForm.managerWorkNumber">
@@ -167,6 +148,7 @@
     managerWorkNumber: "",
     orderEndDate: "",
     orderStartDate: "",
+    routeName:""
   });
   // 时间数据处理
   const time = ref();
@@ -198,6 +180,7 @@
       managerWorkNumber: "",
       orderEndDate: "",
       orderStartDate: "",
+      routeName:""
     };
     time.value = "";
     emit("itemReset");

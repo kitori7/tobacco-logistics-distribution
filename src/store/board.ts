@@ -40,8 +40,8 @@ export const useBoardStore = defineStore("board", () => {
   const cond = ref<ICond>();
   async function getCondAction() {
     loading.value = true;
-    // const res = await getConditions();
-    // cond.value = res.data;
+    const res = await getConditions();
+    cond.value = res.data;
     loading.value = false;
   }
 
