@@ -113,7 +113,7 @@ export interface ISearch {
   /**
    * 路线id
    */
-  routeId?: number;
+  routeName?: string;
   /**
    * 送货员工号
    */

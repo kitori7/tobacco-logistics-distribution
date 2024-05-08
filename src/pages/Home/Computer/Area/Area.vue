@@ -11,11 +11,11 @@
         <div class="content">
             <BorderBox9 :color="['#73e5ff', '#73e5ff']" backgroundColor='#001731'>
                 <div class="areaCollapse">
-                    <el-collapse v-model="activeNames" v-for="(item, index) in  clusterStore.InformationList">
+                    <el-collapse v-model="activeNames" v-for="(item, index) in  clusterStore.InformationList" :key="item.name">
                         <el-badge :value="item.number" class="item"></el-badge>
                         <el-collapse-item :title="item.name" :name="index">
                             <ul>
-                                <li v-for="(item1) in item.data">
+                                <li v-for="(item1) in item.data" :key="item1">
                                     {{ item1 }}
                                 </li>
                             </ul>
@@ -30,8 +30,8 @@
                         element-loading-background="rgba(0,23,49,0.8)" v-model="activeNames2" accordion>
                         <el-scrollbar height="75vh">
                             <el-collapse-item v-for="(item, index) in clusterStore.clusterAndShopList"
-                                :title=item.accumulation :name=index>
-                                <div class="regionCollapseItemContext" v-for="(item1) in item.son">{{ item1.shopName }}
+                                :title=item.accumulation :name=index :key="item.accumulation">
+                                <div class="regionCollapseItemContext" v-for="(item1) in item.son " :key="item1.shopName">{{ item1.shopName }}
                                 </div>
                             </el-collapse-item>
                         </el-scrollbar>

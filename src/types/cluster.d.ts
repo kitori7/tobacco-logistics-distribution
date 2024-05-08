@@ -84,17 +84,26 @@ export interface IMapResult {
 export interface IRouteData {
     routeId?: string,
     routeName: string,
-    transitDepotId?: string,
-    areaId?: string,
-    polyline?: polylineData[],
-    distance?: string,
-    cargoWeight?: string,
+    transitDepotId: any,
+    areaId: any,
+    polyline: polylineData[],
+    distance: string,
+    cargoWeight: string,
     workTime?:number,
     createTime?: string,
     updateTime?: string,
     versionId?: string,
     delete?: boolean,
-    convex?:polylineData[]
+    convex:polylineData[]
+}
+export interface IRouteSave{
+    routeName: string,
+    transitDepotId: number,
+    areaId: number,
+    polyline: polylineData[],
+    distance: string,
+    cargoWeight: string,
+    convex:polylineData[]
 }
 
 interface polylineData {

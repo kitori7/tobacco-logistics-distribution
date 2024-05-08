@@ -110,9 +110,9 @@ const tableData = ref<ImanagementTableData[]>();
 // 修改商铺
 const ShopsEditRef = ref<InstanceType<typeof ShopsEdit>>();
 function openShopsEdit() {
-  if (!updataData.value) {
+  if (!deleteData.value) {
     ElMessage.warning("请先选中要修改的商铺");
-  } else if (updataData.value.length == 1) {
+  } else if (updataData.value&&updataData.value.length == 1) {
     typeof ShopsEditRef.value?.title === "string"
       ? (ShopsEditRef.value.title = "修改商铺信息")
       : false;
@@ -196,8 +196,6 @@ function searchData() {
   }
 }
 function searchTable() {
-  console.log(searchForm.value);
-  
   getDate(searchForm.value)
 }
 function handelReset() {
@@ -231,7 +229,7 @@ function handleDelete() {
   if (!deleteData.value) {
     ElMessage.warning("请先选中要删除的商铺");
   } else if (deleteData.value) {
-    ElMessageBox.confirm("确认删除?")
+    ElMessageBox.confirm("确认删除选中的商铺?")
       .then(() => {
         datamanagementStore.deleteStoreAction(deleteData.value as string).then(() => {
           getDate()
@@ -244,7 +242,7 @@ const AreaEdit = ref<boolean>();
 function updatedAreas() {
   if (!deleteData.value) {
     ElMessage.warning("请先选中要调整的商铺");
-  } else if (!sameArea.value) {
+  } else if (!sameArea.value) {    
     ElMessage.warning("请选择商铺中同一个行政区");
   } else {
     getOptionalList("area")

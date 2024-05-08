@@ -1,6 +1,6 @@
 import requests from "../index";
 import { IRequest } from "../request/type";
-import { IAccumlationInfo, IAccumulationIdInfo, IAreaDetails, ICalculateInfo, IErrorPoints, IHistoricalPath, IInformationList, IMapResult, IResultPoints, IRouteData, IShopData, IStoreDetails, IVersionRequest, ItestInformation } from "@/types/cluster";
+import { IAccumlationInfo, IAccumulationIdInfo, IAreaDetails, ICalculateInfo, IErrorPoints, IHistoricalPath, IInformationList, IMapResult, IResultPoints, IRouteData, IShopData, IStoreDetails, IVersionRequest, ItestInformation,IRouteSave } from "@/types/cluster";
 
 // 获取所有聚集区及商铺点
 export function getAllResultPoints() {
@@ -126,7 +126,7 @@ export function getTransitDepotRouteData() {
 }
 
 //保存路径
-export function postAddRoute(data: IRouteData[]) {
+export function postAddRoute(data: IRouteSave[]) {
     return requests.post<IRequest<any>>({
         url: "/pathcalculate/path/addRoute",
         data,
@@ -146,9 +146,15 @@ export function getRouteVersion(data: IVersionRequest) {
         url: `/pathcalculate/path/getRouteVersion?transitDepotId=${data.transitDepotId}&date=${data.date}`,
     });
 }
-
-export function getSplitLines() {
+// 获取分割线
+export function getSplitLines(groupOrder:string) {
     return requests.get({
-        url: '/pathcalculate/path/getSplitLines',
+        url: `/pathcalculate/path/getSplitLines?groupOrder=${groupOrder}`,
+    });
+}
+// 路径比较
+export function compareRoute(routeIdList:string) {
+    return requests.get({
+        url: `/pathcalculate/path/compare/${routeIdList}`,
     });
 }
