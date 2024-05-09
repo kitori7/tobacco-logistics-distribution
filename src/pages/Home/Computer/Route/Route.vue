@@ -157,7 +157,7 @@
   import { BorderBox9 } from "@dataview/datav-vue3";
   import AMapLoader from "@amap/amap-jsapi-loader";
   import { useClusterStore } from "@/store/cluster";
-  import { IAccumulationList ,polylineData,IRouteSave} from "@/types/cluster";
+  import { IAccumulationList, polylineData, IRouteSave } from "@/types/cluster";
   import echarts from "@/store/echart";
   window._AMapSecurityConfig = {
     securityJsCode: "1b6291b2fceee1cd3b7798bfdd4c39e4",
@@ -516,6 +516,52 @@
   const choiceCalculateType = ref(0);
   const num = ref(10);
   //路径重新计算
+
+  onMounted(() => {
+    setTimeout(() => {
+      countPathResult();
+    }, 1000);
+  });
+  function countPathResult() {
+    const colorArr = ["#e4c974", "#814146", "#798f4a", "#8b90a3", "#728593", "#383a4b"];
+    clusterStore.newPathResultAll?.forEach((item) => {
+      // 凸包渲染
+      const polygonPath = item.convex.map((item) => {
+        return [item.longitude, item.latitude];
+      });
+      const polygon = new AMap.Polygon({
+        path: polygonPath,
+        fillColor: colorArr[item.transitDepotId-1],
+        strokeOpacity: 0.5,
+        fillOpacity: 1,
+        strokeColor: '#fff',
+        strokeWeight: 5,
+        strokeStyle: "solid",
+      });
+      map.add(polygon);
+
+      // 路线绘制
+      // const polyLinePath = item.polyline.map((item) => {
+      //   return new AMap.LngLat(item.longitude, item.latitude);
+      // });
+      // console.log(polyLinePath);
+      
+      // const polyline = new AMap.Polyline({
+      //   path: polyLinePath,
+      //   borderWeight: 1,
+      //   strokeColor: "#000",
+      //   strokeOpacity: 1,
+      //   strokeWeight: 1,
+      //   strokeStyle: "dashed",
+      //   // strokeStyle是dashed时有效
+      //   strokeDasharray: [10, 5],
+      //   lineJoin: "round",
+      //   lineCap: "round",
+      // });
+      // map.add(polyline);
+    });
+    choiceCalculateType.value = 1;
+  }
   const newPolylineList: AMap.Polyline[] = [];
   const CalculateBtnFunction = () => {
     const loading = ElLoading.service({
@@ -528,153 +574,14 @@
         .calculateAllAction({ apiKey: pathCalculateInfo.value.apiKey })
         .then(() => {
           //折线数据展示
-
-          let route1 = clusterStore.newPathResultAll?.filter(
-            (i) => i.transitDepotId == "1"
-          );
-          let route2 = clusterStore.newPathResultAll?.filter(
-            (i) => i.transitDepotId == "2"
-          );
-          let route3 = clusterStore.newPathResultAll?.filter(
-            (i) => i.transitDepotId == "3"
-          );
-          let route4 = clusterStore.newPathResultAll?.filter(
-            (i) => i.transitDepotId == "4"
-          );
-          let route5 = clusterStore.newPathResultAll?.filter(
-            (i) => i.transitDepotId == "5"
-          );
-          let route6 = clusterStore.newPathResultAll?.filter(
-            (i) => i.transitDepotId == "6"
-          );
-
-          route1?.forEach((item) => {
-            //配置折线路径
-            let path: AMap.LngLat[] = [];
-            item.convex?.forEach((item) => {
-              path.push(new AMap.LngLat(item.longitude, item.latitude));
-            });
-
-            //创建 Polyline 实例
-            let polyline1 = new AMap.Polyline({
-              path: path,
-              strokeWeight: 5,
-              // showDir: true,
-              strokeColor: "red", //线条颜色
-              //折线拐点连接处样式
-            });
-
-            newPolylineList.push(polyline1);
-          });
-          route2?.forEach((item) => {
-            //配置折线路径
-            let path: AMap.LngLat[] = [];
-            item.convex?.forEach((item) => {
-              path.push(new AMap.LngLat(item.longitude, item.latitude));
-            });
-
-
-            //创建 Polyline 实例
-            let polyline2 = new AMap.Polyline({
-              path: path,
-              strokeWeight: 5,
-              // showDir: true,
-              strokeColor: "gray", //线条颜色
-              //折线拐点连接处样式
-            });
-
-            newPolylineList.push(polyline2);
-          });
-          route3?.forEach((item) => {
-            //配置折线路径
-            let path: AMap.LngLat[] = [];
-            item.convex?.forEach((item) => {
-              path.push(new AMap.LngLat(item.longitude, item.latitude));
-            });
-  
-
-            //创建 Polyline 实例
-            let polyline3 = new AMap.Polyline({
-              path: path,
-              strokeWeight: 5,
-              // showDir: true,
-              strokeColor: "blue", //线条颜色
-              //折线拐点连接处样式
-            });
-
-            newPolylineList.push(polyline3);
-          });
-          route4?.forEach((item) => {
-            //配置折线路径
-            let path: AMap.LngLat[] = [];
-            item.convex?.forEach((item) => {
-              path.push(new AMap.LngLat(item.longitude, item.latitude));
-            });
-    
-
-            //创建 Polyline 实例
-            let polyline4 = new AMap.Polyline({
-              path: path,
-              strokeWeight: 5,
-              // showDir: true,
-              strokeColor: "purple", //线条颜色
-              //折线拐点连接处样式
-            });
-
-            newPolylineList.push(polyline4);
-          });
-          route5?.forEach((item) => {
-            //配置折线路径
-            let path: AMap.LngLat[] = [];
-            item.convex?.forEach((item) => {
-              path.push(new AMap.LngLat(item.longitude, item.latitude));
-            });
-
-            //创建 Polyline 实例
-            let polyline5 = new AMap.Polyline({
-              path: path,
-              strokeWeight: 5,
-              // showDir: true,
-              strokeColor: "green", //线条颜色
-              //折线拐点连接处样式
-            });
-
-            newPolylineList.push(polyline5);
-          });
-          route6?.forEach((item) => {
-            //配置折线路径
-            let path: AMap.LngLat[] = [];
-            item.convex?.forEach((item) => {
-              path.push(new AMap.LngLat(item.longitude, item.latitude));
-            });
-
-            //创建 Polyline 实例
-            let polyline6 = new AMap.Polyline({
-              path: path,
-              strokeWeight: 5,
-              // showDir: true,
-              strokeColor: "black", //线条颜色
-              //折线拐点连接处样式
-            });
-
-            newPolylineList.push(polyline6);
-          });
-          // map.remove(oldPolylineList);
-         
-          map.add(newPolylineList);
+          countPathResult();
           loading.close();
-          window.sessionStorage.setItem(
-            "newPath",
-            JSON.stringify(clusterStore.newPathResultAll)
-          );
-          choiceCalculateType.value = 1;
         });
     } else {
       pathCalculateInfo.value.assignNumber = num.value;
       pathCalculateInfo.value.areaName = area.value;
       clusterStore.pathCalculateOneAction(pathCalculateInfo.value).then(() => {
         //折线数据展示
-
         clusterStore.newPathResult?.forEach((item) => {
           //配置折线路径
           let path: AMap.LngLat[] = [];
@@ -732,14 +639,14 @@
         delete item.routeId;
         delete item.workTime;
       });
-     
-      let saveRouteData =  clusterStore.newPathResultAll!.map(i=>{
+
+      let saveRouteData = clusterStore.newPathResultAll!.map((i) => {
         i.areaId = Number(i.areaId);
-        i.transitDepotId = Number(i.transitDepotId)
-        return i
-      })
+        i.transitDepotId = Number(i.transitDepotId);
+        return i;
+      });
       console.log(saveRouteData);
-      
+
       clusterStore.postAddRouteAction(saveRouteData);
     }
     if (choiceCalculateType.value == 2) {
@@ -751,13 +658,13 @@
         delete item.routeId;
         delete item.workTime;
       });
-      let saveRouteData =  clusterStore.newPathResult!.map(i=>{
+      let saveRouteData = clusterStore.newPathResult!.map((i) => {
         i.areaId = Number(i.areaId);
-        i.transitDepotId = Number(i.transitDepotId)
-        return i
-      })
+        i.transitDepotId = Number(i.transitDepotId);
+        return i;
+      });
       console.log(saveRouteData);
-      
+
       clusterStore.postAddRouteAction(saveRouteData);
     }
   };
@@ -780,34 +687,31 @@
     let myChart = echarts.init(document.getElementById("main3"));
     myChart.setOption(option);
   };
-  function SplitLines(){
-    clusterStore.getSplitLinesAction().then(()=>{
-   console.log( clusterStore.SplitLines);
-      clusterStore.SplitLines?.forEach((item:polylineData[])=>{
+  function SplitLines() {
+    clusterStore.getSplitLinesAction().then(() => {
+      console.log(clusterStore.SplitLines);
+      clusterStore.SplitLines?.forEach((item: polylineData[]) => {
         let path: AMap.LngLat[] = [];
-              item.forEach((item:polylineData) => {
-                  path.push(new AMap.LngLat(item.longitude, item.latitude))
-              })
-              let polyline = new AMap.Polyline({
-                  path: path,
-                  strokeWeight: 5,
-                  showDir: true,
-                  strokeColor: "#001731", //线条颜色
-                  lineJoin: "round", //折线拐点连接处样式
-              });
-              map.add(polyline);
-          })
-          
-      })
-
-
+        item.forEach((item: polylineData) => {
+          path.push(new AMap.LngLat(item.longitude, item.latitude));
+        });
+        let polyline = new AMap.Polyline({
+          path: path,
+          strokeWeight: 5,
+          showDir: true,
+          strokeColor: "#001731", //线条颜色
+          lineJoin: "round", //折线拐点连接处样式
+        });
+        map.add(polyline);
+      });
+    });
   }
   onMounted(() => {
     setEchartsOptions();
     setEchartsOptions2();
     setEchartsOptions3();
     changeIconFunction();
-    SplitLines()
+    SplitLines();
   });
   let option = {
     textStyle: {
@@ -887,10 +791,9 @@
     .adjust {
       position: relative;
       left: 50%;
-      transform: translate(-60%,50%);
+      transform: translate(-60%, 50%);
     }
     .map {
-   
       :deep(.amap-marker-label) {
         background-color: #3490f5;
         border: 0px;
