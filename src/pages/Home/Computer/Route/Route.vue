@@ -157,7 +157,7 @@
   import { BorderBox9 } from "@dataview/datav-vue3";
   import AMapLoader from "@amap/amap-jsapi-loader";
   import { useClusterStore } from "@/store/cluster";
-  import { IAccumulationList ,polylineData,IRouteSave} from "@/types/cluster";
+  import { IAccumulationList ,polylineData} from "@/types/cluster";
   import echarts from "@/store/echart";
   window._AMapSecurityConfig = {
     securityJsCode: "1b6291b2fceee1cd3b7798bfdd4c39e4",
@@ -558,10 +558,9 @@
             //创建 Polyline 实例
             let polyline1 = new AMap.Polyline({
               path: path,
-              strokeWeight: 5,
+              strokeWeight: 3,
               // showDir: true,
-              strokeColor: "red", //线条颜色
-              //折线拐点连接处样式
+              strokeColor: "red",
             });
 
             newPolylineList.push(polyline1);
@@ -577,9 +576,9 @@
             //创建 Polyline 实例
             let polyline2 = new AMap.Polyline({
               path: path,
-              strokeWeight: 5,
+              strokeWeight: 3,
               // showDir: true,
-              strokeColor: "gray", //线条颜色
+              strokeColor: "gray", 
               //折线拐点连接处样式
             });
 
@@ -596,7 +595,7 @@
             //创建 Polyline 实例
             let polyline3 = new AMap.Polyline({
               path: path,
-              strokeWeight: 5,
+              strokeWeight: 3,
               // showDir: true,
               strokeColor: "blue", //线条颜色
               //折线拐点连接处样式
@@ -615,7 +614,7 @@
             //创建 Polyline 实例
             let polyline4 = new AMap.Polyline({
               path: path,
-              strokeWeight: 5,
+              strokeWeight: 3,
               // showDir: true,
               strokeColor: "purple", //线条颜色
               //折线拐点连接处样式
@@ -633,9 +632,9 @@
             //创建 Polyline 实例
             let polyline5 = new AMap.Polyline({
               path: path,
-              strokeWeight: 5,
+              strokeWeight: 3,
               // showDir: true,
-              strokeColor: "green", //线条颜色
+              strokeColor: "green",
               //折线拐点连接处样式
             });
 
@@ -651,7 +650,7 @@
             //创建 Polyline 实例
             let polyline6 = new AMap.Polyline({
               path: path,
-              strokeWeight: 5,
+              strokeWeight: 3,
               // showDir: true,
               strokeColor: "black", //线条颜色
               //折线拐点连接处样式
@@ -684,7 +683,7 @@
           //创建 Polyline 实例
           let polyline = new AMap.Polyline({
             path: path,
-            strokeWeight: 5,
+            strokeWeight: 3,
             //showDir: true,
             strokeColor: "red", //线条颜色
             //折线拐点连接处样式

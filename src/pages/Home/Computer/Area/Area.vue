@@ -47,7 +47,7 @@ import { ElLoading } from 'element-plus'
 import { useRouter } from "vue-router";
 import { BorderBox9 } from "@dataview/datav-vue3";
 import AMapLoader from "@amap/amap-jsapi-loader";
-// import { IMapResultPoints } from "@/types/cluster";111111
+import { IMapResultPoints } from "@/types/cluster";
 window._AMapSecurityConfig = {
     securityJsCode: "1b6291b2fceee1cd3b7798bfdd4c39e4",
 };
@@ -97,7 +97,7 @@ function save() {
                     ElMessage.success('保存成功')
                 }
             })
-        };
+        }
     }
 }
 //第一个折叠面板的参数
@@ -170,84 +170,76 @@ onMounted(() => {
                 resolve("s111uccess")
                 console.log(reject);
             })
-            
-            //clusterStore.getMapResultPointsAction()
-                // // 地图标点
-                // const data = ref<IMapResultPoints[]>();
-                // data.value = clusterStore.MapResultPoints;
-                // const style = {
-                //     url: "/src/assets/images/amap/mapBluePoint.png", //图标地址
-                //     size: new AMap.Size(15, 15), //图标大小
-                //     anchor: new AMap.Pixel(-10, -20), //图标显示位置偏移量，基准点为图标左上角
-                // }//设置样式对象
-                // //海量点
-                // var massMarks = new AMap.MassMarks(data.value, {
-                //     zIndex: 5, //海量点图层叠加的顺序
-                //     zooms: [10, 22], //在指定地图缩放级别范围内展示海量点图层
-                //     style: style,
-                // });
-                // massMarks.setMap(map);
-
-
-                //点
-
-                // clusterStore.MapResultPoints!.forEach((item) => {
-                //     if (item.state == "center") {
-                //         // 将 Icon 实例添加到 marker 上:
-                //         const marker = new AMap.Marker({
-                //             position: new AMap.LngLat(item.lnglat[0], item.lnglat[1]), //点标记的位置
-                //             offset: new AMap.Pixel(-7, -17), //偏移量
-                //             icon: new AMap.Icon({
-                //                 size: new AMap.Size(25, 25), //图标尺寸
-                //                 image: "/src/assets/images/amap/mapOrangePoint.png", //Icon 的图像
-                //                 // imageOffset: new AMap.Pixel(-9, -3), //图像相对展示区域的偏移量，适于雪碧图等
-                //                 imageSize: new AMap.Size(25, 25), //根据所设置的大小拉伸或压缩图片
-                //             }), //添加 Icon 实例
-                //             title: "中心点",
-                //             zooms: [9, 16], //点标记显示的层级范围，超过范围不显示
-                //         });
-                //         map!.add(marker);
-                //     }
-                //     else if (item.state == "error") {
-                //         // 将 Icon 实例添加到 marker 上:
-                //         const marker = new AMap.Marker({
-                //             position: new AMap.LngLat(item.lnglat[0], item.lnglat[1]), //点标记的位置
-                //             offset: new AMap.Pixel(-7, -17), //偏移量
-                //             icon: new AMap.Icon({
-                //                 size: new AMap.Size(20, 20), //图标尺寸
-                //                 image: "/src/assets/images/amap/mapRedPoint.png", //Icon 的图像
-                //                 // imageOffset: new AMap.Pixel(-9, -3), //图像相对展示区域的偏移量，适于雪碧图等
-                //                 imageSize: new AMap.Size(20, 20), //根据所设置的大小拉伸或压缩图片
-                //             }), //添加 Icon 实例
-                //             title: "错误点",
-                //             zooms: [6, 16], //点标记显示的层级范围，超过范围不显示
-                //         });
-                //         map!.add(marker);
-                //     }
-                // })
-
-                //圈
-
-                // clusterStore.MapResultSurface?.forEach((item) => {
-                //     var circle = new AMap.Circle({
-                //         center: new AMap.LngLat(item.center[0], item.center[1]), //圆心
-                //         radius: item.radius, //半径
-                //         borderWeight: 1, //描边的宽度
-                //         strokeColor: "#FF33FF", //轮廓线颜色
-                //         strokeOpacity: 1, //轮廓线透明度
-                //         strokeWeight: 1, //轮廓线宽度
-                //         fillOpacity: 0.4, //圆形填充透明度
-                //         strokeStyle: "dashed", //轮廓线样式
-                //         strokeDasharray: [10, 10],
-                //         fillColor: "#1791fc", //圆形填充颜色
-                //         zIndex: 50, //圆形的叠加顺序
-                //     });
-                //     //圆形 Circle 对象添加到 Map
-                //     map.add(circle);
-                //     //根据覆盖物范围调整视野
-                //     map.setFitView([circle])
-                // })
-                
+        
+            // clusterStore.getMapResultPointsAction()
+            // const data = ref<IMapResultPoints[]>();
+            // data.value = clusterStore.MapResultPoints;
+            //  const style = {
+            //         url: "/src/assets/images/amap/mapBluePoint.png", //图标地址
+            //         size: new AMap.Size(15, 15), //图标大小
+            //         anchor: new AMap.Pixel(-10, -20), //图标显示位置偏移量，基准点为图标左上角
+            //     }//设置样式对象
+            //     var massMarks = new AMap.MassMarks(data.value, {
+            //         zIndex: 5, //海量点图层叠加的顺序
+            //         zooms: [10, 22], //在指定地图缩放级别范围内展示海量点图层
+            //         style: style,
+            //     });
+            //     massMarks.setMap(map);
+            //     // 点
+            //     clusterStore.MapResultPoints!.forEach((item) => {
+            //         if (item.state == "center") {
+            //             // 将 Icon 实例添加到 marker 上:
+            //             const marker = new AMap.Marker({
+            //                 position: new AMap.LngLat(item.lnglat[0], item.lnglat[1]), //点标记的位置
+            //                 offset: new AMap.Pixel(-7, -17), //偏移量
+            //                 icon: new AMap.Icon({
+            //                     size: new AMap.Size(25, 25), //图标尺寸
+            //                     image: "/src/assets/images/amap/mapOrangePoint.png", //Icon 的图像
+            //                     // imageOffset: new AMap.Pixel(-9, -3), //图像相对展示区域的偏移量，适于雪碧图等
+            //                     imageSize: new AMap.Size(25, 25), //根据所设置的大小拉伸或压缩图片
+            //                 }), //添加 Icon 实例
+            //                 title: "中心点",
+            //                 zooms: [9, 16], //点标记显示的层级范围，超过范围不显示
+            //             });
+            //             map!.add(marker);
+            //         }
+            //         else if (item.state == "error") {
+            //             // 将 Icon 实例添加到 marker 上:
+            //             const marker = new AMap.Marker({
+            //                 position: new AMap.LngLat(item.lnglat[0], item.lnglat[1]), //点标记的位置
+            //                 offset: new AMap.Pixel(-7, -17), //偏移量
+            //                 icon: new AMap.Icon({
+            //                     size: new AMap.Size(20, 20), //图标尺寸
+            //                     image: "/src/assets/images/amap/mapRedPoint.png", //Icon 的图像
+            //                     // imageOffset: new AMap.Pixel(-9, -3), //图像相对展示区域的偏移量，适于雪碧图等
+            //                     imageSize: new AMap.Size(20, 20), //根据所设置的大小拉伸或压缩图片
+            //                 }), //添加 Icon 实例
+            //                 title: "错误点",
+            //                 zooms: [6, 16], //点标记显示的层级范围，超过范围不显示
+            //             });
+            //             map!.add(marker);
+            //         }
+            //     })
+            //     // 圈
+            //     clusterStore.MapResultSurface?.forEach((item) => {
+            //         var circle = new AMap.Circle({
+            //             center: new AMap.LngLat(item.center[0], item.center[1]), //圆心
+            //             radius: item.radius, //半径
+            //             borderWeight: 1, //描边的宽度
+            //             strokeColor: "#FF33FF", //轮廓线颜色
+            //             strokeOpacity: 1, //轮廓线透明度
+            //             strokeWeight: 1, //轮廓线宽度
+            //             fillOpacity: 0.4, //圆形填充透明度
+            //             strokeStyle: "dashed", //轮廓线样式
+            //             strokeDasharray: [10, 10],
+            //             fillColor: "#1791fc", //圆形填充颜色
+            //             zIndex: 50, //圆形的叠加顺序
+            //         });
+            //         //圆形 Circle 对象添加到 Map
+            //         map.add(circle);
+            //         //根据覆盖物范围调整视野
+            //         map.setFitView([circle])
+            //     })       
         })
         .then((abc) => {
             console.log(abc);

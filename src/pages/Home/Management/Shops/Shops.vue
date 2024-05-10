@@ -85,7 +85,7 @@
       <div style="margin-left: 30px">
         <div class="info">现选择商铺所属行政区为：{{ areasName }}</div>
         <el-form-item label="请选择调整后的行政区:">
-          <el-select v-model="searchForm.areaId" placeholder="请选择">
+          <el-select v-model="AreaId" placeholder="请选择">
             <el-option v-for="item in areas" :key="item.areaId" :label="item.areaName" :value="Number(item.areaId)" />
           </el-select>
         </el-form-item>
@@ -211,6 +211,7 @@ function handelReset() {
 // 多选删除
 const deleteData = ref<string>();
 const sameArea = ref<boolean>()
+const AreaId = ref<number>()
 const areasName = ref<string>()
 const updataData = ref<string[]>()
 function handleSelectionChange(items: ImanagementTableData[]) {
@@ -250,12 +251,13 @@ function updatedAreas() {
   }
 }
 function confirmArea() {
-  console.log({ areaId: searchForm.value.areaId, storeIdList: updataData.value });
-  if (searchForm.value.areaId&&updataData.value) {
-    datamanagementStore.updateAreaAction({ areaId: searchForm.value.areaId, storeIdList: updataData.value }).then(() => {
+  console.log({ areaId: AreaId.value, storeIdList: updataData.value });
+  if (AreaId.value&&updataData.value) {
+    datamanagementStore.updateAreaAction({ areaId: AreaId.value, storeIdList: updataData.value }).then(() => {
       AreaEdit.value = false
+      getDate(searchForm.value);
     })
-    getDate(searchForm.value);
+    
   } else {
     ElMessage.warning("请选择调整后的行政区");
   }
@@ -287,7 +289,7 @@ onMounted(() => {
       width: 500px;
 
       .off {
-        width: 2vw;
+        width: 1.5vw;
         height: 2vh;
         background-color: #9addf6;
         position: absolute;

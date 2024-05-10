@@ -22,6 +22,7 @@ export interface ImanagementStoreDetial{
   storeAddress:string,
   storeId?:number,
   storeName:string,
+  locationType:string
   type:string,
   updateBy?:number,
   updateTime:string
