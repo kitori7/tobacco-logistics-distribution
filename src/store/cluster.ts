@@ -72,8 +72,6 @@ export const useClusterStore = defineStore("cluster", () => {
       JSON.stringify(clusterAndShopList.value)
     );
     clusterAndShopList.value = mergedArray;
-    console.log(clusterAndShopList.value);
-    console.log(resultPoints.value);
   }
 
   //计算接口
