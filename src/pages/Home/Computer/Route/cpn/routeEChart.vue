@@ -1,188 +1,108 @@
 <template>
-  <div class="routeEChart">
+  <div class="routeEChart" v-show="isOpenEChart">
     <div class="AnalysisRouteBottom">
-      <div class="BottomLeft">
-        <BorderBox9
-          :color="['#73e5ff', '#73e5ff']"
-          backgroundColor="#001731"
-          style="opacity: 0.97"
-        >
-          <div class="title">运行里程/km</div>
-          <div id="main"></div>
-        </BorderBox9>
+      <div class="content">
+        <div class="title">运行里程/km</div>
+        <div class="canvas" ref="distanceRef"></div>
       </div>
-      <div class="BottomMiddle">
-        <BorderBox9
-          :color="['#73e5ff', '#73e5ff']"
-          backgroundColor="#001731"
-          style="opacity: 0.97"
-        >
-          <div class="title">载货量/条</div>
-          <div id="main2"></div>
-        </BorderBox9>
+      <!-- <div class="content">
+        <div class="title">载货量/条</div>
+        <div class="canvas" ref="weightRef"></div>
       </div>
-      <div class="BottomRight">
-        <BorderBox9
-          :color="['#73e5ff', '#73e5ff']"
-          backgroundColor="#001731"
-          style="opacity: 0.97"
-        >
-          <div class="title">工作时长/h</div>
-          <div id="main3"></div>
-        </BorderBox9>
-      </div>
+      <div class="content">
+        <div class="title">工作时长/h</div>
+        <div class="canvas" ref="timeRef"></div>
+      </div> -->
     </div>
   </div>
 </template>
 <script lang="ts" setup>
-  // const isChartDisplayed = ref<boolean>(true);
-  // const changeIconFunction = () => {
-  //   isChartDisplayed.value = !isChartDisplayed.value;
-  // };
-  // //eachart初始
-  // const setEchartsOptions = () => {
-  //   let myChart = echarts.init(document.getElementById("main"));
-  //   myChart.setOption(option);
-  // };
-  // const setEchartsOptions2 = () => {
-  //   let myChart = echarts.init(document.getElementById("main2"));
-  //   myChart.setOption(option2);
-  // };
-  // const setEchartsOptions3 = () => {
-  //   let myChart = echarts.init(document.getElementById("main3"));
-  //   myChart.setOption(option);
-  // };
-  // function SplitLines() {
-  //   clusterStore.getSplitLinesAction().then(() => {
-  //     console.log(clusterStore.SplitLines);
-  //     clusterStore.SplitLines?.forEach((item: polylineData[]) => {
-  //       let path: AMap.LngLat[] = [];
-  //       item.forEach((item: polylineData) => {
-  //         path.push(new AMap.LngLat(item.longitude, item.latitude));
-  //       });
-  //       let polyline = new AMap.Polyline({
-  //         path: path,
-  //         strokeWeight: 5,
-  //         showDir: true,
-  //         strokeColor: "#001731", //线条颜色
-  //         lineJoin: "round", //折线拐点连接处样式
-  //       });
-  //       map.add(polyline);
-  //     });
-  //   });
-  // }
-  // let option = {
-  //   textStyle: {
-  //     color: "#ffffff",
-  //   },
-  //   xAxis: {
-  //     type: "category",
-  //     data: ["1", "2", "4"],
-  //   },
-  //   yAxis: {
-  //     type: "value",
-  //   },
-  //   grid: {
-  //     x: 70,
-  //     x2: 40,
-  //     y: 70,
-  //     y2: 40,
-  //   },
-  //   series: [
-  //     {
-  //       data: [10, 20, 30],
-  //       type: "bar",
-  //       barWidth: "20%",
-  //       label: {
-  //         show: true, //开启显示
-  //         position: "top",
-  //         textStyle: {
-  //           //数值样式
-  //           color: "#ffffff", //字体颜色
-  //           fontSize: 15, //字体大小
-  //         },
-  //       },
-  //     },
-  //   ],
-  // };
-  // let option2 = {
-  //   textStyle: {
-  //     color: "#ffffff",
-  //   },
-  //   xAxis: {
-  //     type: "category",
-  //     data: ["1", "2", "4"],
-  //   },
-  //   yAxis: {
-  //     type: "value",
-  //   },
-  //   grid: {
-  //     x: 70,
-  //     x2: 40,
-  //     y: 70,
-  //     y2: 40,
-  //   },
-  //   series: [
-  //     {
-  //       data: [10, 20, 30],
-  //       type: "bar",
-  //       barWidth: "20%",
-  //       label: {
-  //         show: true, //开启显示
-  //         position: "top",
-  //         textStyle: {
-  //           //数值样式
-  //           color: "#ffffff", //字体颜色
-  //           fontSize: 15, //字体大小
-  //         },
-  //       },
-  //     },
-  //   ],
-  // };
+  import * as echart from "echarts";
+  type EChartsOption = echarts.EChartsOption;
+
+  type IProps = {
+    data: {
+      [key: string]: Array<number>;
+      dis: Array<number>;
+      wei: Array<number>;
+      time: Array<number>;
+    };
+  };
+  const props = defineProps<IProps>();
+
+  // 显示隐藏
+  const isOpenEChart = defineModel<boolean>({ required: true, default: false });
+
+  const distanceRef = ref<HTMLElement>();
+  const weightRef = ref<HTMLElement>();
+  const timeRef = ref<HTMLElement>();
+
+  onMounted(() => {
+    const distanceEC = echart.init(distanceRef?.value);
+    // const weightEC = echart.init(weightRef?.value);
+    // const timeEC = echart.init(timeRef?.value);
+    watch(
+      props.data,
+      () => {
+        distanceEC.setOption(newOption("dis"));
+        // weightEC.setOption(newOption("wei"));
+        // timeEC.setOption(newOption("time"));
+      },
+      { immediate: true }
+    );
+  });
+
+  function newOption(type: keyof IProps["data"]): EChartsOption {
+    return {
+      xAxis: {
+        type: "category",
+      },
+      yAxis: {
+        type: "value",
+      },
+      series: [
+        {
+          data: props.data[type],
+          type: "bar",
+          label: {
+            fontSize: 6,
+          },
+        },
+      ],
+    };
+  }
+  // const option = computed(() => {});
 </script>
 <style lang="scss" scoped>
   .routeEChart {
-      .AnalysisRouteBottom {
-        display: flex;
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+    .AnalysisRouteBottom {
+      display: flex;
+      position: relative;
+      color: #73e5ff;
+      .content {
+        flex: 1;
+        height: 24vh;
         position: relative;
-        top: -39%;
-        color: #73e5ff;
-
+        background-color: #001731;
+        margin: 0px;
+        border: #73e5ff 1px solid;
+        border-radius: 2px;
+        padding: 5px;
         .title {
+          text-align: center;
+        }
+        .canvas {
           position: absolute;
+          top: 60%;
           left: 50%;
-          transform: translate(-50%, 80%);
-        }
-
-        .BottomLeft {
-          flex: 1;
-          height: 25vh;
-
-          #main {
-            width: 100%;
-            height: 100%;
-          }
-        }
-
-        .BottomMiddle {
-          flex: 1;
-          height: 25vh;
-
-          #main2 {
-            width: 100%;
-            height: 100%;
-          }
-        }
-
-        .BottomRight {
-          flex: 1;
-          height: 25vh;
-
-          #main3 {
-            height: 100%;
-            width: 100%;
-          }
+          transform: translate(-50%, -50%);
+          width: 740px;
+          height: 250px;
         }
       }
+    }
   }
 </style>

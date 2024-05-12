@@ -1,13 +1,14 @@
 <template>
   <div class="route">
     <div class="map">
-      <el-button class="icon">
+      <el-button class="icon" @click="openEChart">
         <el-icon>
           <Edit />
         </el-icon>
       </el-button>
       <div id="container"></div>
-      <el-button class="adjust" @click="areaChange">打卡点调整</el-button>
+      <RouteEChart :data="eChartData" v-model="isOpenEChart"></RouteEChart>
+      <el-button class="adjust">打卡点调整</el-button>
     </div>
     <div class="content">
       <BorderBox9 :color="['#73e5ff', '#73e5ff']" backgroundColor="#001731">
@@ -126,40 +127,27 @@
   //@ts-ignore
   import AMapLoader from "@amap/amap-jsapi-loader";
   import { useClusterStore } from "@/store/cluster";
-  import { IAccumulationList, } from "@/types/cluster";
-  // import echarts from "@/store/echart";
+  import { IAccumulationList } from "@/types/cluster";
+  import RouteEChart from "./cpn/routeEChart.vue";
+  import { log } from "console";
   window._AMapSecurityConfig = {
     securityJsCode: "1b6291b2fceee1cd3b7798bfdd4c39e4",
   };
-  function areaChange() {}
-  //路径分析入口
-  // const analysisRouteBtn = () => {
-  //     if (choiceCalculateType.value !== 0) {
-  //         // router.push('/home/AnalysisRoute')
-
-  //     } else {
-  //         ElMessage.warning("请先进行重新计算");
-  //     }
-  // }
   //聚集区Store
   const clusterStore = useClusterStore();
   let map: any = null;
   AMapLoader.load({
     key: "64c03ae77b4521e9dbb72475e120e70c", // 申请好的Web端开发者Key，首次调用 load 时必填
     version: "2.0", // 指定要加载的 JSAPI 的版本，缺省时默认为 1.4.15
-    plugins: ["AMap.DistrictSearch"], // 需要使用的的插件列表，如比例尺'AMap.Scale'等
+    plugins: ["AMap.DistrictSearch", "AMap.MarkerCluster"], // 需要使用的的插件列表，如比例尺'AMap.Scale'等
   })
-    .then((AMap:any) => {
+    .then((AMap: any) => {
       const district = new AMap.DistrictSearch({
         subdistrict: 1,
         extensions: "all",
         level: "province",
       });
-      district.search("韶关市", function (status: any, result: any) {
-        // 查询成功时，result即为对应的行政区信息
-        console.log(status);
-        console.log(result);
-
+      district.search("韶关市", function (_: any, result: any) {
         const bounds = result.districtList[0].boundaries;
         const mask = [];
         for (let i = 0; i < bounds.length; i++) {
@@ -195,39 +183,7 @@
           console.log(e.lnglat.getLng() + "," + e.lnglat.getLat());
         });
 
-        const myCoordinateList1 = ref<any[]>([
-          // {
-          //   //longitude
-          //   polyline: [
-          //     { latitude: 25.20778628, longitude: 113.2119596663 },
-          //     { latitude: 25.20778628, longitude: 113.507437962 },
-          //     { latitude: 24.893000694, longitude: 113.507437962 },
-          //     { latitude: 24.893000694, longitude: 113.2119596663 },
-          //   ],
-          //   centen: [113.36062079058831, 25.05219532868564],
-          //   marker: {},
-          // },
-          // {
-          //   polyline: [
-          //     { latitude: 24.8701570951955, longitude: 113.41900839283704 },
-          //     { latitude: 24.8701570951955, longitude: 113.79489895520231 },
-          //     { latitude: 24.5085448015983, longitude: 113.79489895520231 },
-          //     { latitude: 24.5085448015983, longitude: 113.41900839283704 },
-          //   ],
-          //   centen: [113.59682684527587, 24.685887616201747],
-          //   marker: {},
-          // },
-          // {
-          //   polyline: [
-          //     { latitude: 24.2, longitude: 113.46635951793562 },
-          //     { latitude: 24.2, longitude: 113.05094914668015 },
-          //     { latitude: 24.4, longitude: 113.05094914668015 },
-          //     { latitude: 24.4, longitude: 113.46635951793562 },
-          //   ],
-          //   centen: [113.26449041949456, 24.27844789476107],
-          //   marker: {},
-          // },
-        ]);
+        const myCoordinateList1 = ref<any[]>([]);
 
         const myCoordinateList = ref<any[]>([
           // {
@@ -392,7 +348,6 @@
           });
           map.add(polygon);
         }
-        console.log(myCoordinateList);
         myCoordinateList.value.forEach((item, index) => {
           //配置多边形路径
           let path: AMap.LngLat[] = [];
@@ -411,7 +366,7 @@
         });
       });
     })
-    .catch((e:Error) => {
+    .catch((e: Error) => {
       console.log(e);
     });
   const activeNames = ref(["0"]);
@@ -461,11 +416,23 @@
   const num = ref(10);
   //路径重新计算
 
+  // 打卡 eChart
+  const isOpenEChart = ref(false);
+  function openEChart() {
+    isOpenEChart.value = !isOpenEChart.value;
+  }
+
+  const eChartData = ref<{
+    dis: number[];
+    wei: number[];
+    time: number[];
+  }>({ dis: [], wei: [], time: [] });
   onMounted(() => {
     setTimeout(() => {
       countPathResult();
     }, 1000);
   });
+  const markers: Array<AMap.Text> = [];
   function countPathResult() {
     const colorArr = [
       "#e4c974",
@@ -480,7 +447,6 @@
       // 绘制点
       // 凸包渲染
       const polygonPath = item.convex.map((item) => {
-
         const position = new AMap.Marker({
           position: new AMap.LngLat(item.longitude, item.latitude),
           title: routeName,
@@ -491,7 +457,15 @@
         map.add(position);
         return [item.longitude, item.latitude];
       });
-      const polygon = new AMap.Polygon({
+      const activePolyOption = {
+        path: polygonPath,
+        strokeOpacity: 1,
+        fillOpacity: 1,
+        fillColor: "#91e3fc",
+        strokeColor: "#fff",
+        strokeWeight: 5,
+      };
+      const unActivePolyOption = {
         path: polygonPath,
         fillColor: colorArr[item.transitDepotId - 1],
         strokeOpacity: 0.5,
@@ -499,10 +473,67 @@
         strokeColor: "#fff",
         strokeWeight: 5,
         strokeStyle: "solid",
+      };
+      const polygon = new AMap.Polygon(unActivePolyOption);
+      let isActive = false;
+      let marker: any = null;
+
+      polygon.on("click", (event: any) => {
+        let index = eChartData.value.dis.indexOf(Number(item.distance));
+        if (!isActive) {
+          polygon.setOptions(activePolyOption);
+          eChartData.value.dis.push(Number(item.distance));
+          eChartData.value.wei.push(Number(item.cargoWeight));
+          eChartData.value.time.push(Number(item.workTime));
+          index = eChartData.value.dis.indexOf(Number(item.distance));
+          marker = new AMap.Text({
+            position: new AMap.LngLat(
+              event.lnglat.getLng(),
+              event.lnglat.getLat()
+            ),
+            text: index.toString(),
+            style: { color: colorArr[item.transitDepotId - 1] },
+          });
+          marker.dis = item.distance;
+          markers.push(marker);
+          map.add(marker);
+          console.log(markers);
+        } else {
+          polygon.setOptions(unActivePolyOption);
+          if (index !== -1) {
+            eChartData.value.dis.splice(index, 1);
+            eChartData.value.wei.splice(index, 1);
+            eChartData.value.time.splice(index, 1);
+          }
+          if (markers.indexOf(marker) !== -1) {
+            markers.splice(markers.indexOf(marker), 1);
+            map.remove(marker);
+            renderMarkers();
+          }
+        }
+        isActive = !isActive;
       });
       map.add(polygon);
-
-      // TODO路线绘制
+      // 重新渲染 marker
+      function renderMarkers() {
+        markers.forEach((marker) => {
+          const newIndex = eChartData.value.dis.indexOf(Number(marker.dis));
+          if (marker.getText() !== newIndex.toString()) {
+            marker.setText(newIndex.toString());
+          }
+        });
+      }
+      // const points = item.convex.map((item) => {
+      //   return {
+      //     lnglat: [item.longitude, item.latitude],
+      //   };
+      // });
+      //@ts-ignore
+      // const cluster = new AMap.MarkerCluster(map, points, {
+      //   gridSize: 400,
+      // });
+      // map.add(cluster);
+      // //路线绘制
       const polyLinePath = item.polyline.map((item) => {
         return new AMap.LngLat(item.longitude, item.latitude);
       });
@@ -644,6 +675,7 @@
         background-color: #3490f5;
         border: 0px;
         border-radius: 30%;
+        position: relative;
       }
       #container {
         height: 75vh;
@@ -660,7 +692,6 @@
         border-radius: 10%;
         background-color: #72e4ff;
       }
-
     }
 
     .content {
