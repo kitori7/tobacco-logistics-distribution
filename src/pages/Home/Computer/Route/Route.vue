@@ -129,7 +129,6 @@
   import { useClusterStore } from "@/store/cluster";
   import { IAccumulationList } from "@/types/cluster";
   import RouteEChart from "./cpn/routeEChart.vue";
-  import { log } from "console";
   window._AMapSecurityConfig = {
     securityJsCode: "1b6291b2fceee1cd3b7798bfdd4c39e4",
   };
@@ -178,10 +177,6 @@
         const limitBound = map.getBounds();
         map.setLimitBounds(limitBound);
         //绑定点击事件
-        map.on("click", function (e: any) {
-          console.log(e);
-          console.log(e.lnglat.getLng() + "," + e.lnglat.getLat());
-        });
 
         const myCoordinateList1 = ref<any[]>([]);
 
@@ -523,16 +518,16 @@
           }
         });
       }
-      // const points = item.convex.map((item) => {
-      //   return {
-      //     lnglat: [item.longitude, item.latitude],
-      //   };
-      // });
+      const points = item.convex.map((item) => {
+        return {
+          lnglat: [item.longitude, item.latitude],
+        };
+      });
       //@ts-ignore
-      // const cluster = new AMap.MarkerCluster(map, points, {
-      //   gridSize: 400,
-      // });
-      // map.add(cluster);
+      const cluster = new AMap.MarkerCluster(map, points, {
+        gridSize: 400,
+      });
+      map.add(cluster);
       // //路线绘制
       const polyLinePath = item.polyline.map((item) => {
         return new AMap.LngLat(item.longitude, item.latitude);

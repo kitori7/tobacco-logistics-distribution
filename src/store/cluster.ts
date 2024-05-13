@@ -179,10 +179,13 @@ export const useClusterStore = defineStore("cluster", () => {
 
   //获取路线详情-大区路线聚集区详情
   //定义路线存储数据变量
-  const routeDetails = ref<IAreaDetails[]>();
+  const routeDetails = ref<IAreaDetails[]>(
+    JSON.parse(localStorage.getItem("routeDetails") ?? "[]")
+  );
   async function getRouteDetailsAction() {
     const res = await getRouteDetails();
     routeDetails.value = res.data;
+    localStorage.setItem("routeDetails", JSON.stringify(res.data));
   }
 
   //获取路线详情-聚集区下商户信息
