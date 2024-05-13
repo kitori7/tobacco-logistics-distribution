@@ -37,13 +37,15 @@ import {
   IStoreDetails,
   IVersionRequest,
   polylineData,
-  IRouteSave
+  IRouteSave,
 } from "@/types/cluster";
 import { defineStore } from "pinia";
 
 export const useClusterStore = defineStore("cluster", () => {
   //获取所有聚集区和对应商铺
-  const clusterAndShopList = ref<IClusterAndShopList[]>([]);
+  const clusterAndShopList = ref<IClusterAndShopList[]>(
+    JSON.parse(localStorage.getItem("clusterAndShopList") ?? "[]")
+  );
   //获取聚集区和商铺
   const resultPoints = ref<IResultPoints[]>([]);
   async function getAllResultPointsAction() {
@@ -64,9 +66,12 @@ export const useClusterStore = defineStore("cluster", () => {
       }
       return result;
     }, clusterAndShopList.value);
+    // 存缓
+    localStorage.setItem(
+      "clusterAndShopList",
+      JSON.stringify(clusterAndShopList.value)
+    );
     clusterAndShopList.value = mergedArray;
-    console.log(clusterAndShopList.value);
-    console.log(resultPoints.value);
   }
 
   //计算接口
@@ -152,10 +157,16 @@ export const useClusterStore = defineStore("cluster", () => {
 
   //计算全部大区接口
   //定义变量储存重新计算完的路径数据
-  const newPathResultAll = ref<IRouteData[]>();
+  const newPathResultAll = ref<IRouteData[]>(
+    JSON.parse(localStorage.getItem("newPathResultAll") ?? "[]") ?? []
+  );
   async function calculateAllAction(data: ICalculateInfo) {
     const res = await calculateAll(data);
     newPathResultAll.value = res.data;
+    localStorage.setItem(
+      "newPathResultAll",
+      JSON.stringify(newPathResultAll.value)
+    );
   }
 
   //路径分析获取地图数据
@@ -168,10 +179,13 @@ export const useClusterStore = defineStore("cluster", () => {
 
   //获取路线详情-大区路线聚集区详情
   //定义路线存储数据变量
-  const routeDetails = ref<IAreaDetails[]>();
+  const routeDetails = ref<IAreaDetails[]>(
+    JSON.parse(localStorage.getItem("routeDetails") ?? "[]")
+  );
   async function getRouteDetailsAction() {
     const res = await getRouteDetails();
     routeDetails.value = res.data;
+    localStorage.setItem("routeDetails", JSON.stringify(res.data));
   }
 
   //获取路线详情-聚集区下商户信息
@@ -228,7 +242,7 @@ export const useClusterStore = defineStore("cluster", () => {
   }
   // 路径比较
   const compareData = ref<any>();
-  async function compareRouteAction(data:string) {
+  async function compareRouteAction(data: string) {
     const res = await compareRoute(data);
     SplitLines.value = res.data;
   }
@@ -271,6 +285,6 @@ export const useClusterStore = defineStore("cluster", () => {
     getSplitLinesAction,
     SplitLines,
     compareRouteAction,
-    compareData
+    compareData,
   };
 });
