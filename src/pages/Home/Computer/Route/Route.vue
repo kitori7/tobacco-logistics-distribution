@@ -129,6 +129,7 @@
   import { useClusterStore } from "@/store/cluster";
   import { IAccumulationList } from "@/types/cluster";
   import RouteEChart from "./cpn/routeEChart.vue";
+  import { log } from "console";
   window._AMapSecurityConfig = {
     securityJsCode: "1b6291b2fceee1cd3b7798bfdd4c39e4",
   };
@@ -147,6 +148,8 @@
         level: "province",
       });
       district.search("韶关市", function (_: any, result: any) {
+        // 渲染
+
         const bounds = result.districtList[0].boundaries;
         const mask = [];
         for (let i = 0; i < bounds.length; i++) {
@@ -177,6 +180,13 @@
         const limitBound = map.getBounds();
         map.setLimitBounds(limitBound);
         //绑定点击事件
+        map.on("click", function (e: any) {
+          console.log(
+            "当前坐标：" + e.lnglat.getLng() + "," + e.lnglat.getLat()
+          );
+        });
+        // 渲染多个组件
+        countPathResult();
 
         const myCoordinateList1 = ref<any[]>([]);
 
@@ -422,11 +432,6 @@
     wei: number[];
     time: number[];
   }>({ dis: [], wei: [], time: [] });
-  onMounted(() => {
-    setTimeout(() => {
-      countPathResult();
-    }, 1000);
-  });
   const markers: Array<AMap.Text> = [];
   function countPathResult() {
     const colorArr = [
@@ -444,7 +449,7 @@
       const polygonPath = item.convex.map((item) => {
         const position = new AMap.Marker({
           position: new AMap.LngLat(item.longitude, item.latitude),
-          title: routeName,
+          title: `${routeName}(${item.longitude},${item.latitude})`,
           content: `<div style="font-size: 8px;color: #bcbcbc;">◉</div>`,
           //@ts-ignore
           anchor: "center",
@@ -518,16 +523,16 @@
           }
         });
       }
-      const points = item.convex.map((item) => {
-        return {
-          lnglat: [item.longitude, item.latitude],
-        };
-      });
+      // const points = item.convex.map((item) => {
+      //   return {
+      //     lnglat: [item.longitude, item.latitude],
+      //   };
+      // });
       //@ts-ignore
-      const cluster = new AMap.MarkerCluster(map, points, {
-        gridSize: 400,
-      });
-      map.add(cluster);
+      // const cluster = new AMap.MarkerCluster(map, points, {
+      //   gridSize: 400,
+      // });
+      // map.add(cluster);
       // //路线绘制
       const polyLinePath = item.polyline.map((item) => {
         return new AMap.LngLat(item.longitude, item.latitude);
