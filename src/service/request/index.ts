@@ -6,7 +6,7 @@ class request {
   instance: AxiosInstance;
   constructor(config: requestConfig) {
     this.instance = axios.create(config);
-
+    this.instance.defaults.timeout=2500
     //全局拦截器
     this.instance.interceptors.request.use(
       //全局请求成功拦截
@@ -25,6 +25,11 @@ class request {
       },
       //全局响应失败
       (err) => {
+        if(err.message.includes('timeout')){
+          ElMessage({message:'请求页面超时，请刷新重试',duration:5*1000,type:'error'});
+        }else if(err.message.includes('Network Error')){
+          ElMessage({message:'网络错误，请检查网络连接',duration:5*1000,type:'error'});
+        }
         return err;
       }
     );

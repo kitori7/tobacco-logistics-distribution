@@ -19,6 +19,10 @@ import {
   getRouteVersion,
   getSplitLines,
   compareRoute,
+  compareArea,
+  adjustPoint,
+  getConvexPoint,
+  calculateSingleRoute
 } from "@/service/modules/cluster";
 import {
   IAccumlationInfo,
@@ -30,20 +34,24 @@ import {
   IHistoricalPath,
   IInformationList,
   IMapResultPoints,
-  IMapResultSurface,
   IResultPoints,
   IRouteData,
   IShopData,
   IStoreDetails,
   IVersionRequest,
   polylineData,
-  IRouteSave
+  IRouteSave,
+  Ipoints
 } from "@/types/cluster";
 import { defineStore } from "pinia";
 
 export const useClusterStore = defineStore("cluster", () => {
   //获取所有聚集区和对应商铺
-  const clusterAndShopList = ref<IClusterAndShopList[]>([]);
+  const clusterAndShopList = ref<IClusterAndShopList[]>(
+
+     localStorage.getItem("clusterAndShopList")?JSON.parse(localStorage.getItem("clusterAndShopList")!):[]
+
+  );
   //获取聚集区和商铺
   const resultPoints = ref<IResultPoints[]>([]);
   async function getAllResultPointsAction() {
@@ -64,9 +72,12 @@ export const useClusterStore = defineStore("cluster", () => {
       }
       return result;
     }, clusterAndShopList.value);
+    // 存缓
+    // localStorage.setItem(
+    //   "clusterAndShopList",
+    //   JSON.stringify(clusterAndShopList.value)
+    // );
     clusterAndShopList.value = mergedArray;
-    console.log(clusterAndShopList.value);
-    console.log(resultPoints.value);
   }
 
   //计算接口
@@ -103,10 +114,11 @@ export const useClusterStore = defineStore("cluster", () => {
 
   //获取错误点接口
   const errorResult = ref<IErrorPoints[]>();
-  // const errorPointsData = ref<IErrorPoints_data[]>();
   async function getErrorPointsAction() {
     const res = await getErrorPoints();
     errorResult.value = res.data;
+    console.log(res);
+    
   }
 
   //获取当前商铺可调整到的聚集区
@@ -134,11 +146,11 @@ export const useClusterStore = defineStore("cluster", () => {
   //获取地图所有商铺点
   //定义变量储存数据
   const MapResultPoints = ref<IMapResultPoints[]>();
-  const MapResultSurface = ref<IMapResultSurface[]>();
+  // const MapResultSurface = ref<IMapResultSurface[]>();
   async function getMapResultPointsAction() {
     const res = await getMapResultPoints();
+    console.log(res);
     MapResultPoints.value = res.data.point;
-    MapResultSurface.value = res.data.side;
   }
 
   //路径计算接口
@@ -148,14 +160,23 @@ export const useClusterStore = defineStore("cluster", () => {
     const res = await pathCalculateOne(data);
     newPathResult.value = res.data;
     console.log(res);
+    
   }
 
   //计算全部大区接口
   //定义变量储存重新计算完的路径数据
-  const newPathResultAll = ref<IRouteData[]>();
+  const newPathResultAll = ref<IRouteData[]>(
+    localStorage.getItem("newPathResultAll")!='undefined'?JSON.parse(localStorage.getItem("newPathResultAll")!):[]
+  );
   async function calculateAllAction(data: ICalculateInfo) {
     const res = await calculateAll(data);
-    newPathResultAll.value = res.data;
+    newPathResultAll.value = res.data;   
+    console.log(res);
+       
+    localStorage.setItem(
+      "newPathResultAll",
+      JSON.stringify(newPathResultAll.value)
+    );
   }
 
   //路径分析获取地图数据
@@ -168,10 +189,13 @@ export const useClusterStore = defineStore("cluster", () => {
 
   //获取路线详情-大区路线聚集区详情
   //定义路线存储数据变量
-  const routeDetails = ref<IAreaDetails[]>();
+  const routeDetails = ref<IAreaDetails[]>(
+    localStorage.getItem("routeDetails")!='undefined'?JSON.parse(localStorage.getItem("routeDetails")!):[]
+  );
   async function getRouteDetailsAction() {
     const res = await getRouteDetails();
     routeDetails.value = res.data;
+    localStorage.setItem("routeDetails", JSON.stringify(res.data));
   }
 
   //获取路线详情-聚集区下商户信息
@@ -195,6 +219,8 @@ export const useClusterStore = defineStore("cluster", () => {
     const res = await postAddRoute(data);
     if (res.code === 200) {
       ElMessage.success(res.msg);
+    }else{
+      ElMessage.error(res.msg);
     }
     console.log(res);
   }
@@ -228,9 +254,36 @@ export const useClusterStore = defineStore("cluster", () => {
   }
   // 路径比较
   const compareData = ref<any>();
-  async function compareRouteAction(data:string) {
+  async function compareRouteAction(data: string) {
     const res = await compareRoute(data);
-    SplitLines.value = res.data;
+    compareData.value = res.data;
+  }
+  // 班组比较
+  const compareAreaData = ref<any>();
+  async function compareAreaAction(data: string) {
+    const res = await compareArea(data);
+    compareAreaData.value = res.data;
+  }
+  // 调整打卡点
+  async function adjustPointAction(data: Ipoints) {
+    const res = await adjustPoint(data);
+    if (res.code === 200) {
+      ElMessage.success(res.msg);
+    }
+    console.log(res);
+  }
+  // 获取凸包打卡点
+  const convexPoint = ref<any>();
+  async function getConvexPointAction() {
+    const res = await getConvexPoint();
+    convexPoint.value = res.data
+  }
+  // 单条路径重新计算
+  async function calculateSingleRouteAction(data:any) {
+    const res = await calculateSingleRoute(data);
+    if (res.code === 200) {
+      ElMessage.success(res.msg);
+    }
   }
   return {
     getAllResultPointsAction,
@@ -250,7 +303,6 @@ export const useClusterStore = defineStore("cluster", () => {
     UpdateStoreAccumulationIdCode,
     getMapResultPointsAction,
     MapResultPoints,
-    MapResultSurface,
     pathCalculateOneAction,
     calculateAllAction,
     newPathResultAll,
@@ -271,6 +323,12 @@ export const useClusterStore = defineStore("cluster", () => {
     getSplitLinesAction,
     SplitLines,
     compareRouteAction,
-    compareData
+    compareData,
+    compareAreaAction,
+    compareAreaData,
+    adjustPointAction,
+    convexPoint,
+    getConvexPointAction,
+    calculateSingleRouteAction
   };
 });

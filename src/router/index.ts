@@ -40,7 +40,7 @@ const constantRoutes: RouteRecordRaw[] = [
         name: "computer",
         meta: { order: 2 },
         component: () => import("@/pages/Home/Computer/Computer.vue"),
-        redirect: "/home/computer/area",
+        redirect: "/home/computer/route",
         children: [
           {
             path: "/home/computer/area",

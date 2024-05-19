@@ -2,12 +2,12 @@
     <div class="Computer">
         <div class="btn-content">
             <el-badge class="item">
-                <el-button :class="{ vertical: true, active: currentRoute === 'area' }"
-                    @click="routerChange('area')">聚集区计算</el-button>
-            </el-badge>
-            <el-badge class="item">
                 <el-button :class="{ vertical: true, active: currentRoute === 'route' }"
                     @click="routerChange('route')">路径计算</el-button>
+            </el-badge>
+            <el-badge class="item">
+                <el-button :class="{ vertical: true, active: currentRoute === 'area' }"
+                    @click="routerChange('area')">聚集区计算</el-button>
             </el-badge>
             <el-badge class="item">
                 <el-button :class="{ vertical: true, active: currentRoute === 'SaleRoute' }"
