@@ -44,7 +44,6 @@ import {
   IRouteSave,
   Ipoints
 } from "@/types/cluster";
-import { tr } from "element-plus/es/locale";
 import { defineStore } from "pinia";
 
 export const useClusterStore = defineStore("cluster", () => {
@@ -253,7 +252,6 @@ export const useClusterStore = defineStore("cluster", () => {
   }
   // 路径比较
   const compareData = ref<any>();
-  async function compareRouteAction(data: string) {
   async function compareRouteAction(data: string) {
     const res = await compareRoute(data);
     compareData.value = res.data;
