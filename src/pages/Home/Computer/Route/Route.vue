@@ -2,7 +2,6 @@
   <div class="route">
     <div class="map">
       <el-button class="icon" @click="openEChart">
-      <el-button class="icon" @click="openEChart">
         <el-icon>
           <Edit />
         </el-icon>
@@ -127,7 +126,6 @@
   import { Edit } from "@element-plus/icons-vue";
   import { BorderBox9 } from "@dataview/datav-vue3";
   //@ts-ignore
-  //@ts-ignore
   import AMapLoader from "@amap/amap-jsapi-loader";
   import { useClusterStore } from "@/store/cluster";
   import { IAccumulationList } from "@/types/cluster";
@@ -141,8 +139,7 @@
   AMapLoader.load({
     key: "64c03ae77b4521e9dbb72475e120e70c", // 申请好的Web端开发者Key，首次调用 load 时必填
     version: "2.0", // 指定要加载的 JSAPI 的版本，缺省时默认为 1.4.15
-    plugins: ["AMap.DistrictSearch", "AMap.MarkerCluster"], // 需要使用的的插件列表，如比例尺'AMap.Scale'等
-    plugins: ["AMap.DistrictSearch", "AMap.MarkerCluster"], // 需要使用的的插件列表，如比例尺'AMap.Scale'等
+    plugins: ["AMap.DistrictSearch", "AMap.MarkerCluster"], // 需要使用的的插件列表，如比例尺'AMap.Scale'等 // 需要使用的的插件列表，如比例尺'AMap.Scale'等
   })
     .then((AMap: any) => {
       const district = new AMap.DistrictSearch({

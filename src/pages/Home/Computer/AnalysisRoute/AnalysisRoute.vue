@@ -69,7 +69,7 @@
 import { ArrowLeftBold } from "@element-plus/icons-vue";
 import { useRouter } from "vue-router";
 import { BorderBox11 } from "@dataview/datav-vue3";
-import AMapLoader from "@amap/amap-jsapi-loader";
+// import AMapLoader from "@amap/amap-jsapi-loader";
 import echarts from "@/store/echart";
 import { useClusterStore } from "@/store/cluster";
 window._AMapSecurityConfig = {
@@ -87,7 +87,7 @@ AMapLoader.load({
     version: "2.0", // 指定要加载的 JSAPI 的版本，缺省时默认为 1.4.15
     plugins: ['AMap.DistrictSearch'], // 需要使用的的插件列表，如比例尺'AMap.Scale'等
 })
-    .then((AMap) => {
+    .then((AMap:any) => {
         const district = new AMap.DistrictSearch({ subdistrict: 0, extensions: 'all', level: 'province' });
         district.search('韶关市', function (status: any, result: any) {
             // 查询成功时，result即为对应的行政区信息
@@ -148,7 +148,7 @@ AMapLoader.load({
 
         })
     })
-    .catch((e) => {
+    .catch((e:Error) => {
         console.log(e);
     });
 //eachart初始
