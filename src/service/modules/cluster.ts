@@ -16,12 +16,13 @@ import {
   IVersionRequest,
   ItestInformation,
   IRouteSave,
+  Ipoints
 } from "@/types/cluster";
 
 // 获取所有聚集区及商铺点
 export function getAllResultPoints() {
   return requests.get<IRequest<IResultPoints[]>>({
-    timeout: 1000 * 30,
+    timeout: 1000 * 80,
     url: "/clustercalculate/cluster/getListResultPoints",
   });
 }
@@ -32,18 +33,25 @@ export function postCalculateAll() {
     timeout: 1000 * 60 * 4,
     url: "/clustercalculate/cluster/calculateAll",
   });
+  return requests.post<IRequest<any[]>>({
+    timeout: 1000 * 60 * 4,
+    url: "/clustercalculate/cluster/calculateAll",
+  });
 }
 
 //检测所有大区的所有聚集区是否有错误点
 export function getCheckErrorPoints() {
   return requests.get<IRequest<number>>({
-    timeout: 1000 * 60,
+    timeout: 1000 * 80,
     url: "/clustercalculate/cluster/checkErrorPoints",
   });
 }
 
 //清空修改数据信息列表哩的全部信息
 export function deleteClearInformationList() {
+  return requests.delete<IRequest<any[]>>({
+    url: "/clustercalculate/cluster/clearInformationList",
+  });
   return requests.delete<IRequest<any[]>>({
     url: "/clustercalculate/cluster/clearInformationList",
   });
@@ -54,11 +62,15 @@ export function getClosestPoints(data: IShopData) {
   return requests.get<IRequest<IAccumlationInfo[]>>({
     url: `/clustercalculate/cluster/getClosestPoints?latitude=${data.latitude}&longitude=${data.longitude}`,
   });
+  return requests.get<IRequest<IAccumlationInfo[]>>({
+    url: `/clustercalculate/cluster/getClosestPoints?latitude=${data.latitude}&longitude=${data.longitude}`,
+  });
 }
 
 //获取错误点接口
 export function getErrorPoints() {
   return requests.get<IRequest<IErrorPoints[]>>({
+    timeout: 1000 * 60,
     url: "/clustercalculate/cluster/getErrorPoints",
   });
 }
@@ -68,18 +80,25 @@ export function getInformationList() {
   return requests.get<IRequest<IInformationList[]>>({
     url: "/clustercalculate/cluster/getInformationList",
   });
+  return requests.get<IRequest<IInformationList[]>>({
+    url: "/clustercalculate/cluster/getInformationList",
+  });
 }
 
 //获取地图所有商铺点()
 export function getMapResultPoints() {
   return requests.get<IRequest<IMapResult>>({
-    timeout: 1000 * 60 * 4,
+    timeout: 1000 * 60 * 6,
     url: "/clustercalculate/cluster/getMapResultPoints",
   });
 }
 
 //测试增删改修改数据信息
 export function postTestInformation(data: ItestInformation) {
+  return requests.post<IRequest<any[]>>({
+    url: "/clustercalculate/cluster/testInformation",
+    data,
+  });
   return requests.post<IRequest<any[]>>({
     url: "/clustercalculate/cluster/testInformation",
     data,
@@ -95,10 +114,21 @@ export function postUpdateStoreAccumulationId(data: IAccumulationIdInfo) {
     url: "/clustercalculate/cluster/updateStoreAccumulationId",
     data,
   });
+  return requests.post<IRequest<any[]>>({
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+    url: "/clustercalculate/cluster/updateStoreAccumulationId",
+    data,
+  });
 }
 
 //路径计算接口
 export function pathCalculateOne(data: ICalculateInfo) {
+  return requests.get<IRequest<IRouteData[]>>({
+    timeout: 1000 * 60 * 5,
+    url: `/pathcalculate/path/calculateOne?apiKey=${data.apiKey}&areaName=${data.areaName}&assignNumber=${data.assignNumber}`,
+  });
   return requests.get<IRequest<IRouteData[]>>({
     timeout: 1000 * 60 * 5,
     url: `/pathcalculate/path/calculateOne?apiKey=${data.apiKey}&areaName=${data.areaName}&assignNumber=${data.assignNumber}`,
@@ -111,10 +141,17 @@ export function calculateAll(data: ICalculateInfo) {
     timeout: 1000 * 60 * 20,
     url: `/pathcalculate/path/calculateAll?apiKey=${data.apiKey}`,
   });
+  return requests.get<IRequest<IRouteData[]>>({
+    timeout: 1000 * 60 * 20,
+    url: `/pathcalculate/path/calculateAll?apiKey=${data.apiKey}`,
+  });
 }
 
 //获取地图数据
 export function getMapData() {
+  return requests.get<IRequest<IRouteData[]>>({
+    url: "/pathcalculate/path/getMapData",
+  });
   return requests.get<IRequest<IRouteData[]>>({
     url: "/pathcalculate/path/getMapData",
   });
@@ -126,10 +163,17 @@ export function getRouteDetails() {
     timeout: 1000 * 60 * 20,
     url: "/pathcalculate/path/getRouteDetails",
   });
+  return requests.get<IRequest<IAreaDetails[]>>({
+    timeout: 1000 * 60 * 20,
+    url: "/pathcalculate/path/getRouteDetails",
+  });
 }
 
 //获取路线详情-聚集区下商户信息
 export function getStoreDetails(data: string) {
+  return requests.get<IRequest<IStoreDetails[]>>({
+    url: `/pathcalculate/path/getStoreDetails/${data}`,
+  });
   return requests.get<IRequest<IStoreDetails[]>>({
     url: `/pathcalculate/path/getStoreDetails/${data}`,
   });
@@ -140,11 +184,15 @@ export function getTransitDepotRouteData() {
   return requests.get<IRequest<IHistoricalPath[]>>({
     url: "/pathcalculate/path/getTransitDepotRouteData",
   });
+  return requests.get<IRequest<IHistoricalPath[]>>({
+    url: "/pathcalculate/path/getTransitDepotRouteData",
+  });
 }
 
 //保存路径
 export function postAddRoute(data: IRouteSave[]) {
   return requests.post<IRequest<any>>({
+    timeout: 1000 * 60 * 5,
     url: "/pathcalculate/path/addRoute",
     data,
   });
@@ -155,6 +203,9 @@ export function getRouteData(data: IRouteData) {
   return requests.get<IRequest<IRouteData>>({
     url: `/pathcalculate/path/getRouteData?transitDepotId=${data.transitDepotId}&routeName=${data.routeName}`,
   });
+  return requests.get<IRequest<IRouteData>>({
+    url: `/pathcalculate/path/getRouteData?transitDepotId=${data.transitDepotId}&routeName=${data.routeName}`,
+  });
 }
 
 //获取路径版本号
@@ -162,16 +213,56 @@ export function getRouteVersion(data: IVersionRequest) {
   return requests.get<IRequest<string[]>>({
     url: `/pathcalculate/path/getRouteVersion?transitDepotId=${data.transitDepotId}&date=${data.date}`,
   });
+  return requests.get<IRequest<string[]>>({
+    url: `/pathcalculate/path/getRouteVersion?transitDepotId=${data.transitDepotId}&date=${data.date}`,
+  });
 }
 // 获取分割线
 export function getSplitLines(groupOrder: string) {
   return requests.get({
+    timeout: 1000 * 60,
     url: `/pathcalculate/path/getSplitLines?groupOrder=${groupOrder}`,
   });
 }
 // 路径比较
 export function compareRoute(routeIdList: string) {
   return requests.get({
+    timeout: 1000 * 60,
     url: `/pathcalculate/path/compare/${routeIdList}`,
+  });
+}
+// 班组比较
+export function compareArea(groupIdList: string) {
+  return requests.get({
+    timeout: 1000 * 20,
+    url: `/pathcalculate/path/compareBaseGroup/${groupIdList}`,
+  });
+}
+// 调整打卡点
+export function adjustPoint(data: Ipoints) {
+  return requests.post<IRequest<any>>({
+    url: "/pathcalculate/path/adjustPoint",
+    data,
+  });
+}
+// 获取凸包打卡点
+export function getConvexPoint() {
+  return requests.get<IRequest<any>>({
+    timeout: 1000 * 60 * 3,
+    url: "/pathcalculate/path/getConvexPoint",
+  });
+}
+// 单条路径重新计算
+export function calculateSingleRoute(data:any) {
+  return requests.get<IRequest<any>>({
+    timeout: 1000 * 60,
+    url: `/pathcalculate/path/calculateRangedRoute?apiKey=${data.apiKey}&routeName1=${data.routeName1}&routeName2=${data.routeName2}`,
+  });
+}
+// 获取凸包数据
+export function getConvex() {
+  return requests.get<IRequest<any>>({
+    timeout: 1000 * 60 * 5,
+    url: "/pathcalculate/path/getConvex",
   });
 }

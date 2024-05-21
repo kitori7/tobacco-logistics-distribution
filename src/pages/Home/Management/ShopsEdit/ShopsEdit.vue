@@ -66,6 +66,10 @@
                 <el-select v-model="searchForm.type">
                   <el-option v-for="item in types" :key="item" :label="item" :value="item" /></el-select>
               </el-form-item>
+              <el-form-item label="商铺类型" prop="locationtype">
+                <el-select v-model="searchForm.locationType">
+                  <el-option v-for="item in locationTypes" :key="item" :label="item" :value="item" /></el-select>
+              </el-form-item>
               <el-form-item prop="routeId">
               <div class="info">路线id：{{ searchForm.routeId }}</div>
             </el-form-item>
@@ -111,12 +115,14 @@ const groups = ref<IOptionalData[]>()
   storeAddress:"",
   storeName:"",
   type:"",
-  updateTime:""
+  updateTime:"",
+  locationType:""
 });
 const types:string[] = ['商业娱乐区','旅游景区','居民区','其他','工业区','院校学区','办公区','交通枢纽区','集贸区','农林渔牧区']
 const gears:string[] = ['一档','二档','三档','四档','五档','六档','七档','八档','九档','十档'
 ,'十一档','十二档','十三档','十四档','十五档','十六档','十七档','十八档','十九档','二十档',
 '二十一档','二十二档','二十三档','二十四档','二十五档','二十六档','二十七档','二十八档','二十九档','三十档']
+const locationTypes:string[]=['乡镇','城区']
 const closeShopsEdit = (formEl: FormInstance | undefined) => {
   if (!formEl) return
   formEl.resetFields()

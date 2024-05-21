@@ -68,6 +68,9 @@ export interface IMapResultPoints {
     state?: string;
     name: string;
     style?: number;
+    accumulationId:string;
+    routeId:string;
+    areaId:string;
 }
 
 export interface IMapResultSurface {
@@ -156,3 +159,7 @@ export interface IVersionRequest{
     date:string,
     transitDepotId:string,
 }
+export interface Ipoints{
+    accumulationId:string,
+    routeId: string
+  }

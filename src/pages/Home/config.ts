@@ -1,7 +1,7 @@
 export const MenuList = [
   { name: "留言板", router: "/home/board/info?feedbackType=1" },
   { name: "用户管理", router: "/home/group" },
-  { name: "数据计算", router: "/home/computer/area" },
+  { name: "数据计算", router: "/home/computer/route" },
   { name: "数据管理", router: "/home/management/shops" },
 ];
 export const ManagementList = [
