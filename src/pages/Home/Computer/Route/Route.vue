@@ -145,7 +145,6 @@
     plugins: ["AMap.DistrictSearch", "AMap.MarkerCluster"], // 需要使用的的插件列表，如比例尺'AMap.Scale'等
   })
     .then((AMap: any) => {
-    .then((AMap: any) => {
       const district = new AMap.DistrictSearch({
         subdistrict: 1,
         extensions: "all",
@@ -494,9 +493,6 @@
         i.transitDepotId = Number(i.transitDepotId);
         return i;
       });
-        i.transitDepotId = Number(i.transitDepotId);
-        return i;
-      });
       console.log(saveRouteData);
       clusterStore.postAddRouteAction(saveRouteData).then(()=>{
         saveLoading.value = false
@@ -524,11 +520,7 @@
         delete item.workTime;
       });
       let saveRouteData = clusterStore.newPathResult!.map((i) => {
-      let saveRouteData = clusterStore.newPathResult!.map((i) => {
         i.areaId = Number(i.areaId);
-        i.transitDepotId = Number(i.transitDepotId);
-        return i;
-      });
         i.transitDepotId = Number(i.transitDepotId);
         return i;
       });
