@@ -45,7 +45,7 @@
             :max="1000"
             style="color: black"
           />
-          <el-button class="btn" @click="CalculateBtnFunction()"
+          <el-button class="btn" @click="CalculateBtnFunction()" :loading="loadCalculate"
             >重新计算</el-button
           >
         </div>
@@ -55,7 +55,8 @@
           <div class="rtitle">{{ route }}</div>
           <div class="detailedRoute">
             <el-scrollbar height="68vh">
-              <el-collapse v-model="activeNames2">
+              <el-collapse v-model="activeNames2" v-loading="isResultPointsFinished" element-loading-text="加载中..."
+                      element-loading-background="rgba(0,23,49,0.8)">
                 <el-collapse-item
                   :title="item.areaName"
                   :name="item.areaId"
@@ -91,7 +92,7 @@
               </el-collapse>
             </el-scrollbar>
           </div>
-          <el-button class="saveRoute" @click="addRouteBtn">保存路径</el-button>
+          <el-button class="saveRoute" @click="addRouteBtn" :loading="saveLoading">保存路径</el-button>
           <el-dialog
             style="transform: translate(16vw, 43vh); height: 30vh"
             v-model="isOpenRouteDialog"
@@ -177,157 +178,7 @@
         const limitBound = map.getBounds();
         map.setLimitBounds(limitBound);
         //绑定点击事件
-
-        const myCoordinateList1 = ref<any[]>([]);
-
-        const myCoordinateList = ref<any[]>([]);
-
-        function addPolygon(data: any, item: any, index: number) {
-          let polygon = new AMap.Polygon({
-            path: data,
-            fillColor: "#ccebc5",
-            strokeOpacity: 1,
-            fillOpacity: 0.5,
-            strokeColor: "#2b8cbe",
-            strokeWeight: 1,
-            strokeStyle: "dashed",
-            strokeDasharray: [5, 5],
-          });
-          polygon.on("mouseover", () => {
-            if (polygon.getOptions().fillColor !== "#001731") {
-              polygon.setOptions({
-                fillOpacity: 0.7,
-                fillColor: "#7bccc4",
-              });
-            }
-          });
-          polygon.on("mouseout", () => {
-            if (polygon.getOptions().fillColor !== "#001731") {
-              polygon.setOptions({
-                fillOpacity: 0.5,
-                fillColor: "#ccebc5",
-              });
-            }
-          });
-          const clickSetMaker = () => {
-            let marker = new AMap.Marker({
-              position: item.centen,
-              anchor: "bottom-center",
-              offset: new AMap.Pixel(0, 0),
-            });
-            item.marker = marker;
-            map.add(marker);
-            // 设置鼠标划过点标记显示的文字提示
-            // marker.setTitle(index);
-            // 设置label标签
-            marker.setLabel({
-              direction: "top",
-              offset: new AMap.Pixel(0, 18), //设置文本标注偏移量
-              content: index + 1, //设置文本标注内容
-            });
-          };
-
-          polygon.on("click", () => {
-            if (polygon.getOptions().fillColor == "#001731") {
-              polygon.setOptions({
-                fillOpacity: 0.5,
-                fillColor: "#ccebc5",
-              });
-              map.remove(item.marker);
-              return;
-            }
-            polygon.setOptions({
-              fillOpacity: 0.5,
-              fillColor: "#001731",
-            });
-            clickSetMaker();
-          });
-          map.add(polygon);
-        }
-        const colorList = ref(["#DC143C", "#FF0000", "#FF6347"]);
-        function addPolygon1(data: any, item: any, index: number) {
-          let polygon = new AMap.Polygon({
-            path: data,
-            fillColor: colorList.value[index],
-            strokeOpacity: 1,
-            fillOpacity: 0.5,
-            strokeColor: "#2b8cbe",
-            strokeWeight: 1,
-            strokeStyle: "dashed",
-            strokeDasharray: [5, 5],
-          });
-
-          const clickSetMaker = () => {
-            let marker = new AMap.Marker({
-              position: item.centen,
-              anchor: "bottom-center",
-              offset: new AMap.Pixel(0, 0),
-            });
-            item.marker = marker;
-            map.add(marker);
-            // 设置鼠标划过点标记显示的文字提示
-            // marker.setTitle(index);
-            // 设置label标签
-            marker.setLabel({
-              direction: "top",
-              offset: new AMap.Pixel(0, 18), //设置文本标注偏移量
-              content: index + 1, //设置文本标注内容
-            });
-          };
-          polygon.on("mouseover", () => {
-            if (polygon.getOptions().fillColor !== "#001731") {
-              polygon.setOptions({
-                fillOpacity: 0.7,
-                fillColor: "#0277a8",
-              });
-            }
-          });
-          polygon.on("mouseout", () => {
-            if (polygon.getOptions().fillColor !== "#001731") {
-              polygon.setOptions({
-                fillOpacity: 0.5,
-                fillColor: colorList.value[index],
-              });
-            }
-          });
-          polygon.on("click", () => {
-            if (item.marker.type == null) {
-              clickSetMaker();
-              polygon.setOptions({
-                fillOpacity: 0.5,
-                fillColor: "#001731",
-              });
-            } else {
-              map.remove(item.marker);
-              item.marker = {};
-              polygon.setOptions({
-                fillOpacity: 0.5,
-                fillColor: colorList.value[index],
-              });
-            }
-          });
-          map.add(polygon);
-        }
-        myCoordinateList.value.forEach((item, index) => {
-          //配置多边形路径
-          let path: AMap.LngLat[] = [];
-          item.polyline.forEach((item: any) => {
-            path.push(new AMap.LngLat(item.longitude, item.latitude));
-          });
-          addPolygon(path, item, index);
-        });
-        myCoordinateList1.value.forEach((item, index) => {
-          //配置多边形路径
-          let path: AMap.LngLat[] = [];
-          item.polyline.forEach((item: any) => {
-            path.push(new AMap.LngLat(item.longitude, item.latitude));
-          });
-          addPolygon1(path, item, index);
-        });
-      });
     })
-    .catch((e: Error) => {
-      console.log(e);
     });
   const activeNames = ref(["0"]);
   const activeNames2 = ref(["0"]);
@@ -389,6 +240,19 @@
   }>({ dis: [], wei: [], time: [] });
   onMounted(() => {
     setTimeout(() => {
+      
+    // 加载保存的地图数据
+   if(!clusterStore.convex){
+    const loading = ElLoading.service({
+      lock: true,
+      text: "加载地图数据中...",
+      background: "rgba(0, 0, 0, 0.7)",
+    });
+    clusterStore.getConvexAction().then(()=>{
+      countPathResult();
+      loading.close();
+    })
+  }
       countPathResult();
       getSplitLines()
     }, 1000);
@@ -396,7 +260,10 @@
   const markers: Array<AMap.Text> = [];
   const points = ref<boolean>(false)
   const accumulationId = ref<string>()
+  const routeId = ref<string>()
   const routeName = ref<string>()
+  const oldRouteName = ref<string>()
+  
   function countPathResult() {
     const colorArr = [
       "#e4c974",
@@ -418,14 +285,20 @@
         });
         map.add(position);
         points.value = true
-        position.on("click", function () {
-          accumulationId.value = point.accumulationId
+       
+          position.on("click", function () {
+          if(adjustLoad.value){
+            accumulationId.value = point.accumulationId
+             oldRouteName.value = point.routeName
+          }
+          
        });
+      
         })
       })
-    clusterStore.newPathResultAll?.forEach((item) => {
+    clusterStore.convex?.forEach((item:any) => {
       // 凸包渲染
-      const polygonPath = item.convex.map((item) => {
+      const polygonPath = item.convex.map((item:any) => {
         return [item.longitude, item.latitude];
       });
       const activePolyOption = {
@@ -457,8 +330,8 @@
           eChartData.value.wei.push(Number(item.cargoWeight));
           eChartData.value.time.push(Number(item.workTime));
           index = eChartData.value.dis.indexOf(Number(item.distance));
+          routeId.value = item.routeId
           routeName.value = item.routeName
- 
           marker = new AMap.Text({
             position: new AMap.LngLat(
               event.lnglat.getLng(),
@@ -475,7 +348,7 @@
           if (index !== -1) {
             eChartData.value.dis.splice(index, 1);
             eChartData.value.wei.splice(index, 1);
-            routeName.value = undefined
+            routeId.value = undefined
             eChartData.value.time.splice(index, 1);
           }
           if (markers.indexOf(marker) !== -1) {
@@ -496,7 +369,7 @@
           }
         });
       }
-      const points = item.convex.map((item) => {
+      const points = item.convex.map((item:any) => {
         return {
           lnglat: [item.longitude, item.latitude],
         };
@@ -507,7 +380,7 @@
       });
       map.add(cluster);
       // //路线绘制
-      const polyLinePath = item.polyline.map((item) => {
+      const polyLinePath = item.polyline.map((item:any) => {
         return new AMap.LngLat(item.longitude, item.latitude);
       });
       const polyline = new AMap.Polyline({
@@ -523,63 +396,33 @@
       });
       map.add(polyline);
     });
-  // })
-    choiceCalculateType.value = 1;
   }
-  const newPolylineList: AMap.Polyline[] = [];
+  const loadCalculate = ref<boolean>(false)
   const CalculateBtnFunction = () => {
-    const loading = ElLoading.service({
-      lock: true,
-      text: "计算中...",
-      background: "rgba(0, 0, 0, 0.7)",
-    });
-
-   
+    loadCalculate.value = true
       if (area.value == "韶关市") {
       clusterStore
         .calculateAllAction({ apiKey: pathCalculateInfo.value.apiKey })
         .then(() => {
-          //折线数据展示
-          countPathResult();
-          loading.close();
+          choiceCalculateType.value = 1;
+          loadCalculate.value = false
         });
     } else {
       pathCalculateInfo.value.assignNumber = num.value;
       pathCalculateInfo.value.areaName = area.value;
       clusterStore.pathCalculateOneAction(pathCalculateInfo.value).then(() => {
-        //折线数据展示
-        clusterStore.newPathResult?.forEach((item) => {
-          //配置折线路径
-          let path: AMap.LngLat[] = [];
-          item.convex?.forEach((item) => {
-            path.push(new AMap.LngLat(item.longitude, item.latitude));
-          });
-          //创建 Polyline 实例
-          let polyline = new AMap.Polyline({
-            path: path,
-            strokeWeight: 3,
-            //showDir: true,
-            strokeColor: "red", //线条颜色
-            //折线拐点连接处样式
-          });
-          newPolylineList.push(polyline);
-        });
-        // map.remove(oldPolylineList);
-        map.add(newPolylineList);
-        loading.close();
-        window.sessionStorage.setItem(
-          "newPath",
-          JSON.stringify(clusterStore.newPathResult)
-        );
+        loadCalculate.value = false
         choiceCalculateType.value = 2;
       });
     }
    
     
   };
-
+  const isResultPointsFinished = ref<boolean>(true)
   //获取路线详情-大区路线聚集区信息
-  clusterStore.getRouteDetailsAction();
+  clusterStore.getRouteDetailsAction().then(()=>{
+    isResultPointsFinished.value = false
+  });
   //定义弹框标题accumulationName的变量
   const titleAccumulationName = ref<string>("");
   //获取路线详情-聚集区下商户信息
@@ -594,8 +437,43 @@
   const closeRouteDialog = () => {
     isOpenRouteDialog.value = false;
   };
+  const saveLoading = ref<boolean>(false)
   const addRouteBtn = () => {
-    if (choiceCalculateType.value == 0) {
+    saveLoading.value = true
+    if(adjustSave.value){
+      clusterStore.convex.forEach((item:any)=>{
+        delete item.createTime;
+        delete item.updateTime;
+        delete item.versionId;
+        delete item.delete;
+        delete item.routeId;
+        delete item.workTime;
+      })
+      let saveRouteData = clusterStore.convex!.map((i:any) => {
+        i.areaId = Number(i.areaId);
+        i.transitDepotId = Number(i.transitDepotId);
+        return i;
+      });
+      console.log(saveRouteData);
+      ElMessage.closeAll('warning')
+       clusterStore.postAddRouteAction(saveRouteData).then(()=>{
+        saveLoading.value = false
+    if(clusterStore.saveState){
+      const loading = ElLoading.service({
+      lock: true,
+      text: "更新地图数据中...",
+      background: "rgba(0, 0, 0, 0.7)",
+    });
+      clusterStore.getConvexAction().then(()=>{
+      countPathResult();
+      loading.close();
+    })
+    }
+       })
+    
+    }
+    if (choiceCalculateType.value == 0&&!adjustSave.value) {
+      saveLoading.value = false 
       ElMessage.warning("请先进行重新计算");
     }
     if (choiceCalculateType.value == 1) {
@@ -613,8 +491,22 @@
         return i;
       });
       console.log(saveRouteData);
-      clusterStore.postAddRouteAction(saveRouteData);
+      clusterStore.postAddRouteAction(saveRouteData).then(()=>{
+        saveLoading.value = false
+    if(clusterStore.saveState){
+      const loading = ElLoading.service({
+      lock: true,
+      text: "更新地图数据中...",
+      background: "rgba(0, 0, 0, 0.7)",
+    });
+      clusterStore.getConvexAction().then(()=>{
+      countPathResult();
+      loading.close();
+    })
     }
+       })
+    }
+   
     if (choiceCalculateType.value == 2) {
       clusterStore.newPathResult?.forEach((item) => {
         delete item.createTime;
@@ -630,12 +522,23 @@
         return i;
       });
       console.log(saveRouteData);
-       clusterStore.postAddRouteAction(saveRouteData);
+      clusterStore.postAddRouteAction(saveRouteData).then(()=>{
+        saveLoading.value = false
+    if(clusterStore.saveState){
+      const loading = ElLoading.service({
+      lock: true,
+      text: "更新地图数据中...",
+      background: "rgba(0, 0, 0, 0.7)",
+    });
+      clusterStore.getConvexAction().then(()=>{
+      countPathResult();
+      loading.close();
+    })
+    }
+       })
     }
   };
    function getSplitLines(){
-    // 获取地图数据
-  
     const oldPolylineList: AMap.Polyline[] = []
     clusterStore.getSplitLinesAction().then(() => {
           //折线数据展示
@@ -663,32 +566,62 @@
   const adjustConfirm = ref<boolean>(false)
   const adjustLoad = ref<boolean>(false)
   const adjustText = ref<string>('打卡点调整')
+  const adjustSave = ref<boolean>(false)
   function adjustPoint(){
     if(!points.value){
       ElMessage.warning("请等待打卡点数据加载完毕");
+           
+     
     }else if(!adjustConfirm.value){
       adjustLoad.value= true
         ElMessage({message:"已进入调整打卡点模式，请选择要调整的打卡点",type:'warning',duration:0});
-        
       watch(accumulationId,(newValue)=>{
         ElMessage.closeAll('warning')
      ElMessage({message:`已选择最新的打卡点，打卡点的Id为${newValue},然后请选择打卡点的新路径`,duration:0,type:'warning'})
    
-     watch(routeName,(newValue)=>{
+     watch(routeId,(newValue)=>{
       if(newValue){
         ElMessage.closeAll('warning')
-      ElMessage({message:`已选择最新的路径，路径的名称为${newValue},请再点击调整按钮确认`,duration:0,type:'warning'});
+      ElMessage({message:`已选择最新的路径，路径的名称为${routeName.value},请再点击调整按钮确认`,duration:0,type:'warning'});   
+
       adjustLoad.value = false
       adjustText.value = '点击确认调整'
       adjustConfirm.value = true
     }
+ 
      })
     },
     )
       }else if(adjustConfirm.value){
-        clusterStore.adjustPointAction({routeName:Number(routeName.value),accumulationId:Number(accumulationId.value)}).then(()=>{
-      clusterStore.calculateSingleRouteAction({apiKey:pathCalculateInfo.value.apiKey,routeName:routeName.value})
+        if(routeId.value&&accumulationId.value){
+          clusterStore.adjustPointAction({routeId:routeId.value,accumulationId:accumulationId.value}).then(()=>{
+          adjustConfirm.value = false
+          ElMessage.closeAll('warning')
+          const loading = ElLoading.service({
+      lock: true,
+      text: "加载地图数据中...",
+      background: "rgba(0, 0, 0, 0.7)",
+    });
+        clusterStore.calculateSingleRouteAction({apiKey:pathCalculateInfo.value.apiKey,routeName1:oldRouteName.value,routeName2:routeName.value}).then(()=>{
+     for (let item of clusterStore.SingleRoute) {   
+    let index = clusterStore.convex.findIndex((obj:any) => obj.routeName === item.routeName);  
+    if (index !== -1) {  
+        clusterStore.convex[index] = item;  
+    }
+     }   
+      const Overlays = map.getAllOverlays('polygon')
+        map.remove(Overlays)
+        countPathResult();
+        loading.close();
+        ElMessage({message:'调整结果如图，如需保存请点击保存路径按钮，否则刷新页面恢复调整前状态',duration:0,type:'warning'});
+        adjustSave.value = true
+      
         })
+        })
+        }else{
+          ElMessage({message:`请选择打卡点的新路径`,type:'warning'});
+        }
+      
     }
   }
   
@@ -765,11 +698,6 @@
           border-top: 1px solid #73e1ff;
           background-color: #73e1ff !important;
         }
-
-        // :global(.el-popper) {
-        //   border: none !important;
-        // }
-
         .el-select {
           --el-select-input-focus-border-color: transparent;
           position: absolute;
@@ -778,7 +706,6 @@
         }
 
         :deep(.el-icon) {
-          // color: rgb(255, 255, 255);
           font-size: 20px;
         }
 
@@ -888,6 +815,9 @@
               --el-collapse-content-font-size: 18px;
               --el-collapse-content-text-color: #e1f7ff;
               --el-collapse-border-color: #001731;
+              :deep(.el-loading-spinner){
+               margin-top: 28vh;
+              }
             }
 
             .el-collapse-item {

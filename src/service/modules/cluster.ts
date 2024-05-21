@@ -147,7 +147,7 @@ export function getTransitDepotRouteData() {
 //保存路径
 export function postAddRoute(data: IRouteSave[]) {
   return requests.post<IRequest<any>>({
-    timeout: 1000 * 6,
+    timeout: 1000 * 60 * 5,
     url: "/pathcalculate/path/addRoute",
     data,
   });
@@ -169,19 +169,21 @@ export function getRouteVersion(data: IVersionRequest) {
 // 获取分割线
 export function getSplitLines(groupOrder: string) {
   return requests.get({
-    timeout: 1000 * 6,
+    timeout: 1000 * 60,
     url: `/pathcalculate/path/getSplitLines?groupOrder=${groupOrder}`,
   });
 }
 // 路径比较
 export function compareRoute(routeIdList: string) {
   return requests.get({
+    timeout: 1000 * 60,
     url: `/pathcalculate/path/compare/${routeIdList}`,
   });
 }
 // 班组比较
 export function compareArea(groupIdList: string) {
   return requests.get({
+    timeout: 1000 * 20,
     url: `/pathcalculate/path/compareBaseGroup/${groupIdList}`,
   });
 }
@@ -195,15 +197,21 @@ export function adjustPoint(data: Ipoints) {
 // 获取凸包打卡点
 export function getConvexPoint() {
   return requests.get<IRequest<any>>({
-    timeout: 1000 * 60,
+    timeout: 1000 * 60 * 3,
     url: "/pathcalculate/path/getConvexPoint",
   });
 }
 // 单条路径重新计算
 export function calculateSingleRoute(data:any) {
-  return requests.post<IRequest<any>>({
+  return requests.get<IRequest<any>>({
     timeout: 1000 * 60,
-    url: "/pathcalculate/path/calculateSingleRoute",
-    data
+    url: `/pathcalculate/path/calculateRangedRoute?apiKey=${data.apiKey}&routeName1=${data.routeName1}&routeName2=${data.routeName2}`,
+  });
+}
+// 获取凸包数据
+export function getConvex() {
+  return requests.get<IRequest<any>>({
+    timeout: 1000 * 60 * 5,
+    url: "/pathcalculate/path/getConvex",
   });
 }

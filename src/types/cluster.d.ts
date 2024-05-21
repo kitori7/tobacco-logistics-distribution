@@ -160,6 +160,6 @@ export interface IVersionRequest{
     transitDepotId:string,
 }
 export interface Ipoints{
-    accumulationId: number,
-    routeName: number
+    accumulationId:string,
+    routeId: string
   }

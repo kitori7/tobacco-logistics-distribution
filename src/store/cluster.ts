@@ -22,7 +22,8 @@ import {
   compareArea,
   adjustPoint,
   getConvexPoint,
-  calculateSingleRoute
+  calculateSingleRoute,
+  getConvex
 } from "@/service/modules/cluster";
 import {
   IAccumlationInfo,
@@ -43,14 +44,12 @@ import {
   IRouteSave,
   Ipoints
 } from "@/types/cluster";
+import { tr } from "element-plus/es/locale";
 import { defineStore } from "pinia";
 
 export const useClusterStore = defineStore("cluster", () => {
   //获取所有聚集区和对应商铺
   const clusterAndShopList = ref<IClusterAndShopList[]>(
-
-     localStorage.getItem("clusterAndShopList")?JSON.parse(localStorage.getItem("clusterAndShopList")!):[]
-
   );
   //获取聚集区和商铺
   const resultPoints = ref<IResultPoints[]>([]);
@@ -59,24 +58,19 @@ export const useClusterStore = defineStore("cluster", () => {
     resultPoints.value = res.data;
     const mergedArray = resultPoints.value.reduce((result, point) => {
       const accumulation = point.accumulation;
-      const existingItem = result.find(
+      const existingItem = result?.find(
         (item) => item.accumulation === accumulation
       );
       if (existingItem) {
         existingItem.son.push({ shopName: point.name });
       } else {
-        result.push({
+        result?.push({
           accumulation: point.accumulation,
           son: [{ shopName: point.name }],
         });
       }
       return result;
     }, clusterAndShopList.value);
-    // 存缓
-    // localStorage.setItem(
-    //   "clusterAndShopList",
-    //   JSON.stringify(clusterAndShopList.value)
-    // );
     clusterAndShopList.value = mergedArray;
   }
 
@@ -151,6 +145,7 @@ export const useClusterStore = defineStore("cluster", () => {
     const res = await getMapResultPoints();
     console.log(res);
     MapResultPoints.value = res.data.point;
+    
   }
 
   //路径计算接口
@@ -159,24 +154,23 @@ export const useClusterStore = defineStore("cluster", () => {
   async function pathCalculateOneAction(data: ICalculateInfo) {
     const res = await pathCalculateOne(data);
     newPathResult.value = res.data;
-    console.log(res);
-    
+    if(res.code==200){
+      ElMessage.success('计算成功')
+    }
+ 
   }
 
   //计算全部大区接口
   //定义变量储存重新计算完的路径数据
   const newPathResultAll = ref<IRouteData[]>(
-    localStorage.getItem("newPathResultAll")!='undefined'?JSON.parse(localStorage.getItem("newPathResultAll")!):[]
   );
   async function calculateAllAction(data: ICalculateInfo) {
     const res = await calculateAll(data);
-    newPathResultAll.value = res.data;   
-    console.log(res);
-       
-    localStorage.setItem(
-      "newPathResultAll",
-      JSON.stringify(newPathResultAll.value)
-    );
+    newPathResultAll.value = res.data;    
+    if(res.code==200){
+      ElMessage.success('计算成功')
+    }
+ 
   }
 
   //路径分析获取地图数据
@@ -190,12 +184,10 @@ export const useClusterStore = defineStore("cluster", () => {
   //获取路线详情-大区路线聚集区详情
   //定义路线存储数据变量
   const routeDetails = ref<IAreaDetails[]>(
-    localStorage.getItem("routeDetails")!='undefined'?JSON.parse(localStorage.getItem("routeDetails")!):[]
   );
   async function getRouteDetailsAction() {
     const res = await getRouteDetails();
     routeDetails.value = res.data;
-    localStorage.setItem("routeDetails", JSON.stringify(res.data));
   }
 
   //获取路线详情-聚集区下商户信息
@@ -215,14 +207,15 @@ export const useClusterStore = defineStore("cluster", () => {
   }
 
   //保存路径
+  const saveState = ref<boolean>(false)
   async function postAddRouteAction(data: IRouteSave[]) {
     const res = await postAddRoute(data);
     if (res.code === 200) {
-      ElMessage.success(res.msg);
+      ElMessage.success('保存成功');
+      saveState.value = true
     }else{
       ElMessage.error(res.msg);
     }
-    console.log(res);
   }
 
   //获取路径分析详细数据
@@ -269,6 +262,8 @@ export const useClusterStore = defineStore("cluster", () => {
     const res = await adjustPoint(data);
     if (res.code === 200) {
       ElMessage.success(res.msg);
+    }else{
+      ElMessage.error('调整失败');
     }
     console.log(res);
   }
@@ -279,12 +274,24 @@ export const useClusterStore = defineStore("cluster", () => {
     convexPoint.value = res.data
   }
   // 单条路径重新计算
+  const SingleRoute = ref<any>()
   async function calculateSingleRouteAction(data:any) {
     const res = await calculateSingleRoute(data);
-    if (res.code === 200) {
-      ElMessage.success(res.msg);
-    }
+    SingleRoute.value = res.data
   }
+  // 获取凸包数据
+  const convex = ref<any>(
+    localStorage.getItem("convex")!='undefined'?JSON.parse(localStorage.getItem("convex")!):undefined
+  );
+  async function getConvexAction() {
+    const res = await getConvex();
+    convex.value = res.data
+    localStorage.setItem(
+      "convex",
+      JSON.stringify(convex.value)
+    );
+  }
+ 
   return {
     getAllResultPointsAction,
     clusterAndShopList,
@@ -329,6 +336,10 @@ export const useClusterStore = defineStore("cluster", () => {
     adjustPointAction,
     convexPoint,
     getConvexPointAction,
-    calculateSingleRouteAction
+    SingleRoute,
+    calculateSingleRouteAction,
+    convex,
+    getConvexAction,
+    saveState
   };
 });
