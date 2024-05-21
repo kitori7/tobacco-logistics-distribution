@@ -4,6 +4,7 @@ import {ImanagementSearchData, IupdateArea,IOptionalData,ImanagementStoreDetial}
 // 表格信息
 export function getStore(params:ImanagementSearchData) {
     return requests.get<IRequest<any>>({
+      timeout:1000*60*3,
       url: "/datamanagement/list",
       params
     });
