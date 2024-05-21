@@ -58,11 +58,11 @@ function routerChange() {
 //聚集区Store
 const clusterStore = useClusterStore();
 
-//获取修改数据信息列表
-clusterStore.getInformationListAction()
+  //获取修改数据信息列表
+  clusterStore.getInformationListAction();
 
-//获取聚集区错误点（只有数量、检查）
-clusterStore.getCheckErrorPointsAction()
+  //获取聚集区错误点（只有数量、检查）
+  clusterStore.getCheckErrorPointsAction();
 
 // 保存结果
 function save() {
@@ -129,9 +129,9 @@ const isMaoFinished = ref<boolean>(true)
 let map: any = null;
 
     AMapLoader.load({
-        key: "64c03ae77b4521e9dbb72475e120e70c", // 申请好的Web端开发者Key，首次调用 load 时必填
-        version: "2.0", // 指定要加载的 JSAPI 的版本，缺省时默认为 1.4.15
-        plugins: ['AMap.DistrictSearch'], // 需要使用的的插件列表，如比例尺'AMap.Scale'等
+      key: "64c03ae77b4521e9dbb72475e120e70c", // 申请好的Web端开发者Key，首次调用 load 时必填
+      version: "2.0", // 指定要加载的 JSAPI 的版本，缺省时默认为 1.4.15
+      plugins: ["AMap.DistrictSearch"], // 需要使用的的插件列表，如比例尺'AMap.Scale'等
     })
         .then((AMap:any) => {
             const district = new AMap.DistrictSearch({

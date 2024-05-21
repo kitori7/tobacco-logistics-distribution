@@ -71,6 +71,11 @@ export const useClusterStore = defineStore("cluster", () => {
       }
       return result;
     }, clusterAndShopList.value);
+    // 存缓
+    localStorage.setItem(
+      "clusterAndShopList",
+      JSON.stringify(clusterAndShopList.value)
+    );
     clusterAndShopList.value = mergedArray;
   }
 
@@ -188,6 +193,7 @@ export const useClusterStore = defineStore("cluster", () => {
   async function getRouteDetailsAction() {
     const res = await getRouteDetails();
     routeDetails.value = res.data;
+    localStorage.setItem("routeDetails", JSON.stringify(res.data));
   }
 
   //获取路线详情-聚集区下商户信息
@@ -247,6 +253,7 @@ export const useClusterStore = defineStore("cluster", () => {
   }
   // 路径比较
   const compareData = ref<any>();
+  async function compareRouteAction(data: string) {
   async function compareRouteAction(data: string) {
     const res = await compareRoute(data);
     compareData.value = res.data;
