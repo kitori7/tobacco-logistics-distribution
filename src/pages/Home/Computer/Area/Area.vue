@@ -6,6 +6,7 @@
           <div class="btns">
               <el-button class="adjust" @click="routerChange">聚集区微调</el-button>
               <el-button class="save" @click="save">保存结果</el-button>
+              <el-button class="save" @click="update">更新地图数据</el-button>
           </div>
       </div>
       <div class="content">
@@ -25,19 +26,19 @@
               <el-button class="btn" @click="CalculateBtnFunction">重新计算</el-button>
           </BorderBox9>
           <BorderBox9 :color="['#73e5ff', '#73e5ff']" backgroundColor='#001731'>
-              <div class="region">
-                  <el-collapse v-loading="isResultPointsFinished" element-loading-text="加载中..."
-                      element-loading-background="rgba(0,23,49,0.8)" v-model="activeNames2" accordion>
-                      <el-scrollbar height="75vh">
-                          <el-collapse-item v-for="(item, index) in clusterStore.clusterAndShopList" :key="item.accumulation"
-                              :title=item.accumulation :name=index>
-                              <div class="regionCollapseItemContext" v-for="(item1) in item.son" :key="item1.shopName">{{ item1.shopName }}
-                              </div>
-                          </el-collapse-item>
-                      </el-scrollbar>
-                  </el-collapse>
-              </div>
-          </BorderBox9>
+                <div class="region">
+                    <el-collapse v-loading="isResultPointsFinished" element-loading-text="加载中..."
+                        element-loading-background="rgba(0,23,49,0.8)" v-model="activeNames2" accordion>
+                        <el-scrollbar height="75vh">
+                            <el-collapse-item v-for="(item, index) in clusterStore.clusterAndShopList"
+                                :title=item.accumulation :name=index :key="item.accumulation">
+                                <div class="regionCollapseItemContext" v-for="(item1) in item.son " :key="item1.shopName">{{ item1.shopName }}
+                                </div>
+                            </el-collapse-item>
+                        </el-scrollbar>
+                    </el-collapse>
+                </div>
+            </BorderBox9>
       </div>
   </div>
 </template>
@@ -64,6 +65,17 @@ const clusterStore = useClusterStore();
   //获取聚集区错误点（只有数量、检查）
   clusterStore.getCheckErrorPointsAction();
 
+// 更新数据
+  const isUpdate = ref<boolean>(false)
+  function update (){
+  if(clusterStore.MapResultPoints){
+  const Overlays = map.getAllOverlays('marker')
+  map.remove(Overlays);
+  isUpdate.value = true
+  getALLMapData()
+  
+    }
+ }
 // 保存结果
 function save() {
   if (clusterStore.ErrorPoints == undefined) {
@@ -125,9 +137,14 @@ const CalculateBtnFunction = () => {
 //定义是否加载的变量
 //@ts-ignore
 import AMapLoader from "@amap/amap-jsapi-loader";
+import { mapIcon } from "@/utils/mapBluePoint";
 const isMaoFinished = ref<boolean>(true)
 let map: any = null;
-
+onMounted(()=>{
+getALLMapData()
+})
+   
+ function getALLMapData(){
     AMapLoader.load({
       key: "64c03ae77b4521e9dbb72475e120e70c", // 申请好的Web端开发者Key，首次调用 load 时必填
       version: "2.0", // 指定要加载的 JSAPI 的版本，缺省时默认为 1.4.15
@@ -169,12 +186,21 @@ let map: any = null;
         const limitBound = map.getBounds();
         map.setLimitBounds(limitBound);
         // 绑定点击事件
+        if(clusterStore.MapResultPoints&&!isUpdate.value){
+            mapPoints()
+        }else{
+            isMaoFinished.value = true
           clusterStore.getMapResultPointsAction().then(() => {
-              // 地图标点
-              const data = ref<IMapResultPoints[]>();
+            isMaoFinished.value = false
+           mapPoints()
+            })
+        }
+            function mapPoints(){
+       // 地图标点
+       const data = ref<IMapResultPoints[]>();
               data.value = clusterStore.MapResultPoints;
               const style = {
-                  url: "/src/assets/images/amap/mapBluePoint.png", //图标地址
+                  url: mapIcon.blue, //图标地址
                   size: new AMap.Size(15, 15), //图标大小
                   anchor: new AMap.Pixel(-10, -20), //图标显示位置偏移量，基准点为图标左上角
               }//设置样式对象
@@ -194,8 +220,7 @@ let map: any = null;
                           offset: new AMap.Pixel(-7, -17), //偏移量
                           icon: new AMap.Icon({
                               size: new AMap.Size(25, 25), //图标尺寸
-                              image: "/src/assets/images/amap/mapOrangePoint.png", //Icon 的图像
-                              // imageOffset: new AMap.Pixel(-9, -3), //图像相对展示区域的偏移量，适于雪碧图等
+                              image: mapIcon.orange, //Icon 的图像
                               imageSize: new AMap.Size(25, 25), //根据所设置的大小拉伸或压缩图片
                           }), //添加 Icon 实例
                           title: "中心点",
@@ -210,7 +235,7 @@ let map: any = null;
                           offset: new AMap.Pixel(-7, -17), //偏移量
                           icon: new AMap.Icon({
                               size: new AMap.Size(20, 20), //图标尺寸
-                              image: "/src/assets/images/amap/mapRedPoint.png", //Icon 的图像
+                              image: mapIcon.red, //Icon 的图像
                               // imageOffset: new AMap.Pixel(-9, -3), //图像相对展示区域的偏移量，适于雪碧图等
                               imageSize: new AMap.Size(20, 20), //根据所设置的大小拉伸或压缩图片
                           }), //添加 Icon 实例
@@ -221,7 +246,7 @@ let map: any = null;
                   }
               })
      
-            })
+}
             const oldPolylineList: AMap.Polyline[] = []
     clusterStore.getSplitLinesAction().then(() => {
           //折线数据展示
@@ -248,7 +273,7 @@ let map: any = null;
           console.log(e);
       });
 
-
+ }
 
 onBeforeUnmount(() => {
   //销毁地图，并清空地图容器
