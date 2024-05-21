@@ -48,8 +48,7 @@ import { defineStore } from "pinia";
 
 export const useClusterStore = defineStore("cluster", () => {
   //获取所有聚集区和对应商铺
-  const clusterAndShopList = ref<IClusterAndShopList[]>(
-  );
+  const clusterAndShopList = ref<IClusterAndShopList[]>([]);
   //获取聚集区和商铺
   const resultPoints = ref<IResultPoints[]>([]);
   async function getAllResultPointsAction() {
@@ -57,13 +56,13 @@ export const useClusterStore = defineStore("cluster", () => {
     resultPoints.value = res.data;
     const mergedArray = resultPoints.value.reduce((result, point) => {
       const accumulation = point.accumulation;
-      const existingItem = result?.find(
+      const existingItem = result.find(
         (item) => item.accumulation === accumulation
       );
       if (existingItem) {
         existingItem.son.push({ shopName: point.name });
       } else {
-        result?.push({
+        result.push({
           accumulation: point.accumulation,
           son: [{ shopName: point.name }],
         });
@@ -72,7 +71,6 @@ export const useClusterStore = defineStore("cluster", () => {
     }, clusterAndShopList.value);
     clusterAndShopList.value = mergedArray;
   }
-
   //计算接口
   async function postCalculateAllAction() {
     const res = await postCalculateAll();
@@ -138,13 +136,17 @@ export const useClusterStore = defineStore("cluster", () => {
 
   //获取地图所有商铺点
   //定义变量储存数据
-  const MapResultPoints = ref<IMapResultPoints[]>();
-  // const MapResultSurface = ref<IMapResultSurface[]>();
+  const MapResultPoints = ref<IMapResultPoints[]>(
+    localStorage.getItem("Points")!='undefined'?JSON.parse(localStorage.getItem("Points")!):undefined
+  );
   async function getMapResultPointsAction() {
     const res = await getMapResultPoints();
     console.log(res);
     MapResultPoints.value = res.data.point;
-    
+    localStorage.setItem(
+      "Points",
+      JSON.stringify(MapResultPoints.value)
+    );
   }
 
   //路径计算接口

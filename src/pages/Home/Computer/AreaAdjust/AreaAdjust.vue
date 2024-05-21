@@ -78,6 +78,7 @@ import { ArrowLeftBold, LocationInformation, Right } from "@element-plus/icons-v
 import { useRouter } from "vue-router";
 import { useClusterStore } from "@/store/cluster";
 import { IAccumlationInfo, IAccumulationIdInfo, IErrorPoints_data, IMapResultPoints, IShopData } from "@/types/cluster";
+import { mapIcon } from "@/utils/mapBluePoint";
 window._AMapSecurityConfig = {
   securityJsCode: "1b6291b2fceee1cd3b7798bfdd4c39e4",
 };
@@ -242,7 +243,7 @@ let map: any = null;
               const data = ref<IMapResultPoints[]>();
               data.value = clusterStore.MapResultPoints;
               const style = {
-                  url: "/src/assets/images/amap/mapBluePoint.png", //图标地址
+                  url: mapIcon.blue, //图标地址
                   size: new AMap.Size(15, 15), //图标大小
                   anchor: new AMap.Pixel(-10, -20), //图标显示位置偏移量，基准点为图标左上角
               }//设置样式对象
@@ -262,7 +263,7 @@ let map: any = null;
                           offset: new AMap.Pixel(-7, -17), //偏移量
                           icon: new AMap.Icon({
                               size: new AMap.Size(25, 25), //图标尺寸
-                              image: "/src/assets/images/amap/mapOrangePoint.png", //Icon 的图像
+                              image: mapIcon.orange, //Icon 的图像
                               // imageOffset: new AMap.Pixel(-9, -3), //图像相对展示区域的偏移量，适于雪碧图等
                               imageSize: new AMap.Size(25, 25), //根据所设置的大小拉伸或压缩图片
                           }), //添加 Icon 实例
@@ -278,7 +279,7 @@ let map: any = null;
                           offset: new AMap.Pixel(-7, -17), //偏移量
                           icon: new AMap.Icon({
                               size: new AMap.Size(20, 20), //图标尺寸
-                              image: "/src/assets/images/amap/mapRedPoint.png", //Icon 的图像
+                              image: mapIcon.red, //Icon 的图像
                               // imageOffset: new AMap.Pixel(-9, -3), //图像相对展示区域的偏移量，适于雪碧图等
                               imageSize: new AMap.Size(20, 20), //根据所设置的大小拉伸或压缩图片
                           }), //添加 Icon 实例
