@@ -31,14 +31,14 @@
               <el-badge :value="1" class="item"></el-badge>
               <el-collapse-item title="聚集区信息改变" name="1">
                 <ul>
-                  <li>D区内聚集区发生改变</li>
+                  <li>班组1聚集区发生改变</li>
                 </ul>
               </el-collapse-item>
               <el-badge :value="1" class="item"></el-badge>
               <el-collapse-item title="系统参数" name="2">
                 <ul>
                   <li>单车载货量更改为700条</li>
-                  <li>D区可工作车辆数更改为25辆</li>
+                  <li>班组2可工作车辆数更改为5辆</li>
                 </ul>
               </el-collapse-item>
             </el-collapse>
