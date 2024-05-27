@@ -29,10 +29,10 @@
                 <div class="region">
                     <el-collapse v-loading="isResultPointsFinished" element-loading-text="加载中..."
                         element-loading-background="rgba(0,23,49,0.8)" v-model="activeNames2" accordion>
-                        <el-scrollbar height="75vh">
+                        <el-scrollbar height="75vh" >
                             <el-collapse-item v-for="item in clusterStore.clusterAndShopList"
-                                :title=item.accumulation :name=item.accumulation :key="item.accumulation" >
-                                <div class="regionCollapseItemContext" v-for="(item1) in item.son " :key="item1.shopName" :class="istrue?'active':''">{{ item1.shopName }}
+                                :title=item.accumulation :name=item.accumulation :key="item.accumulation" :id=item.accumulation>
+                                <div class="regionCollapseItemContext" v-for="(item1) in item.son " :key="item1.shopName" :id=item1.shopName @click="mapShow(item1.lnglat)" :class="longitude==item1.lnglat[0]&&latitude==item1.lnglat[1]?'active':''">{{ item1.shopName }}
                                 </div>
                             </el-collapse-item>
                         </el-scrollbar>
@@ -72,7 +72,6 @@ const clusterStore = useClusterStore();
   map.remove(Overlays);
   isUpdate.value = true
   getALLMapData()
-  
     }
  }
 // 保存结果
@@ -134,6 +133,16 @@ const CalculateBtnFunction = () => {
 }
 //地图部分
 //定义是否加载的变量
+const longitude = ref<number>()
+const latitude = ref<number>()
+   
+function mapShow(lnglat:number[]){
+  if(longitude.value!=lnglat[0]&&latitude.value!=lnglat[1]){
+    longitude.value = lnglat[0]
+    latitude.value=lnglat[1]
+  }
+  map.setZoomAndCenter(12, lnglat);
+}
 //@ts-ignore
 import AMapLoader from "@amap/amap-jsapi-loader";
 import { mapIcon } from "@/utils/mapBluePoint";
@@ -142,7 +151,6 @@ let map: any = null;
 onMounted(()=>{
 getALLMapData()
 })
-const istrue = ref<boolean>(false)
  function getALLMapData(){
     AMapLoader.load({
       key: "64c03ae77b4521e9dbb72475e120e70c", // 申请好的Web端开发者Key，首次调用 load 时必填
@@ -150,7 +158,7 @@ const istrue = ref<boolean>(false)
       plugins: ["AMap.DistrictSearch"], // 需要使用的的插件列表，如比例尺'AMap.Scale'等
     })
         .then((AMap:any) => {
-            const district = new AMap.DistrictSearch({
+        const district = new AMap.DistrictSearch({
         subdistrict: 1,
         extensions: "all",
         level: "province",
@@ -196,51 +204,80 @@ const istrue = ref<boolean>(false)
         }
             function mapPoints(){
        // 地图标点
-              isMaoFinished.value =false
+              isMaoFinished.value =false   
               clusterStore.MapResultPoints!.forEach((item) => {
+                const oldIcon = new AMap.Icon({  
+                    size: new AMap.Size(25, 25),
+                      image: mapIcon.orange, 
+                      imageSize: new AMap.Size(25, 25), // 图标图片地址  
+                    }); 
+                    const newIcon = new AMap.Icon({  
+                    size: new AMap.Size(30, 30),
+                      image: mapIcon.blue, 
+                      imageSize: new AMap.Size(30, 30), // 图标图片地址  
+                    });
                   if (item.state == "center") {
                       // 将 Icon 实例添加到 marker 上:
                       const marker = new AMap.Marker({
                           position: new AMap.LngLat(item.lnglat[0], item.lnglat[1]), //点标记的位置
                           offset: new AMap.Pixel(-7, -17), //偏移量
-                          icon: new AMap.Icon({
-                              size: new AMap.Size(25, 25), //图标尺寸
-                              image: mapIcon.orange, //Icon 的图像
-                              imageSize: new AMap.Size(25, 25), //根据所设置的大小拉伸或压缩图片
-                          }), //添加 Icon 实例
+                          icon: oldIcon, //添加 Icon 实例
                           title: "中心点",
-                          zooms: [9, 16], //点标记显示的层级范围，超过范围不显示
+                          zooms: [9, 18], //点标记显示的层级范围，超过范围不显示
                       });
                       map!.add(marker);
                       marker.on('click',function(){
-                        console.log(item);
                         activeNames2.value=item.accumulation
+                        document.getElementById(item.accumulation)?.scrollIntoView();
+                        if(longitude.value!=item.lnglat[0]&&latitude.value!=item.lnglat[1]){
+                     longitude.value = item.lnglat[0]
+                     latitude.value=item.lnglat[1]
+                         }
+                      })
+                      watch([longitude,latitude],(newValue)=>{
+                    if(newValue[0]==item.lnglat[0]&&newValue[1]==item.lnglat[1]){
+                    marker.setIcon(newIcon)
+                       }else{
+                        marker.setIcon(oldIcon)
+                       }
                       })
                   }
                   else if (item.state == "error") {
+                    const errorIcon = new AMap.Icon({  
+                    size: new AMap.Size(30, 30),
+                      image: mapIcon.red, 
+                      imageSize: new AMap.Size(30, 30), // 图标图片地址  
+                    }); 
                       // 将 Icon 实例添加到 marker 上:
                       const marker = new AMap.Marker({
                           position: new AMap.LngLat(item.lnglat[0], item.lnglat[1]), //点标记的位置
                           offset: new AMap.Pixel(-7, -17), //偏移量
                           zIndex: 100, 
-                          icon: new AMap.Icon({
-                              size: new AMap.Size(30, 30), //图标尺寸
-                              image: mapIcon.red, //Icon 的图像
-                              imageSize: new AMap.Size(30, 30), //根据所设置的大小拉伸或压缩图片
-                          }), //添加 Icon 实例
+                          icon:errorIcon,//添加 Icon 实例
                           title: "错误点",
-                          zooms: [6, 16], //点标记显示的层级范围，超过范围不显示
+                          zooms: [9, 18], //点标记显示的层级范围，超过范围不显示
                       });
-                      
+                      marker.on('click',function(){
+                        activeNames2.value=item.accumulation
+                        document.getElementById(item.accumulation)?.scrollIntoView();
+                        if(longitude.value!=item.lnglat[0]&&latitude.value!=item.lnglat[1]){
+                     longitude.value = item.lnglat[0]
+                     latitude.value=item.lnglat[1]
+                         }
+                      })
+                      watch([longitude,latitude],(newValue)=>{
+                    if(newValue[0]==item.lnglat[0]&&newValue[1]==item.lnglat[1]){
+                    marker.setIcon(newIcon)
+                       }else{
+                        marker.setIcon(errorIcon)
+                       }
+                      })
                       map!.add(marker);
-                  }
-
-                  
+                  } 
               })
-     
 }
             const oldPolylineList: AMap.Polyline[] = []
-    clusterStore.getSplitLinesAction().then(() => {
+        clusterStore.getSplitLinesAction().then(() => {
           //折线数据展示
           clusterStore.SplitLines!.forEach((item) => {
               //配置折线路径
@@ -364,7 +401,7 @@ onBeforeUnmount(() => {
               margin-left: 1.4vw;
               margin-top: 3vh;
               width: 85%;
-
+            
               .el-collapse {
                   --el-collapse-header-bg-color: rgb(2, 119, 168);
                   --el-collapse-header-text-color: #e1f7ff;
@@ -378,17 +415,17 @@ onBeforeUnmount(() => {
               .el-collapse-item {
                   padding-left: 30px;
                   position: relative;
-                 
-                 .active{
-                    background-color: rgb(2, 119, 168);
-                    padding: 0 0.5vw;
-                 } 
+              .active{
+            background-color: rgb(2, 119, 168);
+            padding: 0 0.5vw;
+              } 
                   ::v-deep(.el-collapse-item__content) {
                       padding: 0;
                   }
 
                   .regionCollapseItemContext {
                       margin: 10px 0;
+                      cursor: pointer;
                   }
 
                   .regionCollapseItemContext:before {

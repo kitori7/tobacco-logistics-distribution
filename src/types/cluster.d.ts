@@ -1,6 +1,8 @@
 export interface IResultPoints {
     accumulation: string;
     name: string;
+    longitude:number;
+    latitude:number;
 }
 
 export interface IClusterAndShopList {
@@ -10,6 +12,7 @@ export interface IClusterAndShopList {
 
 export interface IShopList {
     shopName: string;
+    lnglat:number[];
 }
 
 export interface IShopData {
