@@ -77,14 +77,14 @@ import { BorderBox12 } from "@dataview/datav-vue3";
 import { ArrowLeftBold, LocationInformation, Right } from "@element-plus/icons-vue";
 import { useRouter } from "vue-router";
 import { useClusterStore } from "@/store/cluster";
-import { IAccumlationInfo, IAccumulationIdInfo, IErrorPoints_data, IMapResultPoints, IShopData } from "@/types/cluster";
+import { IAccumlationInfo, IAccumulationIdInfo, IErrorPoints_data, IShopData } from "@/types/cluster";
 import { mapIcon } from "@/utils/mapBluePoint";
 window._AMapSecurityConfig = {
   securityJsCode: "1b6291b2fceee1cd3b7798bfdd4c39e4",
 };
 const router = useRouter();
 function backBtn() {
-    router.back()
+    router.replace('/home/computer/area')
 }
 //聚集区Store
 const clusterStore = useClusterStore();
@@ -240,20 +240,6 @@ let map: any = null;
         // 绑定点击事件
           clusterStore.getMapResultPointsAction().then(() => {
               // 地图标点
-              const data = ref<IMapResultPoints[]>();
-              data.value = clusterStore.MapResultPoints;
-              const style = {
-                  url: mapIcon.blue, //图标地址
-                  size: new AMap.Size(15, 15), //图标大小
-                  anchor: new AMap.Pixel(-10, -20), //图标显示位置偏移量，基准点为图标左上角
-              }//设置样式对象
-              //海量点
-              var massMarks = new AMap.MassMarks(data.value, {
-                  zIndex: 5, //海量点图层叠加的顺序
-                  zooms: [10, 22], //在指定地图缩放级别范围内展示海量点图层
-                  style: style,
-              });
-              massMarks.setMap(map);
               isMaoFinished.value =false
               clusterStore.MapResultPoints!.forEach((item) => {
                   if (item.state == "center") {
@@ -331,7 +317,7 @@ onBeforeUnmount(() => {
 <style lang="scss" scoped>
 .AreaAdjust {
     width: 100%;
-
+    margin-left: -2vw;
     .back {
         font-size: 20px;
         display: flex;
@@ -356,7 +342,7 @@ onBeforeUnmount(() => {
 
     .dv-border-box-12 {
         position: absolute;
-        top: 13vh;
+        top: 14vh;
         right: 1vw;
         width: 25vw;
         height: 80vh;
@@ -383,7 +369,7 @@ onBeforeUnmount(() => {
                 display: inline-block;
                 width: 15px;
                 height: 15px;
-                background-color: rgb(255, 51, 204);
+                background-color: #e0c340;
                 border-radius: 50%;
                 margin-right: 10px;
             }
@@ -393,7 +379,7 @@ onBeforeUnmount(() => {
                 margin-right: -15px;
                 width: 33px;
                 height: 33px;
-                background: rgb(255, 51, 204);
+                background-color: #e0c340;
                 transform: rotate(45deg);
                 content: "";
                 display: inline-block;
@@ -422,7 +408,7 @@ onBeforeUnmount(() => {
                 display: inline-block;
                 width: 8px;
                 height: 8px;
-                background-color: fuchsia;
+                background-color: #e0c340;
                 border-radius: 50%;
                 margin-bottom: 4px;
                 margin-right: 0.5vw;
@@ -437,7 +423,7 @@ onBeforeUnmount(() => {
             display: inline-block;
             width: 15px;
             height: 15px;
-            background-color: rgb(255, 51, 204);
+            background-color: #e0c340;
             border-radius: 50%;
             margin-right: 10px;
         }
@@ -447,7 +433,7 @@ onBeforeUnmount(() => {
             margin-right: -15px;
             width: 33px;
             height: 33px;
-            background: rgb(255, 51, 204);
+            background-color: #e0c340;
             transform: rotate(45deg);
             content: "";
             display: inline-block;
@@ -458,7 +444,7 @@ onBeforeUnmount(() => {
             display: inline-block;
             width: 8px;
             height: 8px;
-            background-color: fuchsia;
+            background-color: #e0c340;
             border-radius: 50%;
             margin-bottom: 4px;
             margin-right: 0.5vw;

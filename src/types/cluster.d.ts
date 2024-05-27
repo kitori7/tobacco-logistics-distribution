@@ -71,6 +71,7 @@ export interface IMapResultPoints {
     accumulationId:string;
     routeId:string;
     areaId:string;
+    accumulation: string;
 }
 
 export interface IMapResultSurface {

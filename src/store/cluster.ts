@@ -70,6 +70,8 @@ export const useClusterStore = defineStore("cluster", () => {
       return result;
     }, clusterAndShopList.value);
     clusterAndShopList.value = mergedArray;
+    console.log(clusterAndShopList.value);
+    
   }
   //计算接口
   async function postCalculateAllAction() {

@@ -63,13 +63,18 @@ const constantRoutes: RouteRecordRaw[] = [
             name: "SaleRoute",
             component: () => import("@/pages/Home/Computer/SaleRoute/SaleRoute.vue"),
           },
+          {
+            path: "/home/computer/AreaAdjust",
+            name: "AreaAdjust",
+            component: () => import("@/pages/Home/Computer/AreaAdjust/AreaAdjust.vue"),
+            meta:{
+             isShow:true,
+             order: 2
+            }
+          },
         ],
       },
-      {
-        path: "/home/AreaAdjust",
-        name: "AreaAdjust",
-        component: () => import("@/pages/Home/Computer/AreaAdjust/AreaAdjust.vue"),
-      },
+     
       {
         path: "/home/AnalysisRoute",
         name: "AnalysisRoute",
