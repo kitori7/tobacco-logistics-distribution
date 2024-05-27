@@ -197,6 +197,9 @@
       const limitBound = map.getBounds();
       map.setLimitBounds(limitBound);
       //绑定点击事件
+      map.on("click", function (e: any) {
+        console.log("当前坐标：" + e.lnglat.getLng() + "," + e.lnglat.getLat());
+      });
     });
   });
   const activeNames = ref(["0"]);
