@@ -21,7 +21,7 @@
                                 v-for="(item1, index1) in  item.data" :key="index1">
                                 {{ item1.name }}
                                 <ul>
-                                    <li v-for="(item2, index2) in  item1.son" :key="index2">
+                                    <li v-for="(item2, index2) in  item1.son" :key="index2" :class="longitude==item2.longitude&&latitude==item2.latitude?'active':''">
                                         {{ item2.name }}
                                     </li>
                                 </ul>
@@ -40,7 +40,7 @@
                             {{ infoData?.name }}
                             <ul>
                                 <li style=" list-style: disc;margin-left: 30px;padding: 5px;"
-                                    v-for="(item3, index3) in  infoData?.son" :key="index3">
+                                    v-for="(item3, index3) in  infoData?.son" :key="index3" @click="errorClick([item3.longitude,item3.latitude])" :class="longitude==item3.longitude&&latitude==item3.latitude?'active':''">
                                     {{ item3.name }}
                                 </li>
                             </ul>
@@ -101,7 +101,7 @@ clusterStore.getErrorPointsAction()
     });
 //定义折叠面板的变量
 const activeNames = ref(['1'])
-const activeNames1 = ref(['1'])
+const activeNames1 = ref('')
 //选择器定义变量
 const leftSelect = ref<IShopData>({
     longitude: 0,
@@ -167,6 +167,17 @@ const closeAdjustDialog = () => {
     leftSelectList.value = []
     rightSelectList.value = []
 
+}
+// 地图右边栏互动
+const longitude = ref<number>()
+const latitude = ref<number>()
+   
+function errorClick(lnglat:number[]){
+  if(longitude.value!=lnglat[0]&&latitude.value!=lnglat[1]){
+    longitude.value = lnglat[0]
+    latitude.value=lnglat[1]
+  }
+  map.setZoomAndCenter(12, lnglat);
 }
 //确定聚集区微调
 const adjustConfirmChange = () => {
@@ -234,10 +245,6 @@ let map: any = null;
           });
           polyline.setMap(map);
         }
-        //限制移动范围
-        const limitBound = map.getBounds();
-        map.setLimitBounds(limitBound);
-        // 绑定点击事件
           clusterStore.getMapResultPointsAction().then(() => {
               // 地图标点
               isMaoFinished.value =false
@@ -254,24 +261,45 @@ let map: any = null;
                               imageSize: new AMap.Size(25, 25), //根据所设置的大小拉伸或压缩图片
                           }), //添加 Icon 实例
                           title: "中心点",
-                          zooms: [9, 16], //点标记显示的层级范围，超过范围不显示
+                          zooms: [9, 18], //点标记显示的层级范围，超过范围不显示
                       });
                       map!.add(marker);
                   }
                   else if (item.state == "error") {
                       // 将 Icon 实例添加到 marker 上:
+                      const errorIcon = new AMap.Icon({  
+                    size: new AMap.Size(30, 30),
+                      image: mapIcon.red, 
+                      imageSize: new AMap.Size(30, 30), // 图标图片地址  
+                    }); 
+                    const newIcon = new AMap.Icon({  
+                    size: new AMap.Size(30, 30),
+                      image: mapIcon.blue, 
+                      imageSize: new AMap.Size(30, 30), // 图标图片地址  
+                    });
                       const marker = new AMap.Marker({
                           position: new AMap.LngLat(item.lnglat[0], item.lnglat[1]), //点标记的位置
                           offset: new AMap.Pixel(-7, -17), //偏移量
-                          icon: new AMap.Icon({
-                              size: new AMap.Size(20, 20), //图标尺寸
-                              image: mapIcon.red, //Icon 的图像
-                              // imageOffset: new AMap.Pixel(-9, -3), //图像相对展示区域的偏移量，适于雪碧图等
-                              imageSize: new AMap.Size(20, 20), //根据所设置的大小拉伸或压缩图片
-                          }), //添加 Icon 实例
+                          icon: errorIcon, //添加 Icon 实例
                           title: "错误点",
-                          zooms: [6, 16], //点标记显示的层级范围，超过范围不显示
+                          zIndex: 100, 
+                          zooms: [9, 18], //点标记显示的层级范围，超过范围不显示
                       });
+                      marker.on('click',function(){
+                        activeNames1.value=item.accumulation
+                        document.getElementById(item.accumulation)?.scrollIntoView();
+                        if(longitude.value!=item.lnglat[0]&&latitude.value!=item.lnglat[1]){
+                     longitude.value = item.lnglat[0]
+                     latitude.value=item.lnglat[1]
+                         }
+                      })
+                      watch([longitude,latitude],(newValue)=>{
+                    if(newValue[0]==item.lnglat[0]&&newValue[1]==item.lnglat[1]){
+                    marker.setIcon(newIcon)
+                       }else{
+                        marker.setIcon(errorIcon)
+                       }
+                      })
                       map!.add(marker);
                   }
               })
@@ -399,10 +427,7 @@ onBeforeUnmount(() => {
                 padding: 5px;
             }
 
-            .itemContent {
-                padding: 5px 10px;
-            }
-
+       
             .itemContent:before {
                 content: "";
                 display: inline-block;
@@ -418,6 +443,7 @@ onBeforeUnmount(() => {
 
     .adjustDialogContent {
         margin-top: 20px;
+      
         :global(.el-collapse-item__header::before) {
             content: "";
             display: inline-block;
@@ -454,5 +480,13 @@ onBeforeUnmount(() => {
             margin-top: 25px;
         }
     }
-}
+   }
+     .itemContent {
+    padding: 5px 10px;
+    cursor: pointer;
+    }
+    .active{
+            background-color: #b5a55f;
+            padding: 0 0.5vw;
+              } 
 </style>

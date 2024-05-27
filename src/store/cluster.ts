@@ -60,11 +60,11 @@ export const useClusterStore = defineStore("cluster", () => {
         (item) => item.accumulation === accumulation
       );
       if (existingItem) {
-        existingItem.son.push({ shopName: point.name });
+        existingItem.son.push({ shopName: point.name ,lnglat:[point.longitude,point.latitude]});
       } else {
         result.push({
           accumulation: point.accumulation,
-          son: [{ shopName: point.name }],
+          son: [{ shopName: point.name,lnglat:[point.longitude,point.latitude] }],
         });
       }
       return result;
@@ -110,8 +110,7 @@ export const useClusterStore = defineStore("cluster", () => {
   async function getErrorPointsAction() {
     const res = await getErrorPoints();
     errorResult.value = res.data;
-    console.log(res);
-    
+ 
   }
 
   //获取当前商铺可调整到的聚集区
@@ -143,7 +142,6 @@ export const useClusterStore = defineStore("cluster", () => {
   );
   async function getMapResultPointsAction() {
     const res = await getMapResultPoints();
-    console.log(res);
     MapResultPoints.value = res.data.point;
     localStorage.setItem(
       "Points",
