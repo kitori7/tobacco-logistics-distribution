@@ -12,7 +12,7 @@
       <div class="content">
           <BorderBox9 :color="['#73e5ff', '#73e5ff']" backgroundColor='#001731'>
               <div class="areaCollapse">
-                  <el-collapse v-model="activeNames" v-for="(item, index) in  clusterStore.InformationList" :key="item.number">
+                  <el-collapse v-model="activeNames" v-for="(item, index) in clusterStore.InformationList" :key="item.number">
                       <el-badge :value="item.number" class="item"></el-badge>
                       <el-collapse-item :title="item.name" :name="index">
                           <ul>
@@ -30,9 +30,9 @@
                     <el-collapse v-loading="isResultPointsFinished" element-loading-text="加载中..."
                         element-loading-background="rgba(0,23,49,0.8)" v-model="activeNames2" accordion>
                         <el-scrollbar height="75vh">
-                            <el-collapse-item v-for="(item, index) in clusterStore.clusterAndShopList"
-                                :title=item.accumulation :name=index :key="item.accumulation">
-                                <div class="regionCollapseItemContext" v-for="(item1) in item.son " :key="item1.shopName">{{ item1.shopName }}
+                            <el-collapse-item v-for="item in clusterStore.clusterAndShopList"
+                                :title=item.accumulation :name=item.accumulation :key="item.accumulation" >
+                                <div class="regionCollapseItemContext" v-for="(item1) in item.son " :key="item1.shopName" :class="istrue?'active':''">{{ item1.shopName }}
                                 </div>
                             </el-collapse-item>
                         </el-scrollbar>
@@ -47,14 +47,13 @@ import { useClusterStore } from "@/store/cluster";
 import { ElLoading } from 'element-plus'
 import { useRouter } from "vue-router";
 import { BorderBox9 } from "@dataview/datav-vue3";
-import { IMapResultPoints } from "@/types/cluster";
 window._AMapSecurityConfig = {
   securityJsCode: "1b6291b2fceee1cd3b7798bfdd4c39e4",
 };
 const router = useRouter();
 // 跳转
 function routerChange() {
-  router.replace('/home/AreaAdjust')
+  router.replace('/home/computer/AreaAdjust')
 }
 //聚集区Store
 const clusterStore = useClusterStore();
@@ -114,7 +113,7 @@ function save() {
 //第一个折叠面板的参数
 const activeNames = ref(['0'])
 //第二个折叠面板的参数
-const activeNames2 = ref(['0'])
+const activeNames2 = ref()
 //定义是否加载完成的变量
 const isResultPointsFinished = ref<boolean>(true)
 //获取聚集区和商铺信息的方法
@@ -143,7 +142,7 @@ let map: any = null;
 onMounted(()=>{
 getALLMapData()
 })
-   
+const istrue = ref<boolean>(false)
  function getALLMapData(){
     AMapLoader.load({
       key: "64c03ae77b4521e9dbb72475e120e70c", // 申请好的Web端开发者Key，首次调用 load 时必填
@@ -183,8 +182,8 @@ getALLMapData()
           polyline.setMap(map);
         }
         //限制移动范围
-        const limitBound = map.getBounds();
-        map.setLimitBounds(limitBound);
+        // const limitBound = map.getBounds();
+        // map.setLimitBounds(limitBound);
         // 绑定点击事件
         if(clusterStore.MapResultPoints&&!isUpdate.value){
             mapPoints()
@@ -197,20 +196,6 @@ getALLMapData()
         }
             function mapPoints(){
        // 地图标点
-       const data = ref<IMapResultPoints[]>();
-              data.value = clusterStore.MapResultPoints;
-              const style = {
-                  url: mapIcon.blue, //图标地址
-                  size: new AMap.Size(15, 15), //图标大小
-                  anchor: new AMap.Pixel(-10, -20), //图标显示位置偏移量，基准点为图标左上角
-              }//设置样式对象
-              //海量点
-              var massMarks = new AMap.MassMarks(data.value, {
-                  zIndex: 5, //海量点图层叠加的顺序
-                  zooms: [10, 22], //在指定地图缩放级别范围内展示海量点图层
-                  style: style,
-              });
-              massMarks.setMap(map);
               isMaoFinished.value =false
               clusterStore.MapResultPoints!.forEach((item) => {
                   if (item.state == "center") {
@@ -227,23 +212,30 @@ getALLMapData()
                           zooms: [9, 16], //点标记显示的层级范围，超过范围不显示
                       });
                       map!.add(marker);
+                      marker.on('click',function(){
+                        console.log(item);
+                        activeNames2.value=item.accumulation
+                      })
                   }
                   else if (item.state == "error") {
                       // 将 Icon 实例添加到 marker 上:
                       const marker = new AMap.Marker({
                           position: new AMap.LngLat(item.lnglat[0], item.lnglat[1]), //点标记的位置
                           offset: new AMap.Pixel(-7, -17), //偏移量
+                          zIndex: 100, 
                           icon: new AMap.Icon({
-                              size: new AMap.Size(20, 20), //图标尺寸
+                              size: new AMap.Size(30, 30), //图标尺寸
                               image: mapIcon.red, //Icon 的图像
-                              // imageOffset: new AMap.Pixel(-9, -3), //图像相对展示区域的偏移量，适于雪碧图等
-                              imageSize: new AMap.Size(20, 20), //根据所设置的大小拉伸或压缩图片
+                              imageSize: new AMap.Size(30, 30), //根据所设置的大小拉伸或压缩图片
                           }), //添加 Icon 实例
                           title: "错误点",
                           zooms: [6, 16], //点标记显示的层级范围，超过范围不显示
                       });
+                      
                       map!.add(marker);
                   }
+
+                  
               })
      
 }
@@ -326,7 +318,7 @@ onBeforeUnmount(() => {
                           display: inline-block;
                           width: 15px;
                           height: 15px;
-                          background-color: rgb(255, 51, 204);
+                          background-color: #e0c340;
                           border-radius: 50%;
                           margin-right: 10px;
                       }
@@ -336,7 +328,7 @@ onBeforeUnmount(() => {
                           margin-right: -15px;
                           width: 33px;
                           height: 33px;
-                          background: rgb(255, 51, 204);
+                          background: #e0c340;
                           transform: rotate(45deg);
                           content: "";
                           display: inline-block;
@@ -361,7 +353,7 @@ onBeforeUnmount(() => {
                   display: inline-block;
                   width: 8px;
                   height: 8px;
-                  background-color: fuchsia;
+                  background-color: #b5a55f;
                   border-radius: 50%;
                   margin-bottom: 4px;
                   margin-right: 10px;
@@ -382,11 +374,15 @@ onBeforeUnmount(() => {
                   --el-collapse-content-text-color: #e1f7ff;
                   --el-collapse-border-color: #001731;
               }
-
+            
               .el-collapse-item {
                   padding-left: 30px;
                   position: relative;
-
+                 
+                 .active{
+                    background-color: rgb(2, 119, 168);
+                    padding: 0 0.5vw;
+                 } 
                   ::v-deep(.el-collapse-item__content) {
                       padding: 0;
                   }

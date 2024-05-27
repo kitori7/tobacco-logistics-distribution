@@ -1,6 +1,6 @@
 <template>
     <div class="Computer">
-        <div class="btn-content">
+        <div class="btn-content" v-if="!route.meta.isShow">
             <el-badge class="item">
                 <el-button :class="{ vertical: true, active: currentRoute === 'route' }"
                     @click="routerChange('route')">路径计算</el-button>
