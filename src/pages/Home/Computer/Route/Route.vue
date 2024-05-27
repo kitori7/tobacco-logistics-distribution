@@ -27,7 +27,7 @@
             />
           </el-select>
           <div class="routeCollapse">
-            <!-- <el-collapse v-model="activeNames">
+            <el-collapse v-model="activeNames">
               <el-badge :value="1" class="item"></el-badge>
               <el-collapse-item title="聚集区信息改变" name="1">
                 <ul>
@@ -41,21 +41,24 @@
                   <li>D区可工作车辆数更改为25辆</li>
                 </ul>
               </el-collapse-item>
-            </el-collapse> -->
+            </el-collapse>
           </div>
-          <!-- <el-input-number
-            class="num"
-            v-model="num"
-            :min="1"
-            :max="1000"
-            style="color: black"
-          /> -->
-          <el-button
-            class="btn"
-            @click="CalculateBtnFunction()"
-            :loading="loadCalculate"
-            >重新计算</el-button
-          >
+          <div class="btns">
+            <el-input-number
+              v-if="area !== '韶关市'"
+              class="num"
+              v-model="num"
+              :min="1"
+              :max="1000"
+              style="color: black"
+            />
+            <el-button
+              class="btn"
+              @click="CalculateBtnFunction()"
+              :loading="loadCalculate"
+              >重新计算</el-button
+            >
+          </div>
         </div>
       </BorderBox9>
       <BorderBox9 :color="['#73e5ff', '#73e5ff']" backgroundColor="#001731">
@@ -240,7 +243,7 @@
     assignNumber: 10,
   });
   const choiceCalculateType = ref(0);
-  const num = ref(1);
+  const num = ref(10);
   //路径重新计算
 
   // 打卡 eChart
@@ -741,23 +744,22 @@
         .num {
           width: 120px;
           height: 40px;
-          position: absolute;
-          left: 30%;
-          transform: translate(-50%, 0);
-          bottom: 3%;
         }
 
         .el-input__inner {
           color: #ff0000;
         }
 
-        .btn {
-          width: 120px;
-          height: 40px;
+        .btns {
           position: absolute;
-          left: 70%;
-          transform: translate(-50%, 0);
           bottom: 3%;
+          display: flex;
+          width: 100%;
+          justify-content: center;
+          .btn {
+            width: 120px;
+            height: 40px;
+          }
         }
 
         .leftInformation {
