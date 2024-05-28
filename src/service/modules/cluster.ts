@@ -16,13 +16,13 @@ import {
   IVersionRequest,
   ItestInformation,
   IRouteSave,
-  Ipoints
+  Ipoints,
 } from "@/types/cluster";
 
 // 获取所有聚集区及商铺点
 export function getAllResultPoints() {
   return requests.get<IRequest<IResultPoints[]>>({
-    timeout: 1000 * 60*3,
+    timeout: 1000 * 60 * 3,
     url: "/clustercalculate/cluster/getListResultPoints",
   });
 }
@@ -202,7 +202,7 @@ export function getConvexPoint() {
   });
 }
 // 单条路径重新计算
-export function calculateSingleRoute(data:any) {
+export function calculateSingleRoute(data: any) {
   return requests.get<IRequest<any>>({
     timeout: 1000 * 60,
     url: `/pathcalculate/path/calculateRangedRoute?apiKey=${data.apiKey}&routeName1=${data.routeName1}&routeName2=${data.routeName2}`,
@@ -213,5 +213,12 @@ export function getConvex() {
   return requests.get<IRequest<any>>({
     timeout: 1000 * 60 * 5,
     url: "/pathcalculate/path/getConvex",
+  });
+}
+
+export function getTransitDepotName() {
+  return requests.get<IRequest<any>>({
+    timeout: 1000 * 60 * 5,
+    url: "/path/getTransitDepotName",
   });
 }

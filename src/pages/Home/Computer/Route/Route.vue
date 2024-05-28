@@ -150,6 +150,7 @@
   import { useClusterStore } from "@/store/cluster";
   import { IAccumulationList } from "@/types/cluster";
   import RouteEChart from "./cpn/routeEChart.vue";
+  import { data1, data2, data3, data4, data5 } from "./data/data";
   window._AMapSecurityConfig = {
     securityJsCode: "1b6291b2fceee1cd3b7798bfdd4c39e4",
   };
@@ -160,18 +161,65 @@
     key: "64c03ae77b4521e9dbb72475e120e70c", // 申请好的Web端开发者Key，首次调用 load 时必填
     version: "2.0", // 指定要加载的 JSAPI 的版本，缺省时默认为 1.4.15
     plugins: ["AMap.DistrictSearch", "AMap.MarkerCluster"], // 需要使用的的插件列表，如比例尺'AMap.Scale'等 // 需要使用的的插件列表，如比例尺'AMap.Scale'等
-  }).then((AMap: any) => {
+  }).then(async (AMap: any) => {
     const district = new AMap.DistrictSearch({
       subdistrict: 1,
       extensions: "all",
       level: "province",
     });
-    district.search("韶关市", function (_: any, result: any) {
+    district.search("韶关市", async function (_: any, result: any) {
       const bounds = result.districtList[0].boundaries;
       const mask = [];
       for (let i = 0; i < bounds.length; i++) {
         mask.push([bounds[i]]);
       }
+      setTimeout(() => {
+        // 班组一渲染
+        const polygon1 = new AMap.Polyline({
+          path: data1, //路径
+          strokeWeight: 1, //线条宽度，默认为 2
+          showDir: true,
+          strokeColor: "#001731", //线条颜色
+          lineJoin: "round", //折线拐点连接处样式
+        });
+        map.add(polygon1);
+        // 班组二
+        const polygon2 = new AMap.Polyline({
+          path: data2, //路径
+          strokeWeight: 1, //线条宽度，默认为 2
+          showDir: true,
+          strokeColor: "#001731", //线条颜色
+          lineJoin: "round", //折线拐点连接处样式
+        });
+        map.add(polygon2);
+        // 班组三
+        const polygon3 = new AMap.Polyline({
+          path: data3, //路径
+          strokeWeight: 1, //线条宽度，默认为 2
+          showDir: true,
+          strokeColor: "#001731", //线条颜色
+          lineJoin: "round", //折线拐点连接处样式
+        });
+        map.add(polygon3);
+        // 班组四
+        const polygon4 = new AMap.Polyline({
+          path: data4, //路径
+          strokeWeight: 1, //线条宽度，默认为 2
+          showDir: true,
+          strokeColor: "#001731", //线条颜色
+          lineJoin: "round", //折线拐点连接处样式
+        });
+        map.add(polygon4);
+        // 班组五
+        const polygon5 = new AMap.Polyline({
+          path: data5, //路径
+          strokeWeight: 1, //线条宽度，默认为 2
+          showDir: true,
+          strokeColor: "#001731", //线条颜色
+          lineJoin: "round", //折线拐点连接处样式
+        });
+        map.add(polygon5);
+      }, 1000);
       map = new AMap.Map("container", {
         // 设置地图容器id
         mask: mask, // 为Map实例制定掩模的路径,各图层将值显示路径范围内图像,3D模式下有效
@@ -194,11 +242,14 @@
         polyline.setMap(map);
       }
       //限制移动范围
-      const limitBound = map.getBounds();
-      map.setLimitBounds(limitBound);
+      // const limitBound = map.getBounds();
+      // map.setLimitBounds(limitBound);
       //绑定点击事件
       map.on("click", function (e: any) {
         console.log("当前坐标：" + e.lnglat.getLng() + "," + e.lnglat.getLat());
+        navigator.clipboard.writeText(
+          e.lnglat.getLng() + "," + e.lnglat.getLat()
+        );
       });
     });
   });
@@ -206,36 +257,8 @@
   const activeNames2 = ref(["0"]);
 
   const area = ref("韶关市");
-  const areas = [
-    {
-      value: "韶关市",
-      label: "韶关市",
-    },
-    {
-      value: "仁化",
-      label: "仁化县中转站",
-    },
-    {
-      value: "新丰",
-      label: "新丰县中转站",
-    },
-    {
-      value: "坪石",
-      label: "坪石县中转站",
-    },
-    {
-      value: "翁源",
-      label: "翁源县中转站",
-    },
-    {
-      value: "马市",
-      label: "马市烟叶工作站",
-    },
-    {
-      value: "物流配送中心",
-      label: "物流配送中心",
-    },
-  ];
+  clusterStore.getTransitDepotNameAction();
+  const areas = ref(clusterStore.areas);
   const route = ref("路线详情");
 
   //楚鸿的key： 309bde1e73b984c7d8a87ab19255963c
@@ -354,6 +377,10 @@
               event.lnglat.getLat()
             ),
             text: index.toString(),
+            anchor: "center",
+            style: {
+              color: "#000",
+            },
           });
           marker.dis = item.distance;
           markers.push(marker);
@@ -532,27 +559,28 @@
     }
   };
   function getSplitLines() {
-    const oldPolylineList: AMap.Polyline[] = [];
-    clusterStore.getSplitLinesAction().then(() => {
-      //折线数据展示
-      clusterStore.SplitLines!.forEach((item) => {
-        //配置折线路径
-        let path: AMap.LngLat[] = [];
-        item.forEach((item) => {
-          path.push(new AMap.LngLat(item.longitude, item.latitude));
-        });
-        //创建 Polyline 实例
-        let polyline = new AMap.Polyline({
-          path: path,
-          strokeWeight: 5,
-          showDir: true,
-          strokeColor: "#001731", //线条颜色
-          lineJoin: "round", //折线拐点连接处样式
-        });
-        oldPolylineList.push(polyline);
-      });
-      map.add(oldPolylineList);
-    });
+    // 旧分割线
+    // const oldPolylineList: AMap.Polyline[] = [];
+    // clusterStore.getSplitLinesAction().then(() => {
+    //   //折线数据展示
+    //   clusterStore.SplitLines!.forEach((item) => {
+    //     //配置折线路径
+    //     let path: AMap.LngLat[] = [];
+    //     item.forEach((item) => {
+    //       path.push(new AMap.LngLat(item.longitude, item.latitude));
+    //     });
+    //     //创建 Polyline 实例
+    //     let polyline = new AMap.Polyline({
+    //       path: path,
+    //       strokeWeight: 5,
+    //       showDir: true,
+    //       strokeColor: "#001731", //线条颜色
+    //       lineJoin: "round", //折线拐点连接处样式
+    //     });
+    //     oldPolylineList.push(polyline);
+    //   });
+    //   map.add(oldPolylineList);
+    // });
   }
 
   //  调整打卡点
