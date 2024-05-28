@@ -219,6 +219,6 @@ export function getConvex() {
 export function getTransitDepotName() {
   return requests.get<IRequest<any>>({
     timeout: 1000 * 60 * 5,
-    url: "/path/getTransitDepotName",
+    url: "/pathcalculate/path/getTransitDepotName",
   });
 }

@@ -21,9 +21,9 @@
           <el-select v-model="area">
             <el-option
               v-for="item in areas"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
+              :key="item.name"
+              :label="item.name"
+              :value="item.name"
             />
           </el-select>
           <div class="routeCollapse">
@@ -257,8 +257,11 @@
   const activeNames2 = ref(["0"]);
 
   const area = ref("韶关市");
-  clusterStore.getTransitDepotNameAction();
-  const areas = ref(clusterStore.areas);
+  const areas = ref<any>();
+  clusterStore.getTransitDepotNameAction().then(() => {
+    areas.value = clusterStore.areas;
+  });
+
   const route = ref("路线详情");
 
   //楚鸿的key： 309bde1e73b984c7d8a87ab19255963c
