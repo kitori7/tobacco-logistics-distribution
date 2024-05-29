@@ -12,7 +12,7 @@ import {
   IResultPoints,
   IRouteData,
   IShopData,
-  IStoreDetails,
+  IAccumulationList,
   IVersionRequest,
   ItestInformation,
   IRouteSave,
@@ -132,8 +132,8 @@ export function getRouteDetails() {
 
 //获取路线详情-聚集区下商户信息
 export function getStoreDetails(data: string) {
-  return requests.get<IRequest<IStoreDetails[]>>({
-    url: `/pathcalculate/path/getStoreDetails/${data}`,
+  return requests.get<IRequest<IAccumulationList[]>>({
+    url: `/pathcalculate/path/getAccumulationDetails/${data}`,
   });
 }
 

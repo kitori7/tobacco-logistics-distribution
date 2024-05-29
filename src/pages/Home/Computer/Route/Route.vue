@@ -73,31 +73,31 @@
                 element-loading-background="rgba(0,23,49,0.8)"
               >
                 <el-collapse-item
-                  :title="item.areaName"
-                  :name="item.areaId"
+                  :title="item.groupName"
+                  :name="item.groupId"
                   v-for="item in clusterStore.routeDetails"
-                  :key="item.areaId"
+                  :key="item.groupId"
                 >
                   <ul>
                     <li
                       class="routeNameLi"
-                      v-for="item1 in item.routeList"
-                      :key="item1.routeId"
-                      @click="item1.isOpen = !item1.isOpen"
+                      v-for="item1 in item.list"
+                      :key="item1.transitDepotId"
+          
                     >
-                      <div class="routeName" @click="mapShow(item1.routeName)" :class="mapRouteName==item1.routeName?'active':''">
-                        {{ item1.routeName }}
+                      <div class="routeName">
+                        {{ item1.transitDepotName}}
                       </div>
                       <ul>
                         <li
                           class="accumulationNameLi"
                           tabindex="1"
-                          v-for="item2 in item1.accumulationList"
-                          :key="item2.accumulationId"
-                          v-show="item1.isOpen"
+                          v-for="item2 in item1.routeList"
+                          :key="item2.routeId"
                           @click.stop="accumulationNameClick(item2)"
+                        :class="item2.routeName==mapRouteName?'active':''"
                         >
-                          {{ item2.accumulationName }}
+                          {{ item2.routeName }}
                         </li>
                       </ul>
                     </li>
@@ -113,7 +113,7 @@
             >保存路径</el-button
           >
           <el-dialog
-            style="transform: translate(16vw, 43vh); height: 30vh"
+            style="transform: translate(16vw, 48vh); height: 31vh"
             v-model="isOpenRouteDialog"
             width="20%"
             :modal="false"
@@ -122,13 +122,13 @@
             :title="titleAccumulationName"
           >
             <el-scrollbar height="20vh">
-              <ul style="margin-left: 20px">
+              <ul style="margin-left: 20px; padding-top: 0px;">
                 <li
-                  style="padding: 5px; list-style: square"
+                  style="padding: 3px; list-style: square"
                   v-for="item3 in clusterStore.storeResult"
-                  :key="item3.storeId"
+                  :key="item3.accumulationId"
                 >
-                  {{ item3.storeAddress }}
+                  {{ item3.accumulationAddress }}
                 </li>
               </ul>
             </el-scrollbar>
@@ -145,7 +145,6 @@
   //@ts-ignore
   import AMapLoader from "@amap/amap-jsapi-loader";
   import { useClusterStore } from "@/store/cluster";
-  import { IAccumulationList } from "@/types/cluster";
   import RouteEChart from "./cpn/routeEChart.vue";
   import { data1, data2, data3, data4, data5 } from "./data/data";
   window._AMapSecurityConfig = {
@@ -254,12 +253,6 @@
   const activeNames2 = ref(["0"]);
   // 路径互动
   const mapRouteName=ref<string>()
-  function mapShow(routeName:string){
-  if(mapRouteName.value!=routeName){
-    mapRouteName.value=routeName
-  }
-
-}
   const area = ref("韶关市");
   const areas = ref<any>();
   clusterStore.getTransitDepotNameAction().then(() => {
@@ -408,10 +401,10 @@
         isActive = !isActive;
       });
       map.add(polygon);
+  
+      
       watch(mapRouteName,(newValue)=>{
-       if(newValue==item.routeName){
-        console.log(newValue);
-        console.log(item.routeName);
+       if(newValue==item.routeName){   
        polygon.setOptions({
         path:polygonPath,
         strokeOpacity: 1,
@@ -469,10 +462,13 @@
   //定义弹框标题accumulationName的变量
   const titleAccumulationName = ref<string>("");
   //获取路线详情-聚集区下商户信息
-  const accumulationNameClick = (accumulation: IAccumulationList) => {
-    titleAccumulationName.value = accumulation.accumulationName;
-    clusterStore.getStoreDetailsAction(accumulation.accumulationId);
+  const accumulationNameClick = (accumulation: any) => {
+    titleAccumulationName.value = accumulation.routeName;
+    clusterStore.getStoreDetailsAction(accumulation.routeId);
     isOpenRouteDialog.value = true;
+    if(mapRouteName.value!=accumulation.routeName){
+    mapRouteName.value=accumulation.routeName;
+  }
   };
   //定义是否打开弹窗的变量
   const isOpenRouteDialog = ref(false);
@@ -891,13 +887,6 @@
                   margin-bottom: 4px;
                   margin-right: 10px;
                 }
-
-             
-
-                .accumulationNameLi {
-                  padding-left: 25px;
-                }
-
                 .accumulationNameLi:hover {
                   background-color: #0277a8;
                 }
@@ -943,5 +932,6 @@
   .active{
             background-color: rgb(2, 119, 168);
             padding: 0 0.5vw;
-              } 
+   } 
+
 </style>

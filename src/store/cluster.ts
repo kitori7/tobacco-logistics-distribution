@@ -39,7 +39,7 @@ import {
   IResultPoints,
   IRouteData,
   IShopData,
-  IStoreDetails,
+  IAccumulationList,
   IVersionRequest,
   polylineData,
   IRouteSave,
@@ -189,17 +189,14 @@ export const useClusterStore = defineStore("cluster", () => {
   async function getRouteDetailsAction() {
     const res = await getRouteDetails();
     routeDetails.value = res.data;
-    console.log(res.data);
-    
   }
 
   //获取路线详情-聚集区下商户信息
   //定义变量商户信息
-  const storeResult = ref<IStoreDetails[]>();
+  const storeResult = ref<IAccumulationList[]>();
   async function getStoreDetailsAction(data: string) {
     const res = await getStoreDetails(data);
     storeResult.value = res.data;
- 
   }
 
   //获取路径分析-大区历史路径数据
