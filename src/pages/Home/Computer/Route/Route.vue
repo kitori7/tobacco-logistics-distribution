@@ -8,12 +8,20 @@
       </el-button>
       <div id="container"></div>
       <RouteEChart :data="eChartData" v-model="isOpenEChart"></RouteEChart>
-      <el-button
-        class="adjustPoint"
-        @click="adjustPoint"
-        :loading="adjustLoad"
-        >{{ adjustText }}</el-button
-      >
+      <div class="btn-box">
+        <el-button
+          class="adjustPoint"
+          @click="adjustPoint"
+          :loading="adjustLoad"
+          >{{ adjustText }}</el-button
+        >
+        <el-button
+          class="adjustPoint"
+          @click="refreshConvex"
+          :loading="adjustLoad"
+          >刷新缓存</el-button
+        >
+      </div>
     </div>
     <div class="content">
       <BorderBox9 :color="['#73e5ff', '#73e5ff']" backgroundColor="#001731">
@@ -83,10 +91,9 @@
                       class="routeNameLi"
                       v-for="item1 in item.list"
                       :key="item1.transitDepotId"
-          
                     >
                       <div class="routeName">
-                        {{ item1.transitDepotName}}
+                        {{ item1.transitDepotName }}
                       </div>
                       <ul>
                         <li
@@ -95,7 +102,9 @@
                           v-for="item2 in item1.routeList"
                           :key="item2.routeId"
                           @click.stop="accumulationNameClick(item2)"
-                        :class="item2.routeName==mapRouteName?'active':''"
+                          :class="
+                            item2.routeName == mapRouteName ? 'active' : ''
+                          "
                         >
                           {{ item2.routeName }}
                         </li>
@@ -122,7 +131,7 @@
             :title="titleAccumulationName"
           >
             <el-scrollbar height="20vh">
-              <ul style="margin-left: 20px; padding-top: 0px;">
+              <ul style="margin-left: 20px; padding-top: 0px">
                 <li
                   style="padding: 3px; list-style: square"
                   v-for="item3 in clusterStore.storeResult"
@@ -147,6 +156,9 @@
   import { useClusterStore } from "@/store/cluster";
   import RouteEChart from "./cpn/routeEChart.vue";
   import { data1, data2, data3, data4, data5 } from "./data/data";
+  import str from "./data/color";
+  import colorArr from "./data/colorArr";
+
   window._AMapSecurityConfig = {
     securityJsCode: "1b6291b2fceee1cd3b7798bfdd4c39e4",
   };
@@ -169,53 +181,6 @@
       for (let i = 0; i < bounds.length; i++) {
         mask.push([bounds[i]]);
       }
-      setTimeout(() => {
-        // 班组一渲染
-        const polygon1 = new AMap.Polyline({
-          path: data1, //路径
-          strokeWeight: 1, //线条宽度，默认为 2
-          showDir: true,
-          strokeColor: "#001731", //线条颜色
-          lineJoin: "round", //折线拐点连接处样式
-        });
-        map.add(polygon1);
-        // 班组二
-        const polygon2 = new AMap.Polyline({
-          path: data2, //路径
-          strokeWeight: 1, //线条宽度，默认为 2
-          showDir: true,
-          strokeColor: "#001731", //线条颜色
-          lineJoin: "round", //折线拐点连接处样式
-        });
-        map.add(polygon2);
-        // 班组三
-        const polygon3 = new AMap.Polyline({
-          path: data3, //路径
-          strokeWeight: 1, //线条宽度，默认为 2
-          showDir: true,
-          strokeColor: "#001731", //线条颜色
-          lineJoin: "round", //折线拐点连接处样式
-        });
-        map.add(polygon3);
-        // 班组四
-        const polygon4 = new AMap.Polyline({
-          path: data4, //路径
-          strokeWeight: 1, //线条宽度，默认为 2
-          showDir: true,
-          strokeColor: "#001731", //线条颜色
-          lineJoin: "round", //折线拐点连接处样式
-        });
-        map.add(polygon4);
-        // 班组五
-        const polygon5 = new AMap.Polyline({
-          path: data5, //路径
-          strokeWeight: 1, //线条宽度，默认为 2
-          showDir: true,
-          strokeColor: "#001731", //线条颜色
-          lineJoin: "round", //折线拐点连接处样式
-        });
-        map.add(polygon5);
-      }, 1000);
       map = new AMap.Map("container", {
         // 设置地图容器id
         mask: mask, // 为Map实例制定掩模的路径,各图层将值显示路径范围内图像,3D模式下有效
@@ -237,9 +202,71 @@
         });
         polyline.setMap(map);
       }
+
+      const polygon1 = new AMap.Polyline({
+        path: data1, //路径
+        strokeWeight: 1, //线条宽度，默认为 2
+        showDir: true,
+        strokeColor: "#001731", //线条颜色
+        lineJoin: "round", //折线拐点连接处样式
+      });
+      map.add(polygon1);
+      // 班组二
+      const polygon2 = new AMap.Polyline({
+        path: data2, //路径
+        strokeWeight: 1, //线条宽度，默认为 2
+        showDir: true,
+        strokeColor: "#001731", //线条颜色
+        lineJoin: "round", //折线拐点连接处样式
+      });
+      map.add(polygon2);
+      // 班组三
+      const polygon3 = new AMap.Polyline({
+        path: data3, //路径
+        strokeWeight: 1, //线条宽度，默认为 2
+        showDir: true,
+        strokeColor: "#001731", //线条颜色
+        lineJoin: "round", //折线拐点连接处样式
+      });
+      map.add(polygon3);
+      // 班组四
+      const polygon4 = new AMap.Polyline({
+        path: data4, //路径
+        strokeWeight: 1, //线条宽度，默认为 2
+        showDir: true,
+        strokeColor: "#001731", //线条颜色
+        lineJoin: "round", //折线拐点连接处样式
+      });
+      map.add(polygon4);
+      // 班组五
+      const polygon5 = new AMap.Polyline({
+        path: data5, //路径
+        strokeWeight: 1, //线条宽度，默认为 2
+        showDir: true,
+        strokeColor: "#001731", //线条颜色
+        lineJoin: "round", //折线拐点连接处样式
+      });
+      map.add(polygon5);
       //限制移动范围
       // const limitBound = map.getBounds();
       // map.setLimitBounds(limitBound);
+
+      // 渲染涂色
+      str.forEach((item, index) => {
+        const path = item.map((item) => {
+          return new AMap.LngLat(item[0], item[1]);
+        });
+        colorArr[0];
+        const polygon6 = new AMap.Polygon({
+          path: path, //路径
+          fillColor: colorArr[0][index % 5], //多边形填充颜色
+          strokeWeight: 1, //线条宽度，默认为 2
+          strokeColor: "#fff", //线条颜色
+          strokeOpacity: 1,
+        });
+        map.add(polygon6);
+      });
+
       //绑定点击事件
       map.on("click", function (e: any) {
         console.log("当前坐标：" + e.lnglat.getLng() + "," + e.lnglat.getLat());
@@ -252,7 +279,7 @@
   const activeNames = ref(["0"]);
   const activeNames2 = ref(["0"]);
   // 路径互动
-  const mapRouteName=ref<string>()
+  const mapRouteName = ref<string>();
   const area = ref("韶关市");
   const areas = ref<any>();
   clusterStore.getTransitDepotNameAction().then(() => {
@@ -287,17 +314,8 @@
     setTimeout(() => {
       // 加载保存的地图数据
       if (!clusterStore.convex) {
-        const loading = ElLoading.service({
-          lock: true,
-          text: "加载地图数据中...",
-          background: "rgba(0, 0, 0, 0.7)",
-        });
-        clusterStore.getConvexAction().then(() => {
-          countPathResult();
-          loading.close();
-        });
+        refreshConvex();
       }
-      countPathResult();
     }, 1000);
   });
   const markers: Array<AMap.Text> = [];
@@ -308,14 +326,6 @@
   const oldRouteName = ref<string>();
 
   function countPathResult() {
-    const colorArr = [
-      "#e4c974",
-      "#814146",
-      "#798f4a",
-      "#8b90a3",
-      "#728593",
-      "#383a4b",
-    ];
     // 绘制点
     clusterStore.getConvexPointAction().then(() => {
       clusterStore.convexPoint.forEach((point: any) => {
@@ -401,28 +411,27 @@
         isActive = !isActive;
       });
       map.add(polygon);
-  
-      
-      watch(mapRouteName,(newValue)=>{
-       if(newValue==item.routeName){   
-       polygon.setOptions({
-        path:polygonPath,
-        strokeOpacity: 1,
-        strokeColor: "black",
-        fillOpacity: 0,
-        strokeWeight: 4,
-       })
-       map.setZoomAndCenter(11, polygonPath[0]);
-       }else{
-        polygon.setOptions({
-        path:polygonPath,
-        strokeOpacity: 1,
-        strokeColor: "#fff",
-        fillOpacity: 0,
-        strokeWeight: 3,
-       })
-       }
-      })
+
+      watch(mapRouteName, (newValue) => {
+        if (newValue == item.routeName) {
+          polygon.setOptions({
+            path: polygonPath,
+            strokeOpacity: 1,
+            strokeColor: "black",
+            fillOpacity: 0,
+            strokeWeight: 4,
+          });
+          map.setZoomAndCenter(11, polygonPath[0]);
+        } else {
+          polygon.setOptions({
+            path: polygonPath,
+            strokeOpacity: 1,
+            strokeColor: "#fff",
+            fillOpacity: 0,
+            strokeWeight: 3,
+          });
+        }
+      });
       // 重新渲染 marker
       function renderMarkers() {
         markers.forEach((marker) => {
@@ -466,9 +475,9 @@
     titleAccumulationName.value = accumulation.routeName;
     clusterStore.getStoreDetailsAction(accumulation.routeId);
     isOpenRouteDialog.value = true;
-    if(mapRouteName.value!=accumulation.routeName){
-    mapRouteName.value=accumulation.routeName;
-  }
+    if (mapRouteName.value != accumulation.routeName) {
+      mapRouteName.value = accumulation.routeName;
+    }
   };
   //定义是否打开弹窗的变量
   const isOpenRouteDialog = ref(false);
@@ -583,7 +592,6 @@
     }
   };
 
-
   //  调整打卡点
   const adjustConfirm = ref<boolean>(false);
   const adjustLoad = ref<boolean>(false);
@@ -670,6 +678,18 @@
       }
     }
   }
+
+  function refreshConvex() {
+    const loading = ElLoading.service({
+      lock: true,
+      text: "加载地图数据中...",
+      background: "rgba(0, 0, 0, 0.7)",
+    });
+    clusterStore.getConvexAction().then(() => {
+      countPathResult();
+      loading.close();
+    });
+  }
 </script>
 
 <style lang="scss" scoped>
@@ -677,12 +697,6 @@
     width: 100%;
     display: flex;
     justify-content: center;
-    .adjustPoint {
-      position: relative;
-      left: 50%;
-      transform: translate(-60%, 50%);
-      transform: translate(-60%, 50%);
-    }
     .map {
       :deep(.amap-marker-label) {
         background-color: #3490f5;
@@ -697,6 +711,11 @@
         width: 100%;
         height: 100%;
         margin: 0.5vh 0;
+      }
+      .btn-box {
+        display: flex;
+        width: 100%;
+        justify-content: center;
       }
 
       .icon {
@@ -875,7 +894,7 @@
               }
 
               .routeNameLi {
-               cursor: pointer;
+                cursor: pointer;
 
                 .routeName:before {
                   content: "";
@@ -929,9 +948,8 @@
       }
     }
   }
-  .active{
-            background-color: rgb(2, 119, 168);
-            padding: 0 0.5vw;
-   } 
-
+  .active {
+    background-color: rgb(2, 119, 168);
+    padding: 0 0.5vw;
+  }
 </style>
