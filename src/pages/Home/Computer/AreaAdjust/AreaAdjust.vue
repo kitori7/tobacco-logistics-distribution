@@ -14,14 +14,16 @@
             <el-scrollbar height="75vh">
                 <div class="adjustCollapse">
                     <div class="title">错误点详细：</div>
-                    <el-collapse v-model="activeNames" v-for="(item, index) in  clusterStore.errorResult" :key="index">
+                    <el-collapse v-model="activeNames1" v-for="(item, index) in  clusterStore.errorResult" :key="index" accordion>
                         <el-badge :value="item.number" class="item"></el-badge>
-                        <el-collapse-item :title="item.accumulationName" :name="index">
-                            <div class="itemContent" @click="openAdjustDialog(item.accumulationName, item1)"
-                                v-for="(item1, index1) in  item.data" :key="index1">
+                        <el-collapse-item :title="item.accumulationName" :name="item.accumulationName">
+                            <div
+                                v-for="item1 in item.data" :key="item1.name" @click="openAdjustDialog(item.accumulationName, item1)" >
+                                <div class="itemContent" :class="longitude==item1.longitude&&latitude==item1.latitude?'active':''">
                                 {{ item1.name }}
+                            </div>
                                 <ul>
-                                    <li v-for="(item2, index2) in  item1.son" :key="index2" :class="longitude==item2.longitude&&latitude==item2.latitude?'active':''">
+                                    <li v-for="(item2, index2) in item1.son" :key="index2" :class="longitude==item2.longitude&&latitude==item2.latitude?'active':''">
                                         {{ item2.name }}
                                     </li>
                                 </ul>
@@ -34,17 +36,18 @@
         <el-dialog style="transform: translate(36.5vw, 0);" v-model="isOpenAdjustDialog" width="25%" :modal="false"
             :before-close="closeAdjustDialog" :append-to-body="true">
             <div class="adjustDialogContent">
-                <el-collapse v-model="activeNames1">
+                <el-collapse v-model="activeNames">
                     <el-collapse-item :title="infoData_fatherName" name="1" style="margin-right: 25px;">
-                        <div class="itemContent" style="padding: 5px 10px;">
+                        <div class="itemContent" style="padding: 5px 10px;" @click="errorClick([infoData!.longitude,infoData!.latitude])" :class="longitude==infoData?.longitude&&latitude==infoData?.latitude?'active':''">
                             {{ infoData?.name }}
+                        </div> 
                             <ul>
-                                <li style=" list-style: disc;margin-left: 30px;padding: 5px;"
+                                <li style="list-style: disc;margin-left: 30px;padding: 5px; cursor: pointer;"
                                     v-for="(item3, index3) in  infoData?.son" :key="index3" @click="errorClick([item3.longitude,item3.latitude])" :class="longitude==item3.longitude&&latitude==item3.latitude?'active':''">
                                     {{ item3.name }}
                                 </li>
                             </ul>
-                        </div>
+                       
                     </el-collapse-item>
                 </el-collapse>
                 <div class="adjustDialogChange">
@@ -101,7 +104,7 @@ clusterStore.getErrorPointsAction()
     });
 //定义折叠面板的变量
 const activeNames = ref(['1'])
-const activeNames1 = ref('')
+const activeNames1 = ref()
 //选择器定义变量
 const leftSelect = ref<IShopData>({
     longitude: 0,
@@ -305,28 +308,7 @@ let map: any = null;
               })
      
             })
-            const oldPolylineList: AMap.Polyline[] = []
-    clusterStore.getSplitLinesAction().then(() => {
-          //折线数据展示
-          clusterStore.SplitLines!.forEach((item) => {
-              //配置折线路径
-              let path: AMap.LngLat[] = [];
-              item.forEach((item) => {
-                  path.push(new AMap.LngLat(item.longitude, item.latitude))
-              })
-              //创建 Polyline 实例
-              let polyline = new AMap.Polyline({
-                  path: path,
-                  strokeWeight: 5,
-                  showDir: true,
-                  strokeColor: "#001731", //线条颜色
-                  lineJoin: "round", //折线拐点连接处样式
-              });
-              oldPolylineList.push(polyline)
-          })
-          map.add(oldPolylineList)
-      })
-    })
+        })
       }).catch((e:Error) => {
           console.log(e);
       });
@@ -425,6 +407,7 @@ onBeforeUnmount(() => {
                 list-style: disc;
                 margin-left: 30px;
                 padding: 5px;
+           
             }
 
        
@@ -441,10 +424,21 @@ onBeforeUnmount(() => {
         }
     }
 
+  
+   }
+     .itemContent{
+     margin-top: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+    }
+    .active{
+            background-color: #b5a55f !important;
+            padding: 0 0.5vw !important;
+    } 
     .adjustDialogContent {
         margin-top: 20px;
       
-        :global(.el-collapse-item__header::before) {
+        ::v-deep(.el-collapse-item__header::before) {
             content: "";
             display: inline-block;
             width: 15px;
@@ -454,7 +448,7 @@ onBeforeUnmount(() => {
             margin-right: 10px;
         }
 
-        :global(.el-collapse-item__header::after) {
+        ::v-deep(.el-collapse-item__header::after) {
             margin-left: 10px;
             margin-right: -15px;
             width: 33px;
@@ -465,7 +459,7 @@ onBeforeUnmount(() => {
             display: inline-block;
         }
 
-        :global(.itemContent:before) {
+        ::v-deep(.itemContent:before) {
             content: "";
             display: inline-block;
             width: 8px;
@@ -476,17 +470,8 @@ onBeforeUnmount(() => {
             margin-right: 0.5vw;
         }
 
-        :global(.adjustDialogChange) {
+        ::v-deep(.adjustDialogChange) {
             margin-top: 25px;
         }
     }
-   }
-     .itemContent {
-    padding: 5px 10px;
-    cursor: pointer;
-    }
-    .active{
-            background-color: #b5a55f;
-            padding: 0 0.5vw;
-              } 
 </style>

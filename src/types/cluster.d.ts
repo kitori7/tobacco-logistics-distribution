@@ -125,17 +125,16 @@ export interface ICalculateInfo {
 }
 
 export interface IAreaDetails {
-    areaId: string,
-    areaName: string,
-    routeList: IRouteList[],
+    groupId: string,
+    groupName: string,
+    list: IRouteList[],
 
 }
 
 interface IRouteList {
-    routeId: string,
-    routeName: string,
-    accumulationList: IAccumulationList[],
-    isOpen?: boolean,
+    transitDepotId: string,
+    transitDepotName: string,
+    routeList: any[],
 }
 interface IAccumulationList {
     accumulationId: string,

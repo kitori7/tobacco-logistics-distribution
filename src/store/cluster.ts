@@ -39,7 +39,7 @@ import {
   IResultPoints,
   IRouteData,
   IShopData,
-  IStoreDetails,
+  IAccumulationList,
   IVersionRequest,
   polylineData,
   IRouteSave,
@@ -77,6 +77,7 @@ export const useClusterStore = defineStore("cluster", () => {
     }, clusterAndShopList.value);
     clusterAndShopList.value = mergedArray;
     console.log(clusterAndShopList.value);
+    
   }
   //计算接口
   async function postCalculateAllAction() {
@@ -192,7 +193,7 @@ export const useClusterStore = defineStore("cluster", () => {
 
   //获取路线详情-聚集区下商户信息
   //定义变量商户信息
-  const storeResult = ref<IStoreDetails[]>();
+  const storeResult = ref<IAccumulationList[]>();
   async function getStoreDetailsAction(data: string) {
     const res = await getStoreDetails(data);
     storeResult.value = res.data;
