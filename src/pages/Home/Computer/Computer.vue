@@ -28,6 +28,11 @@ import { useRouter, useRoute } from "vue-router";
 const router = useRouter();
 const route = useRoute();
 const currentRoute = ref(route.name);
+onMounted(()=>{
+    if(route.name == 'AreaAdjust'){
+        currentRoute.value = 'area'
+    }
+})
 function routerChange(route: any) {
     router.push(`/home/computer/${route}`);
     currentRoute.value = route

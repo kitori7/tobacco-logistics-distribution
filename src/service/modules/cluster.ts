@@ -183,7 +183,7 @@ export function compareRoute(routeIdList: string) {
 // 班组比较
 export function compareArea(groupIdList: string) {
   return requests.get({
-    timeout: 1000 * 20,
+    timeout: 1000 * 60,
     url: `/pathcalculate/path/compareBaseGroup/${groupIdList}`,
   });
 }

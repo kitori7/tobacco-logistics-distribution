@@ -276,27 +276,7 @@ getALLMapData()
                   } 
               })
 }
-            const oldPolylineList: AMap.Polyline[] = []
-        clusterStore.getSplitLinesAction().then(() => {
-          //折线数据展示
-          clusterStore.SplitLines!.forEach((item) => {
-              //配置折线路径
-              let path: AMap.LngLat[] = [];
-              item.forEach((item) => {
-                  path.push(new AMap.LngLat(item.longitude, item.latitude))
-              })
-              //创建 Polyline 实例
-              let polyline = new AMap.Polyline({
-                  path: path,
-                  strokeWeight: 5,
-                  showDir: true,
-                  strokeColor: "#001731", //线条颜色
-                  lineJoin: "round", //折线拐点连接处样式
-              });
-              oldPolylineList.push(polyline)
-          })
-          map.add(oldPolylineList)
-      })
+
     })
       }).catch((e:Error) => {
           console.log(e);
@@ -350,7 +330,7 @@ onBeforeUnmount(() => {
 
               .el-collapse {
                   .el-collapse-item {
-                      ::v-deep(.el-collapse-item__header::before) {
+                    ::v-deep(.el-collapse-item__header::before) {
                           content: "";
                           display: inline-block;
                           width: 15px;
@@ -462,4 +442,5 @@ onBeforeUnmount(() => {
       }
   }
 }
+
 </style>

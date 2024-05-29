@@ -85,7 +85,7 @@
                       :key="item1.routeId"
                       @click="item1.isOpen = !item1.isOpen"
                     >
-                      <div class="routeName">
+                      <div class="routeName" @click="mapShow(item1.routeName)" :class="mapRouteName==item1.routeName?'active':''">
                         {{ item1.routeName }}
                       </div>
                       <ul>
@@ -98,7 +98,6 @@
                           @click.stop="accumulationNameClick(item2)"
                         >
                           {{ item2.accumulationName }}
-                          <!-- <div v-if=""></div> -->
                         </li>
                       </ul>
                     </li>
@@ -122,7 +121,6 @@
             :append-to-body="true"
             :title="titleAccumulationName"
           >
-            <!-- :draggable=true 拖动 -->
             <el-scrollbar height="20vh">
               <ul style="margin-left: 20px">
                 <li
@@ -142,7 +140,6 @@
 </template>
 
 <script lang="ts" setup>
-  // import router from "@/router";
   import { Edit } from "@element-plus/icons-vue";
   import { BorderBox9 } from "@dataview/datav-vue3";
   //@ts-ignore
@@ -201,7 +198,14 @@
   });
   const activeNames = ref(["0"]);
   const activeNames2 = ref(["0"]);
+  // 路径互动
+  const mapRouteName=ref<string>()
+  function mapShow(routeName:string){
+  if(mapRouteName.value!=routeName){
+    mapRouteName.value=routeName
+  }
 
+}
   const area = ref("韶关市");
   const areas = [
     {
@@ -272,7 +276,6 @@
         });
       }
       countPathResult();
-      getSplitLines();
     }, 1000);
   });
   const markers: Array<AMap.Text> = [];
@@ -322,12 +325,12 @@
         strokeOpacity: 1,
         strokeColor: "#fff",
         fillOpacity: 0,
-        strokeWeight: 5,
+        strokeWeight: 3,
       };
       const unActivePolyOption = {
         path: polygonPath,
         strokeColor: "#fff",
-        strokeWeight: 5,
+        strokeWeight: 3,
         fillOpacity: 0,
         strokeStyle: "solid",
       };
@@ -372,6 +375,28 @@
         isActive = !isActive;
       });
       map.add(polygon);
+      watch(mapRouteName,(newValue)=>{
+       if(newValue==item.routeName){
+        console.log(newValue);
+        console.log(item.routeName);
+       polygon.setOptions({
+        path:polygonPath,
+        strokeOpacity: 1,
+        strokeColor: "black",
+        fillOpacity: 0,
+        strokeWeight: 4,
+       })
+       map.setZoomAndCenter(11, polygonPath[0]);
+       }else{
+        polygon.setOptions({
+        path:polygonPath,
+        strokeOpacity: 1,
+        strokeColor: "#fff",
+        fillOpacity: 0,
+        strokeWeight: 3,
+       })
+       }
+      })
       // 重新渲染 marker
       function renderMarkers() {
         markers.forEach((marker) => {
@@ -528,29 +553,7 @@
       });
     }
   };
-  function getSplitLines() {
-    const oldPolylineList: AMap.Polyline[] = [];
-    clusterStore.getSplitLinesAction().then(() => {
-      //折线数据展示
-      clusterStore.SplitLines!.forEach((item) => {
-        //配置折线路径
-        let path: AMap.LngLat[] = [];
-        item.forEach((item) => {
-          path.push(new AMap.LngLat(item.longitude, item.latitude));
-        });
-        //创建 Polyline 实例
-        let polyline = new AMap.Polyline({
-          path: path,
-          strokeWeight: 5,
-          showDir: true,
-          strokeColor: "#001731", //线条颜色
-          lineJoin: "round", //折线拐点连接处样式
-        });
-        oldPolylineList.push(polyline);
-      });
-      map.add(oldPolylineList);
-    });
-  }
+
 
   //  调整打卡点
   const adjustConfirm = ref<boolean>(false);
@@ -843,7 +846,7 @@
               }
 
               .routeNameLi {
-                // padding-left: 5px;
+               cursor: pointer;
 
                 .routeName:before {
                   content: "";
@@ -856,9 +859,7 @@
                   margin-right: 10px;
                 }
 
-                .routeName:hover {
-                  background-color: #0277a8;
-                }
+             
 
                 .accumulationNameLi {
                   padding-left: 25px;
@@ -906,4 +907,8 @@
       }
     }
   }
+  .active{
+            background-color: rgb(2, 119, 168);
+            padding: 0 0.5vw;
+              } 
 </style>
