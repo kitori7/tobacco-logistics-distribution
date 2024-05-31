@@ -130,7 +130,7 @@
   function newAreaOption(type?: number[]): EChartsOption {
     return {
       xAxis: {
-        data: ["班组一", "班组二", "班组三", "班组四", "班组五", "班组六"],
+        data: ["班组一", "班组二", "班组三", "班组四", "班组五"],
       },
       yAxis: {
         type: "value",
