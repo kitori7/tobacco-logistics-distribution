@@ -864,6 +864,9 @@ declare namespace AMap {
 
   /** 纯文本标记, 继承自Marker, 具有Marker的大部分属性、方法和事件(v1.4.2新增) **/
   export class Text {
+dis(dis: any): number {
+throw new Error("Method not implemented.");
+}
     /**构造一个点标记对象, 通过TextOptions设置点标记对象的属性**/
     constructor(opt: TextOptions)
     /**获取文本内容**/
@@ -1147,6 +1150,9 @@ declare namespace AMap {
    * Polygon类
    */
   export class Polygon {
+on(arg0: string, arg1: (event: any) => void) {
+throw new Error("Method not implemented.");
+}
     /** 以PolygonOption作为构建函数的配置项  */
     constructor(opt: PolygonOption)
 

@@ -34,7 +34,6 @@
   </div>
 </template>
 <script lang="ts" setup>
-  // import { ElCarousel, ElCarouselItem } from "element-plus";
   import * as echart from "echarts";
   type EChartsOption = echarts.EChartsOption;
   import { useClusterStore } from "@/store/cluster";
@@ -61,6 +60,7 @@
 
   onMounted(() => {
     setEchart();
+    clickEchart()
     clusterStore.compareAreaAction("1,2,3,4,5,6").then(() => {
       disArea.value = clusterStore.compareAreaData.map(
         (i: any) => i.averageDistance
@@ -102,7 +102,23 @@
         },
         { immediate: true }
       );
-    }
+    }  
+  }
+  
+  const emit = defineEmits(['dis','wei','tim'])
+  function clickEchart(){
+    var distanceEC = echart.init(distanceRef?.value);
+    var weightEC = echart.init(weightRef?.value);
+    var timeEC = echart.init(timeRef?.value);
+    distanceEC.on('click', function dis (params) {
+        emit('dis',params)
+    })
+    weightEC.on('click', function wei (params) {
+        emit('wei',params)
+    })
+    timeEC.on('click', function tim (params) {
+        emit('tim',params)
+    })
   }
   const index = ref<number[]>();
   function newOption(type: keyof IProps["data"]): EChartsOption {
@@ -160,9 +176,10 @@
     };
   }
   const type = ref<string>("路径比较");
-  function changeType() {
+    function changeType() {
     setEchart();
   }
+
 </script>
 <style lang="scss" scoped>
   .routeEChart {

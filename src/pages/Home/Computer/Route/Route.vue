@@ -64,7 +64,7 @@
         </el-icon>
       </el-button>
       <div id="container"></div>
-      <RouteEChart :data="eChartData" v-model="isOpenEChart"></RouteEChart>
+      <RouteEChart :data="eChartData" v-model="isOpenEChart" @dis="disEchart" @tim="timEchart" @wei="weiEchart"></RouteEChart>
       <div class="btn-box">
         <el-button
           class="adjustPoint"
@@ -132,7 +132,7 @@
           >保存路径</el-button
         >
         <el-dialog
-          style="transform: translate(16vw, 48vh); height: 31vh"
+          style="transform: translate(17vw, 48vh); height: 31vh"
           v-model="isOpenRouteDialog"
           width="20%"
           :modal="false"
@@ -171,11 +171,22 @@
   window._AMapSecurityConfig = {
     securityJsCode: "1b6291b2fceee1cd3b7798bfdd4c39e4",
   };
+  // 点击图表
+  let EchartFun:any=null
+  function disEchart(groupData:any){
+    EchartFun(groupData)
+  }
+  function timEchart(groupData:any){
+    EchartFun(groupData) 
+  }
+    function weiEchart(groupData:any){
+      EchartFun(groupData)
+  }
   // 折叠
   const isCollapse = ref<boolean>(false);
   //聚集区Store
   const clusterStore = useClusterStore();
-  let map: any = null;
+  var map: any = null;
   AMapLoader.load({
     key: "64c03ae77b4521e9dbb72475e120e70c", // 申请好的Web端开发者Key，首次调用 load 时必填
     version: "2.0", // 指定要加载的 JSAPI 的版本，缺省时默认为 1.4.15
@@ -203,6 +214,66 @@
         zoomEnable: true, // 是否可以缩放地图
         resizeEnable: true,
       });
+        //分割线涂色
+        let polygon:any[]=['polygon1','polygon2','polygon3','polygon4','polygon5']
+        let polygonData:any=[data1,data2,data3,data4,data5]
+       for(let i=0;i<polygon.length;i++){
+        polygon[i] = new AMap.Polyline({  
+        path: polygonData[i], // 路径  
+        strokeWeight: 1, // 线条宽度，默认为 2  
+        showDir: true,  
+        strokeColor:"#001731", // 线条颜色  
+        lineJoin: "round", // 折线拐点连接处样式  
+    });  
+     }  
+    map.add(polygon);  
+function revisePolylineToMap(newPolyon:any,pathData:any, color:string,strokeWeight:number) { 
+  newPolyon.setOptions({
+      path:pathData,
+      strokeWeight:strokeWeight,
+      strokeColor:color
+    })
+}
+// 使用该函数来添加折线  
+       EchartFun = function EchartSplice(groupData:any){
+        switch(groupData.name){
+        case '班组一':
+        revisePolylineToMap(polygon[0],data1,groupData.color,8)
+        revisePolylineToMap(polygon[1],data2,"#001731",1)
+        revisePolylineToMap(polygon[2],data3,"#001731",1)
+        revisePolylineToMap(polygon[3],data4,"#001731",1)
+        revisePolylineToMap(polygon[4],data5,"#001731",1)
+        break;
+        case '班组二':
+        revisePolylineToMap(polygon[0],data1,"#001731",1)
+        revisePolylineToMap(polygon[1],data1,groupData.color,8)
+        revisePolylineToMap(polygon[2],data3,"#001731",1)
+        revisePolylineToMap(polygon[3],data4,"#001731",1)
+        revisePolylineToMap(polygon[4],data5,"#001731",1)
+        break;
+        case '班组三':
+        revisePolylineToMap(polygon[0],data1,"#001731",1)
+        revisePolylineToMap(polygon[1],data2,"#001731",1)
+        revisePolylineToMap(polygon[2],data3,groupData.color,8)
+        revisePolylineToMap(polygon[3],data4,"#001731",1)
+        revisePolylineToMap(polygon[4],data5,"#001731",1)
+        break;
+        case '班组四':
+        revisePolylineToMap(polygon[0],data1,"#001731",1)
+        revisePolylineToMap(polygon[1],data2,"#001731",1)
+        revisePolylineToMap(polygon[2],data3,"#001731",1)
+        revisePolylineToMap(polygon[3],data4,groupData.color,8)
+        revisePolylineToMap(polygon[4],data5,"#001731",1)
+        break;
+        case '班组五':
+        revisePolylineToMap(polygon[0],data1,"#001731",1)
+        revisePolylineToMap(polygon[1],data2,"#001731",1)
+        revisePolylineToMap(polygon[2],data3,"#001731",1)
+        revisePolylineToMap(polygon[3],data4,"#001731",1)
+        revisePolylineToMap(polygon[4],data5,groupData.color,8)
+        break;
+    }
+      }
       // 添加描边
       for (let i = 0; i < bounds.length; i++) {
         const polyline = new AMap.Polyline({
@@ -213,55 +284,6 @@
         });
         polyline.setMap(map);
       }
-
-      const polygon1 = new AMap.Polyline({
-        path: data1, //路径
-        strokeWeight: 1, //线条宽度，默认为 2
-        showDir: true,
-        strokeColor: "#001731", //线条颜色
-        lineJoin: "round", //折线拐点连接处样式
-      });
-      map.add(polygon1);
-      // 班组二
-      const polygon2 = new AMap.Polyline({
-        path: data2, //路径
-        strokeWeight: 1, //线条宽度，默认为 2
-        showDir: true,
-        strokeColor: "#001731", //线条颜色
-        lineJoin: "round", //折线拐点连接处样式
-      });
-      map.add(polygon2);
-      // 班组三
-      const polygon3 = new AMap.Polyline({
-        path: data3, //路径
-        strokeWeight: 1, //线条宽度，默认为 2
-        showDir: true,
-        strokeColor: "#001731", //线条颜色
-        lineJoin: "round", //折线拐点连接处样式
-      });
-      map.add(polygon3);
-      // 班组四
-      const polygon4 = new AMap.Polyline({
-        path: data4, //路径
-        strokeWeight: 1, //线条宽度，默认为 2
-        showDir: true,
-        strokeColor: "#001731", //线条颜色
-        lineJoin: "round", //折线拐点连接处样式
-      });
-      map.add(polygon4);
-      // 班组五
-      const polygon5 = new AMap.Polyline({
-        path: data5, //路径
-        strokeWeight: 1, //线条宽度，默认为 2
-        showDir: true,
-        strokeColor: "#001731", //线条颜色
-        lineJoin: "round", //折线拐点连接处样式
-      });
-      map.add(polygon5);
-      //限制移动范围
-      // const limitBound = map.getBounds();
-      // map.setLimitBounds(limitBound);
-
       // 渲染涂色
       str.forEach((item, index) => {
         const path = item.map((item) => {
@@ -296,9 +318,7 @@
   clusterStore.getTransitDepotNameAction().then(() => {
     areas.value = clusterStore.areas;
   });
-
   const route = ref("路线详情");
-
   //楚鸿的key： 309bde1e73b984c7d8a87ab19255963c
   //我的key：   cdeaa7cd146a1a9612827190fb0e0962
   const pathCalculateInfo = ref({
@@ -306,16 +326,14 @@
     areaName: area.value,
     assignNumber: 10,
   });
-  const choiceCalculateType = ref(0);
-  const num = ref(10);
-  //路径重新计算
-
+    const choiceCalculateType = ref(0);
+    const num = ref(10);
+      
   // 打卡 eChart
   const isOpenEChart = ref(false);
   function openEChart() {
     isOpenEChart.value = !isOpenEChart.value;
   }
-
   const eChartData = ref<{
     dis: number[];
     wei: number[];
@@ -775,6 +793,7 @@
         width: 2.5vw;
         height: 6vh;
         background-color: #001731;
+        cursor: pointer;
       }
       :deep(.el-input__wrapper) {
         font-size: 18px;
