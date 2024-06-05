@@ -13,10 +13,6 @@
                 <el-button :class="{ vertical: true, active: currentRoute === 'SaleRoute' }"
                     @click="routerChange('SaleRoute')">售后路径计算</el-button>
             </el-badge>
-            <el-badge class="item">
-                <el-button :class="{ vertical: true, active: currentRoute === 'delivery' }"
-                    @click="routerChange('delivery')">送货安排</el-button>
-            </el-badge>
         </div>
         <div class="content">
             <RouterView></RouterView>

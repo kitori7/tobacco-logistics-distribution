@@ -189,10 +189,12 @@ export const useClusterStore = defineStore("cluster", () => {
   async function getRouteDetailsAction() {
     const res = await getRouteDetails();
     routeDetails.value = res.data;
+    console.log(res.data);
+    
   }
 
-  //获取路线详情-聚集区下商户信息
-  //定义变量商户信息
+  //获取路线详情下打卡点信息
+  //定义变量打卡点信息
   const storeResult = ref<IAccumulationList[]>();
   async function getStoreDetailsAction(data: string) {
     const res = await getStoreDetails(data);

@@ -56,7 +56,6 @@
         </el-icon>
       </BorderBox9>
     </div>
-
     <div class="map">
       <el-button class="icon" @click="openEChart">
         <el-icon>
@@ -96,7 +95,7 @@
               element-loading-background="rgba(0,23,49,0.8)"
             >
               <el-collapse-item
-                :title="item.groupName"
+                :title="item.groupName+'-'+item.carCount+'辆车'+'-'+item.routeCount+'条路线'"
                 :name="item.groupId"
                 v-for="item in clusterStore.routeDetails"
                 :key="item.groupId"
@@ -378,8 +377,6 @@ function revisePolylineToMap(newPolyon:any,pathData:any, color:string,strokeWeig
     });
     clusterStore.convex?.forEach((item: any) => {
       // 凸包渲染
-      console.log(item);
-
       const polygonPath = item.convex.map((item: any) => {
         return [item.longitude, item.latitude];
       });
@@ -724,10 +721,7 @@ function revisePolylineToMap(newPolyon:any,pathData:any, color:string,strokeWeig
 </script>
 
 <style lang="scss" scoped>
-  .el-menu-vertical-demo:not(.el-menu--collapse) {
-    width: 200px;
-    min-height: 400px;
-  }
+
   .route {
     width: 100%;
     display: flex;

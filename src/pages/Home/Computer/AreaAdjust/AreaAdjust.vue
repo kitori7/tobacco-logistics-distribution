@@ -248,9 +248,13 @@ let map: any = null;
           });
           polyline.setMap(map);
         }
-          clusterStore.getMapResultPointsAction().then(() => {
-              // 地图标点
-              isMaoFinished.value =false
+       if(!clusterStore.MapResultPoints){
+        ElMessage({
+              message: '地图数据为空，请先在聚集区计算页面加载地图数据',
+              duration: 0,
+              type: "warning",
+            });
+       }else{      isMaoFinished.value =false
               clusterStore.MapResultPoints!.forEach((item) => {
                   if (item.state == "center") {
                       // 将 Icon 实例添加到 marker 上:
@@ -305,9 +309,8 @@ let map: any = null;
                       })
                       map!.add(marker);
                   }
-              })
-     
-            })
+              })}
+              // 地图标点
         })
       }).catch((e:Error) => {
           console.log(e);
