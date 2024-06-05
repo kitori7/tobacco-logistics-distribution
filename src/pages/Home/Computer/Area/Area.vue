@@ -1,17 +1,9 @@
 <template>
   <div class="area">
-      <div class="map">
-          <div id="container" v-loading="isMaoFinished" element-loading-text="地图数据加载中..."
-                      element-loading-background="rgba(0,23,49,0.8)"></div>
-          <div class="btns">
-              <el-button class="adjust" @click="routerChange">聚集区微调</el-button>
-              <el-button class="save" @click="save">保存结果</el-button>
-              <el-button class="save" @click="update">更新地图数据</el-button>
-          </div>
-      </div>
-      <div class="content">
-          <BorderBox9 :color="['#73e5ff', '#73e5ff']" backgroundColor='#001731'>
-              <div class="areaCollapse">
+    <div class="aside" :class="{ expanded: isCollapse }">
+    <BorderBox9 :color="['#73e5ff', '#73e5ff']" backgroundColor='#001731' style="width: 100%">
+        <transition name="slide-fade">
+              <div class="areaCollapse" v-show="!isCollapse">
                   <el-collapse v-model="activeNames" v-for="(item, index) in clusterStore.InformationList" :key="item.number">
                       <el-badge :value="item.number" class="item"></el-badge>
                       <el-collapse-item :title="item.name" :name="index">
@@ -22,9 +14,23 @@
                           </ul>
                       </el-collapse-item>
                   </el-collapse>
+                  <el-button class="btn" @click="CalculateBtnFunction">重新计算</el-button>
               </div>
-              <el-button class="btn" @click="CalculateBtnFunction">重新计算</el-button>
+            </transition>
+            <el-icon class="arrow" size="40" @click="isCollapse = !isCollapse">
+          <component :is="isCollapse ? DArrowLeft : DArrowRight"> </component>
+        </el-icon>
           </BorderBox9>
+          </div>
+      <div class="map">
+          <div id="container" v-loading="isMaoFinished" element-loading-text="地图数据加载中..."
+                      element-loading-background="rgba(0,23,49,0.8)"></div>
+          <div class="btns">
+              <el-button class="adjust" @click="routerChange">聚集区微调</el-button>
+              <el-button class="save" @click="save">保存结果</el-button>
+              <el-button class="save" @click="update">更新地图数据</el-button>
+          </div>
+      </div>
           <BorderBox9 :color="['#73e5ff', '#73e5ff']" backgroundColor='#001731'>
                 <div class="region">
                     <el-collapse v-loading="isResultPointsFinished" element-loading-text="加载中..."
@@ -39,11 +45,11 @@
                     </el-collapse>
                 </div>
             </BorderBox9>
-      </div>
   </div>
 </template>
 <script lang="ts" setup>
 import { useClusterStore } from "@/store/cluster";
+import {DArrowLeft, DArrowRight } from "@element-plus/icons-vue";
 import { ElLoading } from 'element-plus'
 import { useRouter } from "vue-router";
 import { BorderBox9 } from "@dataview/datav-vue3";
@@ -74,6 +80,8 @@ const clusterStore = useClusterStore();
   getALLMapData()
     }
  }
+   // 折叠
+   const isCollapse = ref<boolean>(false);
 // 保存结果
 function save() {
   if (clusterStore.ErrorPoints == undefined) {
@@ -189,9 +197,6 @@ getALLMapData()
           });
           polyline.setMap(map);
         }
-        //限制移动范围
-        // const limitBound = map.getBounds();
-        // map.setLimitBounds(limitBound);
         // 绑定点击事件
         if(clusterStore.MapResultPoints&&!isUpdate.value){
             mapPoints()
@@ -297,8 +302,11 @@ onBeforeUnmount(() => {
 .area {
   width: 100%;
   display: flex;
-  justify-content: center;
+
   .map {
+    position: relative;
+      flex-grow: 1;
+      margin: 0 1.5vw;
       :deep(.amap-marker-label) {
         background-color: #3490f5;
         border: 0px;
@@ -313,20 +321,36 @@ onBeforeUnmount(() => {
       margin: 0.5vh 0;
   }
   }
-  .content {
-      width: 100%;
-      display: flex;
-      justify-content: space-between;
-
+  .aside {
+      width: 20vw;
+      transition: width 0.3s ease;
+    }
+    .expanded {
+      width: 3vw;
+    }
+    .slide-fade-enter-active {
+      transition: opacity 0.8s;
+    }
+    .slide-fade-enter-from {
+      opacity: 0;
+    }
       .dv-border-box-9 {
           height: 80vh;
           width: 20vw;
           box-shadow: 10px 10px 5px 5px rgb(0, 0, 0, 0.4);
-
+          .arrow {
+        position: absolute;
+        right: -8%;
+        top: 26%;
+        width: 2.5vw;
+        height: 6vh;
+        background-color: #001731;
+        cursor: pointer;
+      }
           .areaCollapse {
-              margin-left: 1vw;
-              margin-top: 3vh;
-              width: 85%;
+            margin-left: 1vw;
+            padding-top: 2vh;
+            width: 85%;
 
               .el-collapse {
                   .el-collapse-item {
@@ -439,7 +463,6 @@ onBeforeUnmount(() => {
               transform: translate(-50%, 0);
               bottom: 8%;
           }
-      }
   }
 }
 

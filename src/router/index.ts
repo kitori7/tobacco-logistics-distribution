@@ -53,12 +53,6 @@ const constantRoutes: RouteRecordRaw[] = [
             component: () => import("@/pages/Home/Computer/Route/Route.vue"),
           },
           {
-            path: "/home/computer/Delivery",
-            name: "delivery",
-            component: () => import("@/pages/Home/Computer/Delivery/Delivery.vue"),
-          },
-       
-          {
             path: "/home/computer/SaleRoute",
             name: "SaleRoute",
             component: () => import("@/pages/Home/Computer/SaleRoute/SaleRoute.vue"),

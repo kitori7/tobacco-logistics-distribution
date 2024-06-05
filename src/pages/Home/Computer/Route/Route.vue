@@ -1,5 +1,61 @@
 <template>
   <div class="route">
+    <div class="aside" :class="{ expanded: isCollapse }">
+      <BorderBox9
+        :color="['#73e5ff', '#73e5ff']"
+        backgroundColor="#001731"
+        style="width: 100%"
+      >
+        <transition name="slide-fade">
+          <div class="leftInformation" v-show="!isCollapse">
+            <el-select v-model="area">
+              <el-option
+                v-for="item in areas"
+                :key="item.name"
+                :label="item.name"
+                :value="item.name"
+              />
+            </el-select>
+            <div class="routeCollapse">
+              <el-collapse v-model="activeNames">
+                <el-badge :value="1" class="item"></el-badge>
+                <el-collapse-item title="聚集区信息改变" name="1">
+                  <ul>
+                    <li>班组1聚集区发生改变</li>
+                  </ul>
+                </el-collapse-item>
+                <el-badge :value="1" class="item"></el-badge>
+                <el-collapse-item title="系统参数" name="2">
+                  <ul>
+                    <li>单车载货量更改为700条</li>
+                    <li>班组2可工作车辆数更改为5辆</li>
+                  </ul>
+                </el-collapse-item>
+              </el-collapse>
+            </div>
+            <div class="btns">
+              <el-input-number
+                v-if="area !== '韶关市'"
+                class="num"
+                v-model="num"
+                :min="1"
+                :max="1000"
+                style="color: black"
+              />
+              <el-button
+                class="btn"
+                @click="CalculateBtnFunction()"
+                :loading="loadCalculate"
+                >重新计算</el-button
+              >
+            </div>
+          </div>
+        </transition>
+        <el-icon class="arrow" size="40" @click="isCollapse = !isCollapse">
+          <component :is="isCollapse ? DArrowLeft : DArrowRight"> </component>
+        </el-icon>
+      </BorderBox9>
+    </div>
     <div class="map">
       <el-button class="icon" @click="openEChart">
         <el-icon>
@@ -7,7 +63,7 @@
         </el-icon>
       </el-button>
       <div id="container"></div>
-      <RouteEChart :data="eChartData" v-model="isOpenEChart"></RouteEChart>
+      <RouteEChart :data="eChartData" v-model="isOpenEChart" @dis="disEchart" @tim="timEchart" @wei="weiEchart"></RouteEChart>
       <div class="btn-box">
         <el-button
           class="adjustPoint"
@@ -23,133 +79,85 @@
         >
       </div>
     </div>
-    <div class="content">
-      <BorderBox9 :color="['#73e5ff', '#73e5ff']" backgroundColor="#001731">
-        <div class="leftInformation">
-          <el-select v-model="area">
-            <el-option
-              v-for="item in areas"
-              :key="item.name"
-              :label="item.name"
-              :value="item.name"
-            />
-          </el-select>
-          <div class="routeCollapse">
-            <el-collapse v-model="activeNames">
-              <el-badge :value="1" class="item"></el-badge>
-              <el-collapse-item title="聚集区信息改变" name="1">
+    <BorderBox9
+      :color="['#73e5ff', '#73e5ff']"
+      backgroundColor="#001731"
+      style="margin-right: -1vw"
+    >
+      <div class="rightInformation">
+        <div class="rtitle">{{ route }}</div>
+        <div class="detailedRoute">
+          <el-scrollbar height="68vh">
+            <el-collapse
+              v-model="activeNames2"
+              v-loading="isResultPointsFinished"
+              element-loading-text="加载中..."
+              element-loading-background="rgba(0,23,49,0.8)"
+            >
+              <el-collapse-item
+                :title="item.groupName+'-'+item.carCount+'辆车'+'-'+item.routeCount+'条路线'"
+                :name="item.groupId"
+                v-for="item in clusterStore.routeDetails"
+                :key="item.groupId"
+              >
                 <ul>
-                  <li>班组1聚集区发生改变</li>
-                </ul>
-              </el-collapse-item>
-              <el-badge :value="1" class="item"></el-badge>
-              <el-collapse-item title="系统参数" name="2">
-                <ul>
-                  <li>单车载货量更改为700条</li>
-                  <li>班组2可工作车辆数更改为5辆</li>
+                  <li
+                    class="routeNameLi"
+                    v-for="item1 in item.list"
+                    :key="item1.transitDepotId"
+                  >
+                    <div class="routeName">
+                      {{ item1.transitDepotName }}
+                    </div>
+                    <ul>
+                      <li
+                        class="accumulationNameLi"
+                        tabindex="1"
+                        v-for="item2 in item1.routeList"
+                        :key="item2.routeId"
+                        @click.stop="accumulationNameClick(item2)"
+                        :class="item2.routeName == mapRouteName ? 'active' : ''"
+                      >
+                        {{ item2.routeName }}
+                      </li>
+                    </ul>
+                  </li>
                 </ul>
               </el-collapse-item>
             </el-collapse>
-          </div>
-          <div class="btns">
-            <el-input-number
-              v-if="area !== '韶关市'"
-              class="num"
-              v-model="num"
-              :min="1"
-              :max="1000"
-              style="color: black"
-            />
-            <el-button
-              class="btn"
-              @click="CalculateBtnFunction()"
-              :loading="loadCalculate"
-              >重新计算</el-button
-            >
-          </div>
+          </el-scrollbar>
         </div>
-      </BorderBox9>
-      <BorderBox9 :color="['#73e5ff', '#73e5ff']" backgroundColor="#001731">
-        <div class="rightInformation">
-          <div class="rtitle">{{ route }}</div>
-          <div class="detailedRoute">
-            <el-scrollbar height="68vh">
-              <el-collapse
-                v-model="activeNames2"
-                v-loading="isResultPointsFinished"
-                element-loading-text="加载中..."
-                element-loading-background="rgba(0,23,49,0.8)"
+        <el-button class="saveRoute" @click="addRouteBtn" :loading="saveLoading"
+          >保存路径</el-button
+        >
+        <el-dialog
+          style="transform: translate(17.5vw, 48vh); height: 31vh"
+          v-model="isOpenRouteDialog"
+          width="20%"
+          :modal="false"
+          :before-close="closeRouteDialog"
+          :append-to-body="true"
+          :title="titleAccumulationName"
+        >
+          <el-scrollbar height="20vh">
+            <ul style="margin-left: 20px; padding-top: 0px">
+              <li
+                style="padding: 3px; list-style: square"
+                v-for="item3 in clusterStore.storeResult"
+                :key="item3.accumulationId"
               >
-                <el-collapse-item
-                  :title="item.groupName"
-                  :name="item.groupId"
-                  v-for="item in clusterStore.routeDetails"
-                  :key="item.groupId"
-                >
-                  <ul>
-                    <li
-                      class="routeNameLi"
-                      v-for="item1 in item.list"
-                      :key="item1.transitDepotId"
-                    >
-                      <div class="routeName">
-                        {{ item1.transitDepotName }}
-                      </div>
-                      <ul>
-                        <li
-                          class="accumulationNameLi"
-                          tabindex="1"
-                          v-for="item2 in item1.routeList"
-                          :key="item2.routeId"
-                          @click.stop="accumulationNameClick(item2)"
-                          :class="
-                            item2.routeName == mapRouteName ? 'active' : ''
-                          "
-                        >
-                          {{ item2.routeName }}
-                        </li>
-                      </ul>
-                    </li>
-                  </ul>
-                </el-collapse-item>
-              </el-collapse>
-            </el-scrollbar>
-          </div>
-          <el-button
-            class="saveRoute"
-            @click="addRouteBtn"
-            :loading="saveLoading"
-            >保存路径</el-button
-          >
-          <el-dialog
-            style="transform: translate(16vw, 48vh); height: 31vh"
-            v-model="isOpenRouteDialog"
-            width="20%"
-            :modal="false"
-            :before-close="closeRouteDialog"
-            :append-to-body="true"
-            :title="titleAccumulationName"
-          >
-            <el-scrollbar height="20vh">
-              <ul style="margin-left: 20px; padding-top: 0px">
-                <li
-                  style="padding: 3px; list-style: square"
-                  v-for="item3 in clusterStore.storeResult"
-                  :key="item3.accumulationId"
-                >
-                  {{ item3.accumulationAddress }}
-                </li>
-              </ul>
-            </el-scrollbar>
-          </el-dialog>
-        </div>
-      </BorderBox9>
-    </div>
+                {{ item3.accumulationAddress }}
+              </li>
+            </ul>
+          </el-scrollbar>
+        </el-dialog>
+      </div>
+    </BorderBox9>
   </div>
 </template>
 
 <script lang="ts" setup>
-  import { Edit } from "@element-plus/icons-vue";
+  import { Edit, DArrowLeft, DArrowRight } from "@element-plus/icons-vue";
   import { BorderBox9 } from "@dataview/datav-vue3";
   //@ts-ignore
   import AMapLoader from "@amap/amap-jsapi-loader";
@@ -162,9 +170,22 @@
   window._AMapSecurityConfig = {
     securityJsCode: "1b6291b2fceee1cd3b7798bfdd4c39e4",
   };
+  // 点击图表
+  let EchartFun:any=null
+  function disEchart(groupData:any){
+    EchartFun(groupData)
+  }
+  function timEchart(groupData:any){
+    EchartFun(groupData) 
+  }
+    function weiEchart(groupData:any){
+      EchartFun(groupData)
+  }
+  // 折叠
+  const isCollapse = ref<boolean>(false);
   //聚集区Store
   const clusterStore = useClusterStore();
-  let map: any = null;
+  var map: any = null;
   AMapLoader.load({
     key: "64c03ae77b4521e9dbb72475e120e70c", // 申请好的Web端开发者Key，首次调用 load 时必填
     version: "2.0", // 指定要加载的 JSAPI 的版本，缺省时默认为 1.4.15
@@ -192,6 +213,66 @@
         zoomEnable: true, // 是否可以缩放地图
         resizeEnable: true,
       });
+        //分割线涂色
+        let polygon:any[]=['polygon1','polygon2','polygon3','polygon4','polygon5']
+        let polygonData:any=[data1,data2,data3,data4,data5]
+       for(let i=0;i<polygon.length;i++){
+        polygon[i] = new AMap.Polyline({  
+        path: polygonData[i], // 路径  
+        strokeWeight: 1, // 线条宽度，默认为 2  
+        showDir: true,  
+        strokeColor:"#001731", // 线条颜色  
+        lineJoin: "round", // 折线拐点连接处样式  
+    });  
+     }  
+    map.add(polygon);  
+function revisePolylineToMap(newPolyon:any,pathData:any, color:string,strokeWeight:number) { 
+  newPolyon.setOptions({
+      path:pathData,
+      strokeWeight:strokeWeight,
+      strokeColor:color
+    })
+}
+// 使用该函数来添加折线  
+       EchartFun = function EchartSplice(groupData:any){
+        switch(groupData.name){
+        case '班组一':
+        revisePolylineToMap(polygon[0],data1,groupData.color,8)
+        revisePolylineToMap(polygon[1],data2,"#001731",1)
+        revisePolylineToMap(polygon[2],data3,"#001731",1)
+        revisePolylineToMap(polygon[3],data4,"#001731",1)
+        revisePolylineToMap(polygon[4],data5,"#001731",1)
+        break;
+        case '班组二':
+        revisePolylineToMap(polygon[0],data1,"#001731",1)
+        revisePolylineToMap(polygon[1],data1,groupData.color,8)
+        revisePolylineToMap(polygon[2],data3,"#001731",1)
+        revisePolylineToMap(polygon[3],data4,"#001731",1)
+        revisePolylineToMap(polygon[4],data5,"#001731",1)
+        break;
+        case '班组三':
+        revisePolylineToMap(polygon[0],data1,"#001731",1)
+        revisePolylineToMap(polygon[1],data2,"#001731",1)
+        revisePolylineToMap(polygon[2],data3,groupData.color,8)
+        revisePolylineToMap(polygon[3],data4,"#001731",1)
+        revisePolylineToMap(polygon[4],data5,"#001731",1)
+        break;
+        case '班组四':
+        revisePolylineToMap(polygon[0],data1,"#001731",1)
+        revisePolylineToMap(polygon[1],data2,"#001731",1)
+        revisePolylineToMap(polygon[2],data3,"#001731",1)
+        revisePolylineToMap(polygon[3],data4,groupData.color,8)
+        revisePolylineToMap(polygon[4],data5,"#001731",1)
+        break;
+        case '班组五':
+        revisePolylineToMap(polygon[0],data1,"#001731",1)
+        revisePolylineToMap(polygon[1],data2,"#001731",1)
+        revisePolylineToMap(polygon[2],data3,"#001731",1)
+        revisePolylineToMap(polygon[3],data4,"#001731",1)
+        revisePolylineToMap(polygon[4],data5,groupData.color,8)
+        break;
+    }
+      }
       // 添加描边
       for (let i = 0; i < bounds.length; i++) {
         const polyline = new AMap.Polyline({
@@ -202,55 +283,6 @@
         });
         polyline.setMap(map);
       }
-
-      const polygon1 = new AMap.Polyline({
-        path: data1, //路径
-        strokeWeight: 1, //线条宽度，默认为 2
-        showDir: true,
-        strokeColor: "#001731", //线条颜色
-        lineJoin: "round", //折线拐点连接处样式
-      });
-      map.add(polygon1);
-      // 班组二
-      const polygon2 = new AMap.Polyline({
-        path: data2, //路径
-        strokeWeight: 1, //线条宽度，默认为 2
-        showDir: true,
-        strokeColor: "#001731", //线条颜色
-        lineJoin: "round", //折线拐点连接处样式
-      });
-      map.add(polygon2);
-      // 班组三
-      const polygon3 = new AMap.Polyline({
-        path: data3, //路径
-        strokeWeight: 1, //线条宽度，默认为 2
-        showDir: true,
-        strokeColor: "#001731", //线条颜色
-        lineJoin: "round", //折线拐点连接处样式
-      });
-      map.add(polygon3);
-      // 班组四
-      const polygon4 = new AMap.Polyline({
-        path: data4, //路径
-        strokeWeight: 1, //线条宽度，默认为 2
-        showDir: true,
-        strokeColor: "#001731", //线条颜色
-        lineJoin: "round", //折线拐点连接处样式
-      });
-      map.add(polygon4);
-      // 班组五
-      const polygon5 = new AMap.Polyline({
-        path: data5, //路径
-        strokeWeight: 1, //线条宽度，默认为 2
-        showDir: true,
-        strokeColor: "#001731", //线条颜色
-        lineJoin: "round", //折线拐点连接处样式
-      });
-      map.add(polygon5);
-      //限制移动范围
-      // const limitBound = map.getBounds();
-      // map.setLimitBounds(limitBound);
-
       // 渲染涂色
       str.forEach((item, index) => {
         const path = item.map((item) => {
@@ -285,9 +317,7 @@
   clusterStore.getTransitDepotNameAction().then(() => {
     areas.value = clusterStore.areas;
   });
-
   const route = ref("路线详情");
-
   //楚鸿的key： 309bde1e73b984c7d8a87ab19255963c
   //我的key：   cdeaa7cd146a1a9612827190fb0e0962
   const pathCalculateInfo = ref({
@@ -295,16 +325,14 @@
     areaName: area.value,
     assignNumber: 10,
   });
-  const choiceCalculateType = ref(0);
-  const num = ref(10);
-  //路径重新计算
-
+    const choiceCalculateType = ref(0);
+    const num = ref(10);
+      
   // 打卡 eChart
   const isOpenEChart = ref(false);
   function openEChart() {
     isOpenEChart.value = !isOpenEChart.value;
   }
-
   const eChartData = ref<{
     dis: number[];
     wei: number[];
@@ -693,16 +721,19 @@
 </script>
 
 <style lang="scss" scoped>
+
   .route {
     width: 100%;
     display: flex;
-    justify-content: center;
+
     .map {
+      position: relative;
+      flex-grow: 1;
+      margin: 0 1.5vw;
       :deep(.amap-marker-label) {
         background-color: #3490f5;
         border: 0px;
         border-radius: 30%;
-        position: relative;
         position: relative;
       }
       #container {
@@ -730,220 +761,236 @@
         background-color: #72e4ff;
       }
     }
+    .aside {
+      width: 20vw;
+      transition: width 0.3s ease;
+    }
+    .expanded {
+      width: 3vw;
+    }
+    .slide-fade-enter-active {
+      transition: opacity 0.8s;
+    }
+    .slide-fade-enter-from {
+      opacity: 0;
+    }
 
-    .content {
-      width: 100%;
-      display: flex;
-      justify-content: space-between;
+    .dv-border-box-9 {
+      height: 80vh;
+      width: 20vw;
+      box-shadow: 10px 10px 5px 5px rgb(0, 0, 0, 0.4);
 
-      .dv-border-box-9 {
-        height: 80vh;
-        width: 20vw;
-        box-shadow: 10px 10px 5px 5px rgb(0, 0, 0, 0.4);
+      .arrow {
+        position: absolute;
+        right: -8%;
+        top: 26%;
+        width: 2.5vw;
+        height: 6vh;
+        background-color: #001731;
+        cursor: pointer;
+      }
+      :deep(.el-input__wrapper) {
+        font-size: 18px;
+        width: 9vw;
+        background-color: #001731;
+        border: none;
+        box-shadow: none;
+      }
 
-        :deep(.el-input__wrapper) {
-          font-size: 18px;
-          width: 9vw;
-          background-color: #001731;
-          border: none;
-          box-shadow: none;
-        }
+      :deep(.el-input__inner) {
+        font-weight: bolder;
+        text-align: center;
+      }
 
-        :deep(.el-input__inner) {
-          font-weight: bolder;
-          text-align: center;
-        }
+      :global(.el-select-dropdown__item) {
+        display: grid !important;
+        place-items: center !important;
+        font-size: 18px;
+        font-weight: bolder;
+      }
+      :global(.el-popper .el-popper__arrow::before) {
+        border-top: 1px solid #73e1ff;
+        background-color: #73e1ff !important;
+      }
+      .el-select {
+        --el-select-input-focus-border-color: transparent;
+        position: absolute;
+        left: 50%;
+        transform: translate(-50%, -30%);
+      }
 
-        :global(.el-select-dropdown__item) {
-          display: grid !important;
-          place-items: center !important;
-          font-size: 18px;
-          font-weight: bolder;
-        }
-        :global(.el-popper .el-popper__arrow::before) {
-          border-top: 1px solid #73e1ff;
-          background-color: #73e1ff !important;
-        }
-        .el-select {
-          --el-select-input-focus-border-color: transparent;
-          position: absolute;
-          left: 50%;
-          transform: translate(-50%, -30%);
-        }
+      :deep(.el-icon) {
+        font-size: 20px;
+      }
 
-        :deep(.el-icon) {
-          font-size: 20px;
-        }
+      .el-input {
+        border: none;
+      }
+      .rtitle {
+        width: 140px;
+        height: 50px;
+        font-size: 20px;
+        letter-spacing: 2px;
+        line-height: 40px;
+        background-color: #001731;
+        text-align: center;
+        color: rgb(204, 255, 255);
+        font-weight: bolder;
+        position: absolute;
+        left: 50%;
+        transform: translate(-50%, -30%);
+      }
+      .num {
+        width: 120px;
+        height: 40px;
+      }
 
-        .el-input {
-          border: none;
-        }
-        .rtitle {
-          width: 140px;
-          height: 50px;
-          font-size: 20px;
-          letter-spacing: 2px;
-          line-height: 40px;
-          background-color: #001731;
-          text-align: center;
-          color: rgb(204, 255, 255);
-          font-weight: bolder;
-          position: absolute;
-          left: 50%;
-          transform: translate(-50%, -30%);
-        }
-        .num {
+      .el-input__inner {
+        color: #ff0000;
+      }
+
+      .btns {
+        position: absolute;
+        bottom: 3%;
+        display: flex;
+        width: 100%;
+        justify-content: center;
+        .btn {
           width: 120px;
           height: 40px;
         }
+      }
 
-        .el-input__inner {
-          color: #ff0000;
-        }
+      .leftInformation {
+        .routeCollapse {
+          padding-left: 1vw;
+          padding-top: 4vh;
+          width: 85%;
 
-        .btns {
-          position: absolute;
-          bottom: 3%;
-          display: flex;
-          width: 100%;
-          justify-content: center;
-          .btn {
-            width: 120px;
-            height: 40px;
-          }
-        }
-
-        .leftInformation {
-          .routeCollapse {
-            padding-left: 1vw;
-            padding-top: 4vh;
-            width: 85%;
-
-            ::v-deep(.el-collapse-item__header::before) {
-              content: "";
-              display: inline-block;
-              width: 15px;
-              height: 15px;
-              background-color: #fcd539;
-              border-radius: 50%;
-              margin-right: 10px;
-            }
-
-            ::v-deep(.el-collapse-item__header::after) {
-              margin-left: 10px;
-              margin-right: -15px;
-              width: 33px;
-              height: 33px;
-              background: #fcd539;
-              transform: rotate(45deg);
-              content: "";
-              display: inline-block;
-            }
-
-            .item {
-              position: absolute;
-              z-index: 10;
-              margin-top: 20px;
-              margin-left: 16.4vw;
-            }
-
-            li {
-              list-style: disc;
-              padding: 5px 10px;
-            }
-
-            li:before {
-              content: "";
-              display: inline-block;
-              width: 8px;
-              height: 8px;
-              background-color: #fcd539;
-              border-radius: 50%;
-              margin-bottom: 4px;
-            }
-          }
-        }
-
-        .rightInformation {
-          margin-left: 0.5vw;
-
-          .detailedRoute {
-            padding-left: 1vw;
-            padding-top: 4vh;
-            width: 85%;
-
-            .el-collapse {
-              --el-collapse-header-bg-color: rgb(2, 119, 168);
-              --el-collapse-header-text-color: #e1f7ff;
-              --el-collapse-header-font-size: 18px;
-              --el-collapse-content-bg-color: #001731;
-              --el-collapse-content-font-size: 18px;
-              --el-collapse-content-text-color: #e1f7ff;
-              --el-collapse-border-color: #001731;
-              :deep(.el-loading-spinner) {
-                margin-top: 28vh;
-              }
-            }
-
-            .el-collapse-item {
-              padding-left: 30px;
-              position: relative;
-
-              ::v-deep(.el-collapse-item__content) {
-                padding: 0;
-              }
-
-              .routeNameLi {
-                cursor: pointer;
-
-                .routeName:before {
-                  content: "";
-                  display: inline-block;
-                  width: 8px;
-                  height: 8px;
-                  background-color: rgb(0, 179, 255);
-                  border-radius: 50%;
-                  margin-bottom: 4px;
-                  margin-right: 10px;
-                }
-                .accumulationNameLi:hover {
-                  background-color: #0277a8;
-                }
-
-                .accumulationNameLi:before {
-                  content: "";
-                  display: inline-block;
-                  width: 8px;
-                  height: 8px;
-                  background-color: rgb(255, 238, 0);
-                  border-radius: 50%;
-                  margin-bottom: 4px;
-                  margin-right: 10px;
-                }
-              }
-            }
-
-            .el-collapse-item:before {
-              position: absolute;
-              left: 5px;
-              top: 0;
-              border-right: 25px solid rgb(2, 119, 168);
-              border-top: 24px solid transparent;
-              border-bottom: 24px solid transparent;
-              content: "";
-              width: 0;
-              height: 0;
-            }
+          ::v-deep(.el-collapse-item__header::before) {
+            content: "";
+            display: inline-block;
+            width: 15px;
+            height: 15px;
+            background-color: #fcd539;
+            border-radius: 50%;
+            margin-right: 10px;
           }
 
-          .saveRoute {
-            width: 120px;
-            height: 40px;
+          ::v-deep(.el-collapse-item__header::after) {
+            margin-left: 10px;
+            margin-right: -15px;
+            width: 33px;
+            height: 33px;
+            background: #fcd539;
+            transform: rotate(45deg);
+            content: "";
+            display: inline-block;
+          }
+
+          .item {
             position: absolute;
-            left: 50%;
-            transform: translate(-50%, 0);
-            bottom: 3%;
+            z-index: 10;
+            margin-top: 20px;
+            margin-left: 16.4vw;
           }
+
+          li {
+            list-style: disc;
+            padding: 5px 10px;
+          }
+
+          li:before {
+            content: "";
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background-color: #fcd539;
+            border-radius: 50%;
+            margin-bottom: 4px;
+          }
+        }
+      }
+
+      .rightInformation {
+        margin-left: 0.5vw;
+
+        .detailedRoute {
+          padding-left: 1vw;
+          padding-top: 4vh;
+          width: 85%;
+
+          .el-collapse {
+            --el-collapse-header-bg-color: rgb(2, 119, 168);
+            --el-collapse-header-text-color: #e1f7ff;
+            --el-collapse-header-font-size: 18px;
+            --el-collapse-content-bg-color: #001731;
+            --el-collapse-content-font-size: 18px;
+            --el-collapse-content-text-color: #e1f7ff;
+            --el-collapse-border-color: #001731;
+            :deep(.el-loading-spinner) {
+              margin-top: 28vh;
+            }
+          }
+
+          .el-collapse-item {
+            padding-left: 30px;
+            position: relative;
+
+            ::v-deep(.el-collapse-item__content) {
+              padding: 0;
+            }
+
+            .routeNameLi {
+              cursor: pointer;
+
+              .routeName:before {
+                content: "";
+                display: inline-block;
+                width: 8px;
+                height: 8px;
+                background-color: rgb(0, 179, 255);
+                border-radius: 50%;
+                margin-bottom: 4px;
+                margin-right: 10px;
+              }
+              .accumulationNameLi:hover {
+                background-color: #0277a8;
+              }
+
+              .accumulationNameLi:before {
+                content: "";
+                display: inline-block;
+                width: 8px;
+                height: 8px;
+                background-color: rgb(255, 238, 0);
+                border-radius: 50%;
+                margin-bottom: 4px;
+                margin-right: 10px;
+              }
+            }
+          }
+
+          .el-collapse-item:before {
+            position: absolute;
+            left: 5px;
+            top: 0;
+            border-right: 25px solid rgb(2, 119, 168);
+            border-top: 24px solid transparent;
+            border-bottom: 24px solid transparent;
+            content: "";
+            width: 0;
+            height: 0;
+          }
+        }
+
+        .saveRoute {
+          width: 120px;
+          height: 40px;
+          position: absolute;
+          left: 50%;
+          transform: translate(-50%, 0);
+          bottom: 3%;
         }
       }
     }

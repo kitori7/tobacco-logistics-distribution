@@ -128,7 +128,8 @@ export interface IAreaDetails {
     groupId: string,
     groupName: string,
     list: IRouteList[],
-
+    carCount:number,
+    routeCount:number
 }
 
 interface IRouteList {
