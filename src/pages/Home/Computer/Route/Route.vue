@@ -427,7 +427,7 @@
       };
       const unActivePolyOption = {
         path: polygonPath,
-        strokeColor: "#fff",
+        strokeColor: "#eee",
         strokeWeight: 3,
         fillOpacity: 0,
         strokeStyle: "solid",
