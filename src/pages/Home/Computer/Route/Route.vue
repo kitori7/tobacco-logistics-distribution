@@ -63,7 +63,13 @@
         </el-icon>
       </el-button>
       <div id="container"></div>
-      <RouteEChart :data="eChartData" v-model="isOpenEChart" @dis="disEchart" @tim="timEchart" @wei="weiEchart"></RouteEChart>
+      <RouteEChart
+        :data="eChartData"
+        v-model="isOpenEChart"
+        @dis="disEchart"
+        @tim="timEchart"
+        @wei="weiEchart"
+      ></RouteEChart>
       <div class="btn-box">
         <el-button
           v-if="hasOp('path-calculate:accumulation:update')"
@@ -96,7 +102,15 @@
               element-loading-background="rgba(0,23,49,0.8)"
             >
               <el-collapse-item
-                :title="item.groupName+'-'+item.carCount+'辆车'+'-'+item.routeCount+'条路线'"
+                :title="
+                  item.groupName +
+                  '-' +
+                  item.carCount +
+                  '辆车' +
+                  '-' +
+                  item.routeCount +
+                  '条路线'
+                "
                 :name="item.groupId"
                 v-for="item in clusterStore.routeDetails"
                 :key="item.groupId"
@@ -225,71 +239,82 @@
         zoomEnable: true, // 是否可以缩放地图
         resizeEnable: true,
       });
-        //分割线涂色
-        let polygon:any[]=['polygon1','polygon2','polygon3','polygon4','polygon5']
-        let polygonData:any=[data1,data2,data3,data4,data5]
-       for(let i=0;i<polygon.length;i++){
-        polygon[i] = new AMap.Polyline({  
-        path: polygonData[i], // 路径  
-        strokeWeight: 1, // 线条宽度，默认为 2  
-        showDir: true,  
-        strokeColor:"#001731", // 线条颜色  
-        lineJoin: "round", // 折线拐点连接处样式  
-    });  
-     }  
-    map.add(polygon);  
-function revisePolylineToMap(newPolyon:any,pathData:any, color:string,strokeWeight:number) { 
-  newPolyon.setOptions({
-      path:pathData,
-      strokeWeight:strokeWeight,
-      strokeColor:color
-    })
-}
-// 使用该函数来添加折线  
-       EchartFun = function EchartSplice(groupData:any){
-        switch(groupData.name){
-        case '班组一':
-        groupName.value = '班组一'
-        revisePolylineToMap(polygon[0],data1,groupData.color,8)
-        revisePolylineToMap(polygon[1],data2,"#001731",1)
-        revisePolylineToMap(polygon[2],data3,"#001731",1)
-        revisePolylineToMap(polygon[3],data4,"#001731",1)
-        revisePolylineToMap(polygon[4],data5,"#001731",1)
-        break;
-        case '班组二':
-        groupName.value = '班组二'
-        revisePolylineToMap(polygon[0],data1,"#001731",1)
-        revisePolylineToMap(polygon[1],data1,groupData.color,8)
-        revisePolylineToMap(polygon[2],data3,"#001731",1)
-        revisePolylineToMap(polygon[3],data4,"#001731",1)
-        revisePolylineToMap(polygon[4],data5,"#001731",1)
-        break;
-        case '班组三':
-        groupName.value = '班组三'
-        revisePolylineToMap(polygon[0],data1,"#001731",1)
-        revisePolylineToMap(polygon[1],data2,"#001731",1)
-        revisePolylineToMap(polygon[2],data3,groupData.color,8)
-        revisePolylineToMap(polygon[3],data4,"#001731",1)
-        revisePolylineToMap(polygon[4],data5,"#001731",1)
-        break;
-        case '班组四':
-        groupName.value = '班组四'
-        revisePolylineToMap(polygon[0],data1,"#001731",1)
-        revisePolylineToMap(polygon[1],data2,"#001731",1)
-        revisePolylineToMap(polygon[2],data3,"#001731",1)
-        revisePolylineToMap(polygon[3],data4,groupData.color,8)
-        revisePolylineToMap(polygon[4],data5,"#001731",1)
-        break;
-        case '班组五':
-        groupName.value = '班组五'
-        revisePolylineToMap(polygon[0],data1,"#001731",1)
-        revisePolylineToMap(polygon[1],data2,"#001731",1)
-        revisePolylineToMap(polygon[2],data3,"#001731",1)
-        revisePolylineToMap(polygon[3],data4,"#001731",1)
-        revisePolylineToMap(polygon[4],data5,groupData.color,8)
-        break;
-    }
+      //分割线涂色
+      let polygon: any[] = [
+        "polygon1",
+        "polygon2",
+        "polygon3",
+        "polygon4",
+        "polygon5",
+      ];
+      let polygonData: any = [data1, data2, data3, data4, data5];
+      for (let i = 0; i < polygon.length; i++) {
+        polygon[i] = new AMap.Polyline({
+          path: polygonData[i], // 路径
+          strokeWeight: 1, // 线条宽度，默认为 2
+          strokeColor: "#001731", // 线条颜色
+          lineJoin: "round", // 折线拐点连接处样式
+          zIndex: 100,
+        });
       }
+      map.add(polygon);
+      function revisePolylineToMap(
+        newPolyon: any,
+        pathData: any,
+        color: string,
+        strokeWeight: number
+      ) {
+        newPolyon.setOptions({
+          path: pathData,
+          strokeWeight: strokeWeight,
+          strokeColor: color,
+        });
+      }
+      // 使用该函数来添加折线
+      EchartFun = function EchartSplice(groupData: any) {
+        switch (groupData.name) {
+          case "班组一":
+            groupName.value='班组一'
+            revisePolylineToMap(polygon[0], data1, groupData.color, 8);
+            revisePolylineToMap(polygon[1], data2, "#001731", 1);
+            revisePolylineToMap(polygon[2], data3, "#001731", 1);
+            revisePolylineToMap(polygon[3], data4, "#001731", 1);
+            revisePolylineToMap(polygon[4], data5, "#001731", 1);
+            break;
+          case "班组二":
+          groupName.value='班组二'
+            revisePolylineToMap(polygon[0], data1, "#001731", 1);
+            revisePolylineToMap(polygon[1], data1, groupData.color, 8);
+            revisePolylineToMap(polygon[2], data3, "#001731", 1);
+            revisePolylineToMap(polygon[3], data4, "#001731", 1);
+            revisePolylineToMap(polygon[4], data5, "#001731", 1);
+            break;
+          case "班组三":
+          groupName.value='班组三'
+            revisePolylineToMap(polygon[0], data1, "#001731", 1);
+            revisePolylineToMap(polygon[1], data2, "#001731", 1);
+            revisePolylineToMap(polygon[2], data3, groupData.color, 8);
+            revisePolylineToMap(polygon[3], data4, "#001731", 1);
+            revisePolylineToMap(polygon[4], data5, "#001731", 1);
+            break;
+          case "班组四":
+          groupName.value='班组四'
+            revisePolylineToMap(polygon[0], data1, "#001731", 1);
+            revisePolylineToMap(polygon[1], data2, "#001731", 1);
+            revisePolylineToMap(polygon[2], data3, "#001731", 1);
+            revisePolylineToMap(polygon[3], data4, groupData.color, 8);
+            revisePolylineToMap(polygon[4], data5, "#001731", 1);
+            break;
+          case "班组五":
+          groupName.value='班组五'
+            revisePolylineToMap(polygon[0], data1, "#001731", 1);
+            revisePolylineToMap(polygon[1], data2, "#001731", 1);
+            revisePolylineToMap(polygon[2], data3, "#001731", 1);
+            revisePolylineToMap(polygon[3], data4, "#001731", 1);
+            revisePolylineToMap(polygon[4], data5, groupData.color, 8);
+            break;
+        }
+      };
       // 渲染涂色
       str.forEach((item, index) => {
         const path = item.map((item) => {
@@ -305,7 +330,6 @@ function revisePolylineToMap(newPolyon:any,pathData:any, color:string,strokeWeig
         });
         map.add(polygon6);
       });
-
       //绑定点击事件
       map.on("click", function (e: any) {
         console.log("当前坐标：" + e.lnglat.getLng() + "," + e.lnglat.getLat());
@@ -332,9 +356,9 @@ function revisePolylineToMap(newPolyon:any,pathData:any, color:string,strokeWeig
     areaName: area.value,
     assignNumber: 10,
   });
-    const choiceCalculateType = ref(0);
-    const num = ref(10);
-      
+  const choiceCalculateType = ref(0);
+  const num = ref(10);
+
   // 打卡 eChart
   const isOpenEChart = ref(false);
   function openEChart() {
@@ -356,6 +380,8 @@ function revisePolylineToMap(newPolyon:any,pathData:any, color:string,strokeWeig
       // 加载保存的地图数据
       if (!clusterStore.convex) {
         refreshConvex();
+      } else {
+        countPathResult();
       }
     }, 1000);
   });
@@ -386,6 +412,31 @@ function revisePolylineToMap(newPolyon:any,pathData:any, color:string,strokeWeig
             oldRouteName.value = point.routeName;
           }
         });
+      });
+    });
+
+    // 涂色渲染
+    clusterStore.getColorConvexAction();
+    clusterStore?.colorConvex.forEach((item: string[], index) => {
+      console.log(index);
+
+      item.forEach((item1, index1) => {
+        const coordinatesArray = item1.split(";");
+        // 将每个字符串转换成数组格式
+        // const formattedArray = coordinatesArray.map((coord) => `[${coord}]`);
+        const path = coordinatesArray.map((item) => {
+          const arr = item.split(",");
+          return new AMap.LngLat(Number(arr[0]), Number(arr[1]));
+        });
+        const polygon = new AMap.Polygon({
+          //@ts-ignore
+          path, //路径
+          fillColor: colorArr[index][index1 % 4], //多边形填充颜色
+          strokeWeight: 1, //线条宽度，默认为 2
+          strokeColor: "#fff", //线条颜色
+          fillOpacity: 0.9,
+        });
+        map.add(polygon);
       });
     });
     watch(groupName,()=>{
@@ -424,11 +475,11 @@ function revisePolylineToMap(newPolyon:any,pathData:any, color:string,strokeWeig
         strokeOpacity: 1,
         strokeColor: "#fff",
         fillOpacity: 0,
-        strokeWeight: 3,
+        strokeWeight: 5,
       };
       const unActivePolyOption = {
         path: polygonPath,
-        strokeColor: "#fff",
+        strokeColor: "#eee",
         strokeWeight: 3,
         fillOpacity: 0,
         strokeStyle: "solid",
@@ -782,7 +833,6 @@ function revisePolylineToMap(newPolyon:any,pathData:any, color:string,strokeWeig
 </script>
 
 <style lang="scss" scoped>
-
   .route {
     width: 100%;
     display: flex;

@@ -24,6 +24,7 @@ import {
   calculateSingleRoute,
   getConvex,
   getTransitDepotName,
+  getAllColor,
 } from "@/service/modules/cluster";
 import {
   IAccumlationInfo,
@@ -76,7 +77,6 @@ export const useClusterStore = defineStore("cluster", () => {
     }, clusterAndShopList.value);
     clusterAndShopList.value = mergedArray;
     console.log(clusterAndShopList.value);
-    
   }
   //计算接口
   async function postCalculateAllAction() {
@@ -292,6 +292,17 @@ export const useClusterStore = defineStore("cluster", () => {
     const res = await getTransitDepotName();
     areas.value = res.data;
   }
+  // 获取涂色数据
+  const colorConvex = ref<any[]>(
+    localStorage.getItem("convexColor") != "undefined"
+      ? JSON.parse(localStorage.getItem("convexColor")!)
+      : undefined
+  );
+  async function getColorConvexAction() {
+    const res = await getAllColor();
+    colorConvex.value = res.data;
+    localStorage.setItem("convexColor", JSON.stringify(colorConvex.value));
+  }
   return {
     getAllResultPointsAction,
     clusterAndShopList,
@@ -341,5 +352,7 @@ export const useClusterStore = defineStore("cluster", () => {
     saveState,
     getTransitDepotNameAction,
     areas,
+    colorConvex,
+    getColorConvexAction,
   };
 });
