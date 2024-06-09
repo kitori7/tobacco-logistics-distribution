@@ -222,3 +222,11 @@ export function getTransitDepotName() {
     url: "/pathcalculate/path/getTransitDepotName",
   });
 }
+
+// 获取涂色数据
+export function getAllColor() {
+  return requests.get<IRequest<any>>({
+    timeout: 1000 * 60 * 5,
+    url: "/pathcalculate/path/getAllColourConvex",
+  });
+}
