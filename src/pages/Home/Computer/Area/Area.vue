@@ -302,7 +302,6 @@ onBeforeUnmount(() => {
 .area {
   width: 100%;
   display: flex;
-
   .map {
     position: relative;
       flex-grow: 1;

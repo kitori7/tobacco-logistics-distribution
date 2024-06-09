@@ -46,7 +46,7 @@
           <el-form-item
             label="状态修改为 :"
             prop="feedbackStatus"
-            v-show="
+            v-if="
               (hasOp('guest-book:logistics:exception:modify') &&
                 props.feedbackType === '1') ||
               (hasOp('guest-book:marketing:exception:modify') &&

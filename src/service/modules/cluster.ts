@@ -173,13 +173,7 @@ export function getSplitLines(groupOrder: string) {
     url: `/pathcalculate/path/getSplitLines?groupOrder=${groupOrder}`,
   });
 }
-// 路径比较
-export function compareRoute(routeIdList: string) {
-  return requests.get({
-    timeout: 1000 * 60,
-    url: `/pathcalculate/path/compare/${routeIdList}`,
-  });
-}
+
 // 班组比较
 export function compareArea(groupIdList: string) {
   return requests.get({

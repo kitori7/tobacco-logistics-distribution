@@ -8,7 +8,7 @@
       >
         <transition name="slide-fade">
           <div class="leftInformation" v-show="!isCollapse">
-            <el-select v-model="area">
+            <el-select v-model="area" >
               <el-option
                 v-for="item in areas"
                 :key="item.name"
@@ -66,6 +66,7 @@
       <RouteEChart :data="eChartData" v-model="isOpenEChart" @dis="disEchart" @tim="timEchart" @wei="weiEchart"></RouteEChart>
       <div class="btn-box">
         <el-button
+          v-if="hasOp('path-calculate:accumulation:update')"
           class="adjustPoint"
           @click="adjustPoint"
           :loading="adjustLoad"
@@ -131,7 +132,7 @@
           >保存路径</el-button
         >
         <el-dialog
-          style="transform: translate(17.5vw, 48vh); height: 31vh"
+          style="transform: translate(17.5vw, 48vh); height: 32vh"
           v-model="isOpenRouteDialog"
           width="20%"
           :modal="false"
@@ -142,7 +143,7 @@
           <el-scrollbar height="20vh">
             <ul style="margin-left: 20px; padding-top: 0px">
               <li
-                style="padding: 3px; list-style: square"
+                style="padding: 0.3vh; list-style: square"
                 v-for="item3 in clusterStore.storeResult"
                 :key="item3.accumulationId"
               >
@@ -157,6 +158,7 @@
 </template>
 
 <script lang="ts" setup>
+  import { hasOp } from "@/op";
   import { Edit, DArrowLeft, DArrowRight } from "@element-plus/icons-vue";
   import { BorderBox9 } from "@dataview/datav-vue3";
   //@ts-ignore
@@ -166,20 +168,30 @@
   import { data1, data2, data3, data4, data5 } from "./data/data";
   import str from "./data/color";
   import colorArr from "./data/colorArr";
-
   window._AMapSecurityConfig = {
     securityJsCode: "1b6291b2fceee1cd3b7798bfdd4c39e4",
   };
   // 点击图表
-  let EchartFun:any=null
+  let EchartFun:(groupData:any) => void
+  const groupName = ref<string>()
+  const routeIndex = ref<number>()
   function disEchart(groupData:any){
     EchartFun(groupData)
+    if(groupData.name.substring(0,2)!='班组'){
+      routeIndex.value=groupData.dataIndex
+    }
   }
   function timEchart(groupData:any){
     EchartFun(groupData) 
+    if(groupData.name.substring(0,2)!='班组'){
+      routeIndex.value=groupData.dataIndex
+    }
   }
     function weiEchart(groupData:any){
       EchartFun(groupData)
+      if(groupData.name.substring(0,2)!='班组'){
+      routeIndex.value=groupData.dataIndex
+    }
   }
   // 折叠
   const isCollapse = ref<boolean>(false);
@@ -237,6 +249,7 @@ function revisePolylineToMap(newPolyon:any,pathData:any, color:string,strokeWeig
        EchartFun = function EchartSplice(groupData:any){
         switch(groupData.name){
         case '班组一':
+        groupName.value = '班组一'
         revisePolylineToMap(polygon[0],data1,groupData.color,8)
         revisePolylineToMap(polygon[1],data2,"#001731",1)
         revisePolylineToMap(polygon[2],data3,"#001731",1)
@@ -244,6 +257,7 @@ function revisePolylineToMap(newPolyon:any,pathData:any, color:string,strokeWeig
         revisePolylineToMap(polygon[4],data5,"#001731",1)
         break;
         case '班组二':
+        groupName.value = '班组二'
         revisePolylineToMap(polygon[0],data1,"#001731",1)
         revisePolylineToMap(polygon[1],data1,groupData.color,8)
         revisePolylineToMap(polygon[2],data3,"#001731",1)
@@ -251,6 +265,7 @@ function revisePolylineToMap(newPolyon:any,pathData:any, color:string,strokeWeig
         revisePolylineToMap(polygon[4],data5,"#001731",1)
         break;
         case '班组三':
+        groupName.value = '班组三'
         revisePolylineToMap(polygon[0],data1,"#001731",1)
         revisePolylineToMap(polygon[1],data2,"#001731",1)
         revisePolylineToMap(polygon[2],data3,groupData.color,8)
@@ -258,6 +273,7 @@ function revisePolylineToMap(newPolyon:any,pathData:any, color:string,strokeWeig
         revisePolylineToMap(polygon[4],data5,"#001731",1)
         break;
         case '班组四':
+        groupName.value = '班组四'
         revisePolylineToMap(polygon[0],data1,"#001731",1)
         revisePolylineToMap(polygon[1],data2,"#001731",1)
         revisePolylineToMap(polygon[2],data3,"#001731",1)
@@ -265,6 +281,7 @@ function revisePolylineToMap(newPolyon:any,pathData:any, color:string,strokeWeig
         revisePolylineToMap(polygon[4],data5,"#001731",1)
         break;
         case '班组五':
+        groupName.value = '班组五'
         revisePolylineToMap(polygon[0],data1,"#001731",1)
         revisePolylineToMap(polygon[1],data2,"#001731",1)
         revisePolylineToMap(polygon[2],data3,"#001731",1)
@@ -272,16 +289,6 @@ function revisePolylineToMap(newPolyon:any,pathData:any, color:string,strokeWeig
         revisePolylineToMap(polygon[4],data5,groupData.color,8)
         break;
     }
-      }
-      // 添加描边
-      for (let i = 0; i < bounds.length; i++) {
-        const polyline = new AMap.Polyline({
-          path: bounds[i], // polyline 路径，支持 lineString 和 MultiLineString
-          strokeColor: "#3078AC", // 线条颜色，使用16进制颜色代码赋值。默认值为#00D3FC
-          strokeWeight: 2, // 轮廓线宽度,默认为:2
-          // map:map // 这种方式相当于: polyline.setMap(map);
-        });
-        polyline.setMap(map);
       }
       // 渲染涂色
       str.forEach((item, index) => {
@@ -337,7 +344,13 @@ function revisePolylineToMap(newPolyon:any,pathData:any, color:string,strokeWeig
     dis: number[];
     wei: number[];
     time: number[];
-  }>({ dis: [], wei: [], time: [] });
+    groupDis:number[];
+    groupWei:number[];
+    groupTime:number[];
+    routeName:string[];
+    groupRouteName:string[];
+    groupName?:string;
+  }>({ dis: [], wei: [], time: [],routeName:[],groupDis:[],groupTime:[],groupWei:[], groupRouteName:[]});
   onMounted(() => {
     setTimeout(() => {
       // 加载保存的地图数据
@@ -375,7 +388,33 @@ function revisePolylineToMap(newPolyon:any,pathData:any, color:string,strokeWeig
         });
       });
     });
+    watch(groupName,()=>{
+      eChartData.value.groupDis=[]
+        eChartData.value.groupWei=[]
+        eChartData.value.groupTime=[]
+        eChartData.value.groupRouteName=[]
+    })
     clusterStore.convex?.forEach((item: any) => {
+        function addData(){ 
+        eChartData.value.groupDis.push(Number(item.distance));
+        eChartData.value.groupWei.push(Number(item.cargoWeight));
+        eChartData.value.groupTime.push(Number(item.workTime));
+        eChartData.value.groupRouteName.push(item.routeName);
+        eChartData.value.groupName=groupName.value
+      }
+    watch(groupName,()=>{
+      if(groupName.value=='班组一'&&item.groupId==1){
+        addData()
+      }else if(groupName.value=='班组二'&&item.groupId==2){
+        addData()
+      }else if(groupName.value=='班组三'&&item.groupId==3){
+        addData()
+      }else if(groupName.value=='班组四'&&item.groupId==4){
+        addData()
+      }else if(groupName.value=='班组五'&&item.groupId==5){
+        addData()
+    }
+    })
       // 凸包渲染
       const polygonPath = item.convex.map((item: any) => {
         return [item.longitude, item.latitude];
@@ -394,7 +433,6 @@ function revisePolylineToMap(newPolyon:any,pathData:any, color:string,strokeWeig
         fillOpacity: 0,
         strokeStyle: "solid",
       };
-
       const polygon = new AMap.Polygon(unActivePolyOption);
       let isActive = false;
       let marker: any = null;
@@ -405,6 +443,7 @@ function revisePolylineToMap(newPolyon:any,pathData:any, color:string,strokeWeig
           eChartData.value.dis.push(Number(item.distance));
           eChartData.value.wei.push(Number(item.cargoWeight));
           eChartData.value.time.push(Number(item.workTime));
+          eChartData.value.routeName.push(item.routeName);
           index = eChartData.value.dis.indexOf(Number(item.distance));
           routeId.value = item.routeId;
           routeName.value = item.routeName;
@@ -440,8 +479,8 @@ function revisePolylineToMap(newPolyon:any,pathData:any, color:string,strokeWeig
       });
       map.add(polygon);
 
-      watch(mapRouteName, (newValue) => {
-        if (newValue == item.routeName) {
+      watch(mapRouteName, () => {
+        if (mapRouteName.value == item.routeName) {
           polygon.setOptions({
             path: polygonPath,
             strokeOpacity: 1,
@@ -450,7 +489,7 @@ function revisePolylineToMap(newPolyon:any,pathData:any, color:string,strokeWeig
             strokeWeight: 4,
           });
           map.setZoomAndCenter(11, polygonPath[0]);
-        } else {
+        } else{
           polygon.setOptions({
             path: polygonPath,
             strokeOpacity: 1,
@@ -460,6 +499,26 @@ function revisePolylineToMap(newPolyon:any,pathData:any, color:string,strokeWeig
           });
         }
       });
+      watch(routeIndex,()=>{
+        if(routeIndex.value&&eChartData.value.groupRouteName[routeIndex.value]==item.routeName){
+          polygon.setOptions({
+            path: polygonPath,
+            strokeOpacity: 1,
+            strokeColor: "black",
+            fillOpacity: 0,
+            strokeWeight: 4,
+          });
+          map.setZoomAndCenter(11, polygonPath[0]);
+        } else{
+          polygon.setOptions({
+            path: polygonPath,
+            strokeOpacity: 1,
+            strokeColor: "#fff",
+            fillOpacity: 0,
+            strokeWeight: 3,
+          });
+        }
+      })
       // 重新渲染 marker
       function renderMarkers() {
         markers.forEach((marker) => {
@@ -535,6 +594,8 @@ function revisePolylineToMap(newPolyon:any,pathData:any, color:string,strokeWeig
         dis: [],
         wei: [],
         time: [],
+        routeName:[],
+        groupDis:[],groupTime:[],groupWei:[], groupRouteName:[]
       };
       markers.splice(0, markers.length);
       ElMessage.closeAll("warning");
@@ -740,7 +801,7 @@ function revisePolylineToMap(newPolyon:any,pathData:any, color:string,strokeWeig
         padding: 0px;
         margin: 0px;
         width: 100%;
-        height: 100%;
+        height: 103%;
         margin: 0.5vh 0;
       }
       .btn-box {
@@ -779,7 +840,6 @@ function revisePolylineToMap(newPolyon:any,pathData:any, color:string,strokeWeig
       height: 80vh;
       width: 20vw;
       box-shadow: 10px 10px 5px 5px rgb(0, 0, 0, 0.4);
-
       .arrow {
         position: absolute;
         right: -8%;
@@ -791,26 +851,14 @@ function revisePolylineToMap(newPolyon:any,pathData:any, color:string,strokeWeig
       }
       :deep(.el-input__wrapper) {
         font-size: 18px;
-        width: 9vw;
+        width: 10vw;
         background-color: #001731;
-        border: none;
         box-shadow: none;
       }
 
       :deep(.el-input__inner) {
         font-weight: bolder;
         text-align: center;
-      }
-
-      :global(.el-select-dropdown__item) {
-        display: grid !important;
-        place-items: center !important;
-        font-size: 18px;
-        font-weight: bolder;
-      }
-      :global(.el-popper .el-popper__arrow::before) {
-        border-top: 1px solid #73e1ff;
-        background-color: #73e1ff !important;
       }
       .el-select {
         --el-select-input-focus-border-color: transparent;
@@ -866,7 +914,6 @@ function revisePolylineToMap(newPolyon:any,pathData:any, color:string,strokeWeig
           padding-left: 1vw;
           padding-top: 4vh;
           width: 85%;
-
           ::v-deep(.el-collapse-item__header::before) {
             content: "";
             display: inline-block;
@@ -940,7 +987,9 @@ function revisePolylineToMap(newPolyon:any,pathData:any, color:string,strokeWeig
             ::v-deep(.el-collapse-item__content) {
               padding: 0;
             }
-
+            ::v-deep(.el-collapse-item__header) {
+          font-size: 2vh;
+         }
             .routeNameLi {
               cursor: pointer;
 
@@ -999,4 +1048,14 @@ function revisePolylineToMap(newPolyon:any,pathData:any, color:string,strokeWeig
     background-color: rgb(2, 119, 168);
     padding: 0 0.5vw;
   }
+  .el-select-dropdown__item {
+    display: grid !important;
+    place-items: center !important;
+        font-size: 18px;
+        font-weight: bolder;
+      }
+      .el-popper .el-popper__arrow::before {
+        border-top: 1px solid #73e1ff;
+        background-color: #73e1ff !important;
+      }
 </style>

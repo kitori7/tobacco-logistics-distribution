@@ -8,28 +8,33 @@
           class="changeType"
           @change="changeType"
         >
-          <el-option label="路径比较" value="路径比较" />
-          <el-option label="班组比较" value="班组比较" />
+          <el-option style="width: 110px;" label="路径比较" value="路径比较" />
+          <el-option style="width: 110px;" label="班组间比较" value="班组间比较" />
+          <el-option style="width: 110px;" label="班组内比较" value="班组内比较" />
         </el-select>
         <el-carousel-item>
           <div class="content">
-            <div class="title">运行里程/km</div>
+            <div class="title">{{title?props.data.groupName?props.data.groupName+'运行里程/km':title:'运行里程/km'}}</div>
             <div class="canvas" ref="distanceRef"></div>
           </div>
+          <div class="variance">方差：{{varianceDis}}</div>
         </el-carousel-item>
         <el-carousel-item>
           <div class="content">
-            <div class="title">载货量/条</div>
+            <div class="title">{{title?props.data.groupName?props.data.groupName+'载货量/条':title:'载货量/条'}}</div>
             <div class="canvas" ref="weightRef"></div>
           </div>
+          <div class="variance">方差：{{varianceWei}}</div>
         </el-carousel-item>
         <el-carousel-item>
           <div class="content">
-            <div class="title">工作时长/h</div>
+            <div class="title">{{title?props.data.groupName?props.data.groupName+'工作时长/h':title:'工作时长/h'}}</div>
             <div class="canvas" ref="timeRef"></div>
           </div>
+          <div class="variance">方差：{{varianceTim}}</div>
         </el-carousel-item>
       </el-carousel>
+      
     </div>
   </div>
 </template>
@@ -40,28 +45,45 @@
   const clusterStore = useClusterStore();
   type IProps = {
     data: {
-      [key: string]: Array<number>;
+      [key: string]: any;
       dis: Array<number>;
       wei: Array<number>;
       time: Array<number>;
+      groupDis:Array<number>;
+      groupWei:Array<number>;
+      groupTime:Array<number>;
+      routeName:Array<string>;
+      groupRouteName:Array<string>;
+      groupName:string;
     };
   };
   const props = defineProps<IProps>();
-
   // 显示隐藏
   const isOpenEChart = defineModel<boolean>({ required: true, default: false });
-
   const distanceRef = ref<HTMLElement>();
   const weightRef = ref<HTMLElement>();
   const timeRef = ref<HTMLElement>();
   const disArea = ref<number[]>();
   const weiArea = ref<number[]>();
   const timeArea = ref<number[]>();
-
+  const varianceDis=ref<number>(0)
+  const varianceWei=ref<number>(0)
+  const varianceTim=ref<number>(0)
+  const title = ref<string>()
+    function calculateVariance(data:number[]) {  
+    // 计算平均值  
+    let sum = data.reduce((a, b) => a + b, 0);  
+    let avg = sum / data.length;  
+    // 计算方差  
+    let variance = data.reduce((acc, val) => acc + Math.pow(val - avg, 2), 0);  
+    variance /= data.length;  
+    variance = parseFloat(variance.toFixed(2));  
+    return variance;  
+}  
   onMounted(() => {
     setEchart();
     clickEchart()
-    clusterStore.compareAreaAction("1,2,3,4,5,6").then(() => {
+    clusterStore.compareAreaAction("1,2,3,4,5").then(() => {
       disArea.value = clusterStore.compareAreaData.map(
         (i: any) => i.averageDistance
       );
@@ -78,31 +100,87 @@
     var weightEC = echart.init(weightRef?.value);
     var timeEC = echart.init(timeRef?.value);
     if (type.value == "路径比较") {
+      title.value=''
       watch(
-        props.data,
+        props.data.wei,
         () => {
-          index.value = props.data.dis.map(
-            (_value: number, index: number) => index
-          );
-          if (type.value == "路径比较") {
-            distanceEC.setOption(newOption("dis"));
-            weightEC.setOption(newOption("wei"));
-            timeEC.setOption(newOption("time"));
+          if(type.value=="路径比较"){
+            index.value = props.data.routeName.map(
+            (_value: string,index:number) => index
+          );  
+            if(props.data.dis.length>0){
+              varianceDis.value=calculateVariance(props.data.dis)
+            }else{
+              varianceDis.value=0
+            }
+            if(props.data.wei.length>0){
+              varianceWei.value=calculateVariance(props.data.wei)
+            }else{
+              varianceDis.value=0
+            }
+            if(props.data.time.length>0){
+              varianceTim.value=calculateVariance(props.data.time)
+            }else{
+              varianceDis.value=0
+            }
+            distanceEC.setOption(newOption("dis",'routeName'));
+            weightEC.setOption(newOption("wei",'routeName'));
+            timeEC.setOption(newOption("time",'routeName'));
           }
-        },
+          },  
         { immediate: true }
       );
-    } else if (type.value == "班组比较") {
+    } else if (type.value == "班组间比较") {
+      title.value=''
       watch(
         disArea,
         () => {
+          if(disArea.value&&disArea.value.length>0){
+              varianceDis.value=calculateVariance(disArea.value.map((i)=>Number(i)))
+            }
+            if(weiArea.value&&weiArea.value.length>0){
+              varianceWei.value=calculateVariance(weiArea.value.map((i)=>Number(i)))
+            }
+            if(timeArea.value&&timeArea.value.length>0){
+              varianceTim.value=calculateVariance(timeArea.value.map((i)=>Number(i)))
+            }
           distanceEC.setOption(newAreaOption(disArea.value));
           weightEC.setOption(newAreaOption(weiArea.value));
           timeEC.setOption(newAreaOption(timeArea.value));
         },
         { immediate: true }
       );
-    }  
+    }else if(type.value == "班组内比较"){
+    
+      title.value='暂无数据，请先在班组间比较选择要比较的班组路径并且刷新缓存'
+      watch(
+        props.data.groupRouteName,
+        () => {
+          index.value = props.data.groupRouteName.map(
+            (_value: string,index:number) => index
+          );  
+            if(props.data.groupDis.length>0){
+              varianceDis.value=calculateVariance(props.data.groupDis)
+            }else{
+              varianceDis.value=0
+            }
+            if(props.data.groupWei.length>0){
+              varianceWei.value=calculateVariance(props.data.groupWei)
+            }else{
+              varianceDis.value=0
+            }
+            if(props.data.groupTime.length>0){
+              varianceTim.value=calculateVariance(props.data.groupTime)
+            }else{
+              varianceDis.value=0
+            }
+            distanceEC.setOption(newOption("groupDis",'groupRouteName'));
+            weightEC.setOption(newOption("groupWei",'groupRouteName'));
+            timeEC.setOption(newOption("groupTime",'groupRouteName'));
+        },
+        { immediate: true }
+      );
+    }
   }
   
   const emit = defineEmits(['dis','wei','tim'])
@@ -110,32 +188,51 @@
     var distanceEC = echart.init(distanceRef?.value);
     var weightEC = echart.init(weightRef?.value);
     var timeEC = echart.init(timeRef?.value);
-    distanceEC.on('click', function dis (params) {
-        emit('dis',params)
+    
+      distanceEC.on('click', function dis (params) {
+        if(type.value=='班组间比较'||type.value=='班组内比较'){
+          emit('dis',params)
+        }
     })
     weightEC.on('click', function wei (params) {
+      if(type.value=='班组间比较'||type.value=='班组内比较'){
         emit('wei',params)
+        }
     })
     timeEC.on('click', function tim (params) {
+      if(type.value=='班组间比较'||type.value=='班组内比较'){
         emit('tim',params)
+        } 
     })
   }
   const index = ref<number[]>();
-  function newOption(type: keyof IProps["data"]): EChartsOption {
+  function newOption(type: keyof IProps["data"],groupType:string): EChartsOption {
     return {
+      grid: {  
+        width: '90%',
+        left:'0' 
+    },
       xAxis: {
         data: index.value,
       },
       yAxis: {
         type: "value",
       },
+      tooltip: {
+        position:'top',
+        appendToBody:true,
+      formatter(params:any) {
+			return `
+		${params.data} </br> 
+		${props.data[groupType][params.dataIndex]}
+			`;
+   
+		}
+    },
       series: [
         {
           data: props.data[type],
           type: "bar",
-          emphasis: {
-            label: { show: true, color: "#000" },
-          },
           itemStyle: {
             color: "#73e5ff",
           },
@@ -151,13 +248,21 @@
       yAxis: {
         type: "value",
       },
+      tooltip: {
+        position:'top',
+        appendToBody:true,
+      formatter(params:any) {
+			return `
+		${params.data} </br> 
+		 ${params.name}
+			`;
+		},
+    },
       series: [
         {
           data: type,
           type: "bar",
-          emphasis: {
-            label: { show: true, color: "#000" },
-          },
+  
           itemStyle: {
             color: function (params) {
               var colorarrays = [
@@ -185,21 +290,19 @@
   .routeEChart {
     position: absolute;
     width: 100%;
-    bottom: 0;
+    bottom: -3vh;
     .AnalysisRouteBottom {
       .changeType {
         position: absolute;
-        font-size: 1.6vh;
         height: 1vh;
-        width: 5.5vw;
+        width: 110px;
         right: 2%;
         top: 5%;
         z-index: 10;
       }
       position: relative;
       color: #73e5ff;
-      width: 100%;
-      height: 220px;
+
       .content {
         flex: 1;
         position: relative;
@@ -210,17 +313,33 @@
         border-radius: 2px;
         padding: 5px;
         .title {
-          text-align: center;
+          position: absolute;
+          left: 46%;
+          transform: translate(-50%);
         }
         .canvas {
           position: absolute;
-          top: 55%;
+          top: 48%;
           left: 50%;
           transform: translate(-50%, -50%);
           width: 740px;
           height: 280px;
         }
-      }
+    }
+            .variance{
+          position: absolute;
+          top: 30%;
+          right: 2%;
+        }
     }
   }
+  .el-select-dropdown__item {
+    display: grid !important;
+        place-items: center !important;
+      
+      }
+      .el-popper .el-popper__arrow::before {
+        border-top: 1px solid #73e1ff;
+        background-color: #73e1ff !important;
+      }
 </style>

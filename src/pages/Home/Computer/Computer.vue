@@ -69,7 +69,7 @@ function routerChange(route: any) {
     }
 
     .content {
-        margin-left: 2vw;
+        margin-left: 1.5vw;
         flex: 1;
     }
 }</style>

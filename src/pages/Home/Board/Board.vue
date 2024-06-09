@@ -8,11 +8,11 @@
       </BorderBox9>
     </div>
     <div class="btn-content">
-      <el-badge v-show="hasOp('guest-book:logistics:exception:view')" :value="logisticsMount" class="item"
+      <el-badge v-if="hasOp('guest-book:logistics:exception:view')" :value="logisticsMount" class="item"
         :hidden="!logisticsMount">
         <el-button :class="{ vertical: true, active: currentIndex === 1 }" @click="routerChange('1')">物流反馈</el-button>
       </el-badge>
-      <el-badge v-show="hasOp('guest-book:marketing:exception:view')" :value="marketingMount" class="item"
+      <el-badge v-if="hasOp('guest-book:marketing:exception:view')" :value="marketingMount" class="item"
         :hidden="!marketingMount">
         <el-button :class="{ vertical: true, active: currentIndex === 2 }" @click="routerChange('2')">营销反馈</el-button>
       </el-badge>

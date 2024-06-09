@@ -76,7 +76,7 @@
       <el-button
         :icon="Plus"
         @click="handleAdd"
-        v-show="
+        v-if="
           (hasOp('guest-book:logistics:exception:add') &&
             feedbackType === '1') ||
           (hasOp('guest-book:marketing:exception:add') && feedbackType === '2')
@@ -85,7 +85,7 @@
       >
       <el-button
         :icon="Delete"
-        v-show="
+        v-if="
           (hasOp('guest-book:logistics:exception:delete') &&
             feedbackType === '1') ||
           (hasOp('guest-book:marketing:exception:delete') &&

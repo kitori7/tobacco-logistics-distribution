@@ -18,7 +18,6 @@ import {
   calculateAll,
   getRouteVersion,
   getSplitLines,
-  compareRoute,
   compareArea,
   adjustPoint,
   getConvexPoint,
@@ -189,8 +188,6 @@ export const useClusterStore = defineStore("cluster", () => {
   async function getRouteDetailsAction() {
     const res = await getRouteDetails();
     routeDetails.value = res.data;
-    console.log(res.data);
-    
   }
 
   //获取路线详情下打卡点信息
@@ -248,12 +245,7 @@ export const useClusterStore = defineStore("cluster", () => {
     const res = await getSplitLines("二四五一三六");
     SplitLines.value = res.data;
   }
-  // 路径比较
-  const compareData = ref<any>();
-  async function compareRouteAction(data: string) {
-    const res = await compareRoute(data);
-    compareData.value = res.data;
-  }
+
   // 班组比较
   const compareAreaData = ref<any>();
   async function compareAreaAction(data: string) {
@@ -337,8 +329,6 @@ export const useClusterStore = defineStore("cluster", () => {
     routeVersion,
     getSplitLinesAction,
     SplitLines,
-    compareRouteAction,
-    compareData,
     compareAreaAction,
     compareAreaData,
     adjustPointAction,
