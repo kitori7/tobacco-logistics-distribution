@@ -404,7 +404,7 @@
         const polygon = new AMap.Polygon({
           //@ts-ignore
           path, //路径
-          fillColor: colorArr[index][index1 % 4], //多边形填充颜色
+          fillColor: colorArr[index][index1 % 5], //多边形填充颜色
           strokeWeight: 1, //线条宽度，默认为 2
           strokeColor: "#fff", //线条颜色
           fillOpacity: 0.9,
