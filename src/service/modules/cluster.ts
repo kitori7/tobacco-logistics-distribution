@@ -154,9 +154,9 @@ export function postAddRoute(data: IRouteSave[]) {
 }
 
 // 获取路径分析详细数据
-export function getRouteData(data: IRouteData) {
+export function getRouteData(data: IRouteData,apiKey:string) {
   return requests.get<IRequest<IRouteData>>({
-    url: `/pathcalculate/path/getRouteData?transitDepotId=${data.transitDepotId}&routeName=${data.routeName}`,
+    url: `/pathcalculate/path/getRouteData/${apiKey}?transitDepotId=${data.transitDepotId}&routeName=${data.routeName}`,
   });
 }
 
@@ -175,10 +175,10 @@ export function getSplitLines(groupOrder: string) {
 }
 
 // 班组比较
-export function compareArea(groupIdList: string) {
+export function compareArea(groupIdList: string,apiKey:string) {
   return requests.get({
     timeout: 1000 * 60,
-    url: `/pathcalculate/path/compareBaseGroup/${groupIdList}`,
+    url: `/pathcalculate/path/compareBaseGroup/${groupIdList}/${apiKey}`,
   });
 }
 // 调整打卡点
@@ -203,10 +203,10 @@ export function calculateSingleRoute(data: any) {
   });
 }
 // 获取凸包数据
-export function getConvex() {
+export function getConvex(apiKey:string) {
   return requests.get<IRequest<any>>({
     timeout: 1000 * 60 * 5,
-    url: "/pathcalculate/path/getConvex",
+    url: `/pathcalculate/path/getConvex?apiKey=${apiKey}`,
   });
 }
 

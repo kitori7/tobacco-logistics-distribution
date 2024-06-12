@@ -44,6 +44,7 @@
   import { useClusterStore } from "@/store/cluster";
   const clusterStore = useClusterStore();
   type IProps = {
+    apiKey:string;
     data: {
       [key: string]: any;
       dis: Array<number>;
@@ -54,7 +55,7 @@
       groupTime:Array<number>;
       routeName:Array<string>;
       groupRouteName:Array<string>;
-      groupName:string;
+      groupName?:string;
     };
   };
   const props = defineProps<IProps>();
@@ -83,7 +84,7 @@
   onMounted(() => {
     setEchart();
     clickEchart()
-    clusterStore.compareAreaAction("1,2,3,4,5").then(() => {
+    clusterStore.compareAreaAction("1,2,3,4,5",props.apiKey).then(() => {
       disArea.value = clusterStore.compareAreaData.map(
         (i: any) => i.averageDistance
       );
@@ -152,7 +153,7 @@
       );
     }else if(type.value == "班组内比较"){
     
-      title.value='暂无数据，请先在班组间比较选择要比较的班组路径并且刷新缓存'
+      title.value='暂无数据，请先在班组间比较选择要比较的班组路径'
       watch(
         props.data.groupRouteName,
         () => {
@@ -188,7 +189,6 @@
     var distanceEC = echart.init(distanceRef?.value);
     var weightEC = echart.init(weightRef?.value);
     var timeEC = echart.init(timeRef?.value);
-    
       distanceEC.on('click', function dis (params) {
         if(type.value=='班组间比较'||type.value=='班组内比较'){
           emit('dis',params)

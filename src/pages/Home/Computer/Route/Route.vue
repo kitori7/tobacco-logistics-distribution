@@ -65,6 +65,7 @@
       <div id="container"></div>
       <RouteEChart
         :data="eChartData"
+        :api-key="pathCalculateInfo.apiKey"
         v-model="isOpenEChart"
         @dis="disEchart"
         @tim="timEchart"
@@ -180,7 +181,6 @@
   import { useClusterStore } from "@/store/cluster";
   import RouteEChart from "./cpn/routeEChart.vue";
   import { data1, data2, data3, data4, data5 } from "./data/data";
-  import str from "./data/color";
   import colorArr from "./data/colorArr";
   window._AMapSecurityConfig = {
     securityJsCode: "1b6291b2fceee1cd3b7798bfdd4c39e4",
@@ -315,21 +315,6 @@
             break;
         }
       };
-      // 渲染涂色
-      str.forEach((item, index) => {
-        const path = item.map((item) => {
-          return new AMap.LngLat(item[0], item[1]);
-        });
-        colorArr[0];
-        const polygon6 = new AMap.Polygon({
-          path: path, //路径
-          fillColor: colorArr[0][index % 5], //多边形填充颜色
-          strokeWeight: 1, //线条宽度，默认为 2
-          strokeColor: "#fff", //线条颜色
-          strokeOpacity: 1,
-        });
-        map.add(polygon6);
-      });
       //绑定点击事件
       map.on("click", function (e: any) {
         console.log("当前坐标：" + e.lnglat.getLng() + "," + e.lnglat.getLat());
@@ -380,9 +365,9 @@
       // 加载保存的地图数据
       if (!clusterStore.convex) {
         refreshConvex();
-      } else {
-        countPathResult();
-      }
+      }else{
+        countPathResult()
+      } 
     }, 1000);
   });
   const markers: Array<AMap.Text> = [];
@@ -416,10 +401,8 @@
     });
 
     // 涂色渲染
-    clusterStore.getColorConvexAction();
-    clusterStore?.colorConvex.forEach((item: string[], index) => {
-      console.log(index);
-
+  
+    clusterStore.colorConvex?.forEach((item: string[], index) => {
       item.forEach((item1, index1) => {
         const coordinatesArray = item1.split(";");
         // 将每个字符串转换成数组格式
@@ -653,15 +636,7 @@
       clusterStore.postAddRouteAction(saveRouteData).then(() => {
         saveLoading.value = false;
         if (clusterStore.saveState) {
-          const loading = ElLoading.service({
-            lock: true,
-            text: "更新地图数据中...",
-            background: "rgba(0, 0, 0, 0.7)",
-          });
-          clusterStore.getConvexAction().then(() => {
-            countPathResult();
-            loading.close();
-          });
+          refreshConvex();
         }
       });
     }
@@ -687,15 +662,7 @@
       clusterStore.postAddRouteAction(saveRouteData).then(() => {
         saveLoading.value = false;
         if (clusterStore.saveState) {
-          const loading = ElLoading.service({
-            lock: true,
-            text: "更新地图数据中...",
-            background: "rgba(0, 0, 0, 0.7)",
-          });
-          clusterStore.getConvexAction().then(() => {
-            countPathResult();
-            loading.close();
-          });
+          refreshConvex();
         }
       });
     }
@@ -718,15 +685,7 @@
       clusterStore.postAddRouteAction(saveRouteData).then(() => {
         saveLoading.value = false;
         if (clusterStore.saveState) {
-          const loading = ElLoading.service({
-            lock: true,
-            text: "更新地图数据中...",
-            background: "rgba(0, 0, 0, 0.7)",
-          });
-          clusterStore.getConvexAction().then(() => {
-            countPathResult();
-            loading.close();
-          });
+          refreshConvex();
         }
       });
     }
@@ -825,11 +784,14 @@
       text: "加载地图数据中...",
       background: "rgba(0, 0, 0, 0.7)",
     });
-    clusterStore.getConvexAction().then(() => {
+    clusterStore.getConvexAction(pathCalculateInfo.value.apiKey).then(() => {
+      clusterStore.getColorConvexAction().then(()=>{
       countPathResult();
       loading.close();
+      })
     });
   }
+
 </script>
 
 <style lang="scss" scoped>
