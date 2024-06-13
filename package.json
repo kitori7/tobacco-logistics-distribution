@@ -7,7 +7,7 @@
     "dev": "vite --mode prd",
     "homeDev": "vite --mode homeprd",
     "build": "vite build --mode prd",
-    "build:dep": "vue-tsc && vite build --mode dep",
+    "build:dep": "vite build --mode dep",
     "preview": "vite preview"
   },
   "dependencies": {
