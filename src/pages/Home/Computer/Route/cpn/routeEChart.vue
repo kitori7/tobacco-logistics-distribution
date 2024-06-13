@@ -73,11 +73,14 @@
   const title = ref<string>()
     function calculateVariance(data:number[]) {  
     // 计算平均值  
-    let sum = data.reduce((a, b) => a + b, 0);  
-    let avg = sum / data.length;  
+    let min = Math.min(...data);  
+    let max = Math.max(...data);
+    let arr=data.map(value => (value - min) / (max - min));
+    let sum = arr.reduce((a, b) => a + b, 0);  
+    let avg = sum / arr.length;  
     // 计算方差  
-    let variance = data.reduce((acc, val) => acc + Math.pow(val - avg, 2), 0);  
-    variance /= data.length;  
+    let variance = arr.reduce((acc, val) => acc + Math.pow(val - avg, 2), 0);  
+    variance /= arr.length;  
     variance = parseFloat(variance.toFixed(2));  
     return variance;  
 }  
@@ -103,23 +106,23 @@
     if (type.value == "路径比较") {
       title.value=''
       watch(
-        props.data.wei,
+        props.data.dis,
         () => {
           if(type.value=="路径比较"){
             index.value = props.data.routeName.map(
             (_value: string,index:number) => index
           );  
-            if(props.data.dis.length>0){
+            if(props.data.dis.length>1){
               varianceDis.value=calculateVariance(props.data.dis)
             }else{
               varianceDis.value=0
             }
-            if(props.data.wei.length>0){
+            if(props.data.wei.length>1){
               varianceWei.value=calculateVariance(props.data.wei)
             }else{
               varianceDis.value=0
             }
-            if(props.data.time.length>0){
+            if(props.data.time.length>1){
               varianceTim.value=calculateVariance(props.data.time)
             }else{
               varianceDis.value=0
@@ -209,8 +212,8 @@
   function newOption(type: keyof IProps["data"],groupType:string): EChartsOption {
     return {
       grid: {  
-        width: '90%',
-        left:'0' 
+        width: '85%',
+        left:'5%' 
     },
       xAxis: {
         data: index.value,
@@ -314,7 +317,7 @@
         padding: 5px;
         .title {
           position: absolute;
-          left: 46%;
+          left: 48%;
           transform: translate(-50%);
         }
         .canvas {
