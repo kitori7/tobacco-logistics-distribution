@@ -38,22 +38,22 @@
         </div>
       </div>
       <div class="second">
-        <el-button class="btn" @click="openShopsAdd">
+        <el-button class="btn" @click="openShopsAdd"  v-if="hasOp('data-management:store:add')">
           <el-icon>
             <Plus />
           </el-icon>添加商铺
         </el-button>
-        <el-button class="btn" @click="updatedAreas">
+        <el-button class="btn" @click="updatedAreas"  v-if="hasOp('data-management:store:update')">
           <el-icon>
             <Place />
           </el-icon>调整归属地
         </el-button>
-        <el-button class="btn" @click="handleDelete">
+        <el-button class="btn" @click="handleDelete"  v-if="hasOp('data-management:store:delete')">
           <el-icon>
             <Delete />
           </el-icon>批量删除
         </el-button>
-        <el-button class="btn" @click="openShopsEdit">
+        <el-button class="btn" @click="openShopsEdit"  v-if="hasOp('data-management:store:area:update')">
           <el-icon>
             <EditPen />
           </el-icon>修改信息
@@ -96,6 +96,7 @@
 </template>
 
 <script lang="ts" setup>
+import { hasOp } from "@/op";
 import { usedatamanagementStore } from "@/store/datamanagement";
 const datamanagementStore = usedatamanagementStore();
 import type { ImanagementSearchData, ImanagementTableData, ISearch ,IOptionalData} from "@/types/datamanagement";

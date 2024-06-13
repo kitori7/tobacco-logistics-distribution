@@ -31,7 +31,7 @@
           </div>
           <div
             class="el-dialog-div-recover"
-            v-show="
+            v-if="
               isShow &&
               ((hasOp('guest-book:logistics:exception:reply') &&
                 props.feedbackType === '1') ||

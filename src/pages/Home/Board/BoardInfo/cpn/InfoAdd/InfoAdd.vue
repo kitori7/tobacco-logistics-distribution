@@ -55,7 +55,6 @@
             </el-upload>
           </el-form-item>
           <el-button class="btn" size="large" @click="submitForm(ruleFormRef, ruleFormRef2)">提交</el-button>
-
           <el-button class="btn" size="large" @click="resetForm(ruleFormRef, ruleFormRef2)">清空</el-button>
         </el-form>
       </div>

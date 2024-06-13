@@ -73,7 +73,6 @@
                 ></el-option>
               </el-select>
             </el-form-item>
-            <!-- <div class="groupAddMessage">默认密码 : ycwl1234</div> -->
           </el-form>
         </div>
         <div class="groupAddSetting">

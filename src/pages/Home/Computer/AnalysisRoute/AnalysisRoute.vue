@@ -69,7 +69,7 @@
 import { ArrowLeftBold } from "@element-plus/icons-vue";
 import { useRouter } from "vue-router";
 import { BorderBox11 } from "@dataview/datav-vue3";
-// import AMapLoader from "@amap/amap-jsapi-loader";
+import AMapLoader from "@amap/amap-jsapi-loader";
 import echarts from "@/store/echart";
 import { useClusterStore } from "@/store/cluster";
 window._AMapSecurityConfig = {
@@ -346,7 +346,7 @@ const analysisBtn = () => {
     map2.remove(newPolyline);
     oldPolyline = []
     newPolyline = []
-    clusterStore.getRouteDataAction({ transitDepotId: saveTransitDepotId.value, routeName: routeName + '-' + pickerDate.value + '-' + versionValue.value })
+    clusterStore.getRouteDataAction({ transitDepotId: saveTransitDepotId.value, routeName: routeName + '-' + pickerDate.value + '-' + versionValue.value },'309bde1e73b984c7d8a87ab19255963c')
         .then(() => {
             //旧路线数据
             //柱状图

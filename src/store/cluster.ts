@@ -18,7 +18,6 @@ import {
   calculateAll,
   getRouteVersion,
   getSplitLines,
-  compareRoute,
   compareArea,
   adjustPoint,
   getConvexPoint,
@@ -189,7 +188,6 @@ export const useClusterStore = defineStore("cluster", () => {
   async function getRouteDetailsAction() {
     const res = await getRouteDetails();
     routeDetails.value = res.data;
-    console.log(res.data);
   }
 
   //获取路线详情下打卡点信息
@@ -223,9 +221,8 @@ export const useClusterStore = defineStore("cluster", () => {
   //获取路径分析详细数据
   //定义变量存储正在分析的路径数据
   const analysisRouteData = ref<IRouteData>();
-  async function getRouteDataAction(data: IRouteData) {
-    const res = await getRouteData(data);
-    console.log(res);
+  async function getRouteDataAction(data: IRouteData,apiKey:string) {
+    const res = await getRouteData(data,apiKey);
     if (res.code === 200) {
       ElMessage.success(res.msg);
     } else if (res.code !== 500) {
@@ -247,16 +244,11 @@ export const useClusterStore = defineStore("cluster", () => {
     const res = await getSplitLines("二四五一三六");
     SplitLines.value = res.data;
   }
-  // 路径比较
-  const compareData = ref<any>();
-  async function compareRouteAction(data: string) {
-    const res = await compareRoute(data);
-    compareData.value = res.data;
-  }
+
   // 班组比较
   const compareAreaData = ref<any>();
-  async function compareAreaAction(data: string) {
-    const res = await compareArea(data);
+  async function compareAreaAction(data: string,apiKey:string) {
+    const res = await compareArea(data,apiKey);
     compareAreaData.value = res.data;
   }
   // 调整打卡点
@@ -287,8 +279,8 @@ export const useClusterStore = defineStore("cluster", () => {
       ? JSON.parse(localStorage.getItem("convex")!)
       : undefined
   );
-  async function getConvexAction() {
-    const res = await getConvex();
+  async function getConvexAction(apiKey:string) {
+    const res = await getConvex(apiKey);
     convex.value = res.data;
     localStorage.setItem("convex", JSON.stringify(convex.value));
   }
@@ -347,8 +339,6 @@ export const useClusterStore = defineStore("cluster", () => {
     routeVersion,
     getSplitLinesAction,
     SplitLines,
-    compareRouteAction,
-    compareData,
     compareAreaAction,
     compareAreaData,
     adjustPointAction,
