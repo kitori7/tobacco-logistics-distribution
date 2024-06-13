@@ -500,8 +500,9 @@
           if (index !== -1) {
             eChartData.value.dis.splice(index, 1);
             eChartData.value.wei.splice(index, 1);
-            routeId.value = undefined;
+            eChartData.value.time.splice(index, 1);
             eChartData.value.routeName.splice(index, 1);
+            routeId.value = undefined;
           }
           if (markers.indexOf(marker) !== -1) {
             markers.splice(markers.indexOf(marker), 1);
